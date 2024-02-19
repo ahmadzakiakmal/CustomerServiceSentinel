@@ -9,5 +9,5 @@ Ketua Kelompok: **Ahmad Zaki Akmal - 21/480179/TK/52981**
 
 Anggota 1: Nafisa Ramadhania - 21/478543/TK/52731
 
-Anggota 2:
+Anggota 2: Athilla Azka Havillah - 21/474647/TK/52362
 
