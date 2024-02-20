@@ -6,4 +6,4 @@ class Membership(Document):
     user = ReferenceField(User)
     organization = ReferenceField(Organization)
 
-    meta = {"collection": "Memberships"}
+    meta = {"collection": "_Memberships"}

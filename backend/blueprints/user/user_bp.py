@@ -11,7 +11,6 @@ def create_user():
     user = User(
       email = data["email"],
       user_name = data["user_name"],
-      organizations = []
     )
     user.save()
     return jsonify({

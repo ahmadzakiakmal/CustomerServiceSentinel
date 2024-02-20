@@ -1,7 +1,7 @@
 from flask import Flask, jsonify
 from openai import OpenAI
 import os
-from flask_pymongo import PyMongo
+from flask_mongoengine import MongoEngine
 from mongoengine.base.common import get_document
 import models
 
@@ -15,8 +15,11 @@ if not os.environ.get("OPENAI_API_KEY") or not os.environ.get("MONGODB_URI"):
   raise ValueError("Required environment variables are not found.")  
 
 app = Flask(__name__)
-app.config["MONGO_URI"] = os.environ.get("MONGODB_URI")
-mongo = PyMongo(app)
+app.config["MONGODB_SETTINGS"] = {
+  "db": os.environ.get("MONGODB_DB"),
+  "host": os.environ.get("MONGODB_URI")
+} 
+db = MongoEngine(app)
 
 # Register Blueprints
 from blueprints import user_bp
