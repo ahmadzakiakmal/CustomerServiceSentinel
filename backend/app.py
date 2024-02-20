@@ -19,7 +19,7 @@ app.config["MONGO_URI"] = os.environ.get("MONGODB_URI")
 mongo = PyMongo(app)
 
 # Register Blueprints
-from blueprints.user.user_bp import user_bp
+from blueprints import user_bp
 app.register_blueprint(user_bp, url_prefix="/user")
 
 if __name__ == '__main__':
