@@ -36,6 +36,11 @@ def handle_exception(e):
         "description": str(e),
     }), 500
 
+@app.errorhandler(404)
+def not_found(e):
+  print(e)
+  return "Route not found"
+
 @app.route("/")
 def hello_world():
   return """
