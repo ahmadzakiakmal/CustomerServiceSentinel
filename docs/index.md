@@ -30,6 +30,7 @@ Sebuah aplikasi web bernama **Customer Service Sentinel** di mana organisasi ata
 
 ### e. Analisis Kompetitor
 #### _Kompetitor 1_
+
 | Nama Kompetitor | [Qiscus](https://www.qiscus.com/id) |
 |-|-|
 | Jenis Kompetitor | Indirect Competitor |
@@ -47,6 +48,7 @@ Sebuah aplikasi web bernama **Customer Service Sentinel** di mana organisasi ata
 | Produk kami lebih terfokus pada AI Customer Service Assistant, tidak menyebar ke human assistant, app integration, dan marketing |
 
 #### _Kompetitor 2_
+
 | Nama Kompetitor | [CrampasAI](https://www.padiumkm.id/product/ai-powered-dashboard/65800fc23cff436a8d5bc662) |
 |-|-|
 | Jenis Kompetitor | Direct Competitor |
@@ -64,6 +66,7 @@ Sebuah aplikasi web bernama **Customer Service Sentinel** di mana organisasi ata
 | Produk yang kami tawarkan lebih sederhana dan ditujukan untuk perusahaan level kecil sehingga lebih murah daripada CrampasAI. |
 
 #### _Kompetitor 3_
+
 | Nama Kompetitor | [Tableau](https://www.tableau.com) |
 |-|-|
 | Jenis Kompetitor | Tertiary Competitor |
