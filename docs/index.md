@@ -25,6 +25,9 @@ Perubahan ini memungkinkan peningkatan penggunaan saluran layanan mandiri hingga
 #### _Permasalahan_
 Tidak ada penyedia jasa *Chatbot Assistant* yang mudah diakses oleh orang-orang non teknis. Kebanyakan hanya menyediakan API yang masih memerlukan pengetahuan teknis untuk bisa menggunakannya. Oleh karena itu, kami berpikir untuk membuat sebuah platform berbasis aplikasi web yang memudahkan orang awam untuk bisa menerapkannya dalam bisnis mereka.
 
+#### _Referensi_
+[1] McKinsey & Company, 'The Next Frontier of Customer Engagement: AI-Enabled Customer Service,' McKinsey & Company, [Online]. Available: https://www.mckinsey.com/capabilities/operations/our-insights/the-next-frontier-of-customer-engagement-ai-enabled-customer-service. [Accessed: 12-02-2024].
+
 ### d. Ide Solusi
 Sebuah aplikasi web bernama **Customer Service Sentinel** di mana organisasi atau perusahaan bisa dengan mudah melakukan kustomisasi kepada sebuah *GPT Assistant* untuk bisa menjawab sesuai kebutuhan.
 
