@@ -1,4 +1,12 @@
-## Modul 1
+---
+layout: default
+title: Modul 1
+description: Modul 1 Senior Project 2024
+---
+
+## **Modul 1**
+[kembali ke halaman utama](./)
+
 ### a. Nama Produk
 Customer Service Sentinel
 
