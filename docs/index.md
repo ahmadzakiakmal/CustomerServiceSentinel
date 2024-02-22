@@ -1,13 +1,13 @@
-# Customer Service Sentinel
+# **Customer Service Sentinel**
 
-## Kelompok 17
+## **Kelompok 17**
 - Ahmad Zaki Akmal - 21/480179/TK/52981
 - Nafisa Ramadhania - 21/478543/TK/52731
 - Athillah Azka Havillah - 21/474647/TK/52362\
 
-**Project Senior Teknologi Informasi**
+Project Senior Teknologi Informasi
 
-**Departemen Teknik Elektro dan Teknologi Informasi, Fakultas Teknik, Universitas Gadjah Mada**
+Departemen Teknik Elektro dan Teknologi Informasi, Fakultas Teknik, Universitas Gadjah Mada
 
-## Daftar Modul
+## **Daftar Modul**
 - [Modul 1](./modul1.html)
