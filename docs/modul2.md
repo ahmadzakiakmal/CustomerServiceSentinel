@@ -54,7 +54,7 @@ Kanban
 
 ### **f. Low-Fidelity Wireframe**
 Landing Page
-![Login](https://github.com/ahmadzaki2975/CustomerServiceSentinel/assets/91113046/af878942-1eac-40ee-89ba-4263a59faa4d)
+![Landing](https://github.com/ahmadzaki2975/CustomerServiceSentinel/assets/87590846/581ab420-b273-45cb-8371-5bd7527b2771)
 
 Login Page
 ![Login](https://github.com/ahmadzaki2975/CustomerServiceSentinel/assets/91113046/af878942-1eac-40ee-89ba-4263a59faa4d)
