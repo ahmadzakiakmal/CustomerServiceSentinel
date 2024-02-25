@@ -51,7 +51,7 @@ Kanban
 ### **e. Entity Relationship Diagram**
 ![Entity Relation Diagram](https://github.com/ahmadzaki2975/CustomerServiceSentinel/assets/91113046/c43e779a-5378-4e3f-a534-9a4656c0e6cc)
 
-### **e. Low-Fidelity Wireframe**
+### **f. Low-Fidelity Wireframe**
 Landing Page
 ![Login](https://github.com/ahmadzaki2975/CustomerServiceSentinel/assets/91113046/af878942-1eac-40ee-89ba-4263a59faa4d)
 
@@ -75,3 +75,6 @@ Testing Assistant
 
 Assistant Data
 ![Assistant](https://github.com/ahmadzaki2975/CustomerServiceSentinel/assets/91113046/64c2336f-1c15-4c70-893a-b40a18102116)
+
+### **g. Gantt-Chart pengerjaan proyek dalam kurun waktu 1 semester**
+![GanntChart](https://github.com/ahmadzaki2975/CustomerServiceSentinel/assets/91113046/343d8571-44b6-4e9d-8358-ac527378e41d)
