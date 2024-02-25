@@ -18,3 +18,5 @@ Kanban
 - Kendali WIP (Work In Progress)
 - Berfokus kepada aliran kerja 
 - Kolaborasi tim yang lebih baik
+
+## **Perancangan Tahap 1-3 SDLC**
