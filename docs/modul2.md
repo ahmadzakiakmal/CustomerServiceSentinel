@@ -34,3 +34,16 @@ Kanban
 
 ### **c. Use case diagram**
 ![Use Case Diagram](https://github.com/ahmadzaki2975/CustomerServiceSentinel/assets/91113046/f2e82445-ada3-4432-aa4f-de6cdfc67e7d)
+
+### **d. Functional requirements untuk use case yang telah dirancang**
+| FR | Deskripsi |
+|-|-|
+| FR 1 - Login | User harus bisa login. |
+| FR 2 - Register | User harus bisa membuat akun. |
+| FR 3 - Chat | User harus bisa berkomunikasi dengan Assistant. |
+| FR 4 - Manage Assistant Data | Organization Owner harus bisa mengelola data yang akan digunakan oleh Assistant. |
+| FR 5 - CRUD Organization | Fungsi CRUD bekerja dengan baik untuk akun organization. |
+| FR 6 - CRUD User | Fungsi CRUD bekerja dengan baik untuk akun user. |
+| FR 7 - CRUD Customer | Fungsi CRUD bekerja dengan baik untuk akun customer. |
+| FR 8 - Dashboard | Konten dashboard harus tampil. |
+| FR 9 - Testing Assistant | Organization owner dan user harus bisa melakukan testing terhadap Assistant. |
