@@ -36,6 +36,7 @@ Kanban
 ![Use Case Diagram](https://github.com/ahmadzaki2975/CustomerServiceSentinel/assets/91113046/f2e82445-ada3-4432-aa4f-de6cdfc67e7d)
 
 ### **d. Functional requirements untuk use case yang telah dirancang**
+
 | FR | Deskripsi |
 |-|-|
 | FR 1 - Login | User harus bisa login. |
