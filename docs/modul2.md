@@ -50,3 +50,28 @@ Kanban
 
 ### **e. Entity Relationship Diagram**
 ![Entity Relation Diagram](https://github.com/ahmadzaki2975/CustomerServiceSentinel/assets/91113046/c43e779a-5378-4e3f-a534-9a4656c0e6cc)
+
+### **e. Low-Fidelity Wireframe**
+Landing Page
+![Login](https://github.com/ahmadzaki2975/CustomerServiceSentinel/assets/91113046/af878942-1eac-40ee-89ba-4263a59faa4d)
+
+Login Page
+![Login](https://github.com/ahmadzaki2975/CustomerServiceSentinel/assets/91113046/af878942-1eac-40ee-89ba-4263a59faa4d)
+
+About Us
+![About Us](https://github.com/ahmadzaki2975/CustomerServiceSentinel/assets/91113046/a237f745-b4c7-4338-9571-42c1550d3b5d)
+
+Chat
+![Chat](https://github.com/ahmadzaki2975/CustomerServiceSentinel/assets/91113046/6b38b5b6-93a8-459c-afd4-a3cce9223667)
+
+Dashboard
+![Dashboard](https://github.com/ahmadzaki2975/CustomerServiceSentinel/assets/91113046/c3bbe45d-50e5-4ed0-bf89-133bd45ac6f5)
+
+404
+![404](https://github.com/ahmadzaki2975/CustomerServiceSentinel/assets/91113046/784d851a-073e-417d-9211-adb04c926210)
+
+Testing Assistant
+![Assistant](https://github.com/ahmadzaki2975/CustomerServiceSentinel/assets/91113046/64c2336f-1c15-4c70-893a-b40a18102116)
+
+Assistant Data
+![Assistant](https://github.com/ahmadzaki2975/CustomerServiceSentinel/assets/91113046/64c2336f-1c15-4c70-893a-b40a18102116)
