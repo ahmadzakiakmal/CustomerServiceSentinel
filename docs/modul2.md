@@ -47,3 +47,6 @@ Kanban
 | FR 7 - CRUD Customer | Fungsi CRUD bekerja dengan baik untuk akun customer. |
 | FR 8 - Dashboard | Konten dashboard harus tampil. |
 | FR 9 - Testing Assistant | Organization owner dan user harus bisa melakukan testing terhadap Assistant. |
+
+### **e. Entity Relationship Diagram**
+![Entity Relation Diagram](https://github.com/ahmadzaki2975/CustomerServiceSentinel/assets/91113046/c43e779a-5378-4e3f-a534-9a4656c0e6cc)
