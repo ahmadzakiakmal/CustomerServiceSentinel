@@ -7,7 +7,7 @@ import jwt
 import datetime
 import os
 
-user_bp = Blueprint('user_blueprint', __name__)
+user_bp = Blueprint("user_blueprint", __name__)
 
 @user_bp.route("/register", methods=["POST"])
 def create_user(): 
@@ -54,7 +54,7 @@ def login():
     if not bcrypt.checkpw(data["password"].encode("utf-8"), user.password.encode("utf-8")):
       raise Unauthorized
     response = make_response(jsonify({"message" : "login success"}))
-    response.set_cookie("token", jw_token, max_age=6*3600)
+    response.set_cookie("Authentication", jw_token, max_age=6*3600)
     return response, 200
     
   except BadRequest as e:
@@ -66,5 +66,5 @@ def login():
 def logout():
   response = make_response(jsonify({"message": "logout success."}))
   a_day_ago = datetime.datetime.utcnow() - datetime.timedelta(days=1)
-  response.set_cookie("token", "", max_age=0, expires=a_day_ago,)
+  response.set_cookie("Authentication", "", max_age=0, expires=a_day_ago,)
   return response
