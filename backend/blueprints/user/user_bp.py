@@ -53,11 +53,18 @@ def login():
     }, os.environ.get("JWT_SECRET"), algorithm="HS256")
     if not bcrypt.checkpw(data["password"].encode("utf-8"), user.password.encode("utf-8")):
       raise Unauthorized
-    response = make_response(jsonify({"token": jw_token}))
+    response = make_response(jsonify({"message" : "login success"}))
     response.set_cookie("token", jw_token, max_age=6*3600)
-    return response
+    return response, 200
     
   except BadRequest as e:
     return jsonify({"message": str(e)}), 400
   except Unauthorized as e:
     return jsonify({"message": str(e)}), 401
+  
+@user_bp.route("/logout", methods=["POST"])
+def logout():
+  response = make_response(jsonify({"message": "logout success."}))
+  a_day_ago = datetime.datetime.utcnow() - datetime.timedelta(days=1)
+  response.set_cookie("token", "", max_age=0, expires=a_day_ago,)
+  return response
