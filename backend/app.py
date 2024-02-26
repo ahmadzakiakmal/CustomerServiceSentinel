@@ -11,7 +11,7 @@ Organization = get_document("Organization")
 from dotenv import load_dotenv
 load_dotenv()
 
-if not os.environ.get("OPENAI_API_KEY") or not os.environ.get("MONGODB_URI"):
+if not os.environ.get("OPENAI_API_KEY") or not os.environ.get("MONGODB_URI") or not os.environ.get("JWT_SECRET"):
   raise ValueError("Required environment variables are not found.")  
 
 app = Flask(__name__)
