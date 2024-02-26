@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from werkzeug.exceptions import BadRequest
+from werkzeug.exceptions import BadRequest, Unauthorized
 from mongoengine.errors import NotUniqueError, ValidationError
 from app import User
 import bcrypt
@@ -34,3 +34,21 @@ def create_user():
     return jsonify({"message": str(e)}), 400
   except BadRequest as e:
     return jsonify({"message": str(e)}), 400
+
+@user_bp.route("/login", methods=["POST"])
+def login():
+  try:
+    data = request.get_json()
+    if not data.get("email") or not data.get("password"):
+      raise BadRequest("Missing required parameters")
+    
+    user = User.objects(email=data["email"]).first()
+    print(bcrypt.checkpw(data["password"].encode("utf-8"), user.password.encode("utf-8")))
+    if not bcrypt.checkpw(data["password"].encode("utf-8"), user.password.encode("utf-8")):
+      raise Unauthorized
+    return jsonify({"user": user})
+    
+  except BadRequest as e:
+    return jsonify({"message": str(e)}), 400
+  except Unauthorized as e:
+    return jsonify({"message": str(e)}), 401
