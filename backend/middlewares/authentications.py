@@ -6,16 +6,16 @@ import os
 def authenticateUser(f):
   def wrapper(*args, **kwargs):
     try:
-      cookies = request.headers.get("Cookie")
+      cookies = request.headers.get("Cookie", "")
       print(cookies)
       print("Authentication=" in cookies)
-      if not cookies:
+      if cookies is None:
         raise Unauthorized("No cookie found.")
       if not "Authentication=" in cookies:
         raise Unauthorized("No authentication cookie found.")
       
       auth_cookie = next((cookie for cookie in cookies.split("; ") if cookie.startswith("Authentication=")), None)
-      if not auth_cookie:
+      if auth_cookie is None:
         raise Unauthorized("Authentication cookie is missing.")
 
       token = auth_cookie.split("=")[1]
