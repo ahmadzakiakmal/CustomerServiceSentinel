@@ -11,7 +11,7 @@ Organization = get_document("Organization")
 from dotenv import load_dotenv
 load_dotenv()
 
-if not os.environ.get("OPENAI_API_KEY") or not os.environ.get("MONGODB_URI"):
+if not os.environ.get("OPENAI_API_KEY") or not os.environ.get("MONGODB_URI") or not os.environ.get("JWT_SECRET"):
   raise ValueError("Required environment variables are not found.")  
 
 app = Flask(__name__)
@@ -22,8 +22,9 @@ app.config["MONGODB_SETTINGS"] = {
 db = MongoEngine(app)
 
 # Register Blueprints
-from blueprints import user_bp
+from blueprints import user_bp, chatbot_bp
 app.register_blueprint(user_bp, url_prefix="/user")
+app.register_blueprint(chatbot_bp, url_prefix="/chatbot")
 
 if __name__ == '__main__':
   app.run(debug=True)
