@@ -2,6 +2,6 @@ from mongoengine import Document, StringField, ListField, LazyReferenceField, PU
 
 class Organization(Document):
   organization_name = StringField(required=True, max_length=50)
-  chat_records = ListField(LazyReferenceField("ChatRecord", reverse_delete_rule=CASCADE)) 
+  chat_records = ListField(LazyReferenceField("Thread", reverse_delete_rule=CASCADE)) 
 
   meta = {"collection" : "Organizations"}
