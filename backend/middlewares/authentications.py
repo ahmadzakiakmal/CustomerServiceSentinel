@@ -19,8 +19,7 @@ def authenticateUser(f):
         raise Unauthorized("Authentication cookie is missing.")
 
       token = auth_cookie.split("=")[1]
-      payload = decode(token, os.environ.get("JWT_SECRET"), algorithms=["HS256"])
-      print(payload)
+      # payload = decode(token, os.environ.get("JWT_SECRET"), algorithms=["HS256"])
       return f(*args, **kwargs)
     except Unauthorized as e:
       return jsonify({"error" : str(e)}), 401
