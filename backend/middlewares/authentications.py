@@ -7,8 +7,6 @@ def authenticateUser(f):
   def wrapper(*args, **kwargs):
     try:
       cookies = request.headers.get("Cookie", "")
-      print(cookies)
-      print("Authentication=" in cookies)
       if cookies is None:
         raise Unauthorized("No cookie found.")
       if not "Authentication=" in cookies:
