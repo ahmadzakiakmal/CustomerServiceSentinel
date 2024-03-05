@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify
 from app import Organization
-from werkzeug.exceptions import BadRequest
+from models import Membership
+from werkzeug.exceptions import BadRequest, NotFound, Conflict
 from middlewares.authentications import authenticateUser
 from jwt import decode
 import os
@@ -16,7 +17,7 @@ def create_organization():
     auth_cookie = next((cookie for cookie in cookies.split("; ") if cookie.startswith("Authentication=")), None)
     token = auth_cookie.split("=")[1]
     payload = decode(token, os.environ.get("JWT_SECRET"), algorithms=["HS256"])
-    print(payload.get("email"))
+
     if not data.get("organizationName"):
       raise BadRequest("Missing required parameters")
     org = Organization(
@@ -36,3 +37,48 @@ def create_organization():
     return jsonify({
       "message": str(e)
     }), 400
+  
+@organization_bp.route("/member", methods=["POST"], endpoint="Add Member")
+@authenticateUser
+def add_member():
+  try:
+    data = request.get_json()
+    cookies = request.headers.get("Cookie", "")
+    auth_cookie = next((cookie for cookie in cookies.split("; ") if cookie.startswith("Authentication=")), None)
+    token = auth_cookie.split("=")[1]
+    payload = decode(token, os.environ.get("JWT_SECRET"), algorithms=["HS256"])
+
+    if not data.get("organizationId") or not data.get("email"):
+      raise BadRequest("Missing required parameters")
+    
+    org = Organization.objects(id=data["organizationId"]).first()
+    if not org:
+      raise NotFound("Organization Not Found")
+    
+    check_duplicate = Membership.objects(organization=data["organizationId"], user=data["email"])
+    print(check_duplicate)
+    if check_duplicate:
+      raise Conflict("This membership relation already exist")
+    
+    membership = Membership(
+      user = data["email"],
+      organization = str(org.id)
+    )
+    membership.save()
+
+    return jsonify({
+      "organizationId": org.id,
+      "email": str(org.id)
+    })
+  except NotFound as e:
+    return jsonify({
+      "message": str(e)
+    }), 404
+  except BadRequest as e:
+    return jsonify({
+      "message": str(e)
+    }), 404
+  except Conflict as e:
+    return jsonify({
+      "message": str(e)
+    })
