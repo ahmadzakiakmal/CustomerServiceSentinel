@@ -41,7 +41,7 @@ def handle_exception(e):
 @app.errorhandler(404)
 def not_found(e):
   print(e)
-  return "Route not found"
+  return "404: Route not found", 404
 
 @app.route("/")
 def hello_world():
