@@ -1,4 +1,4 @@
-from flask import request, jsonify
+from flask import request, jsonify, g
 from werkzeug.exceptions import Unauthorized
 from jwt import decode, ExpiredSignatureError, InvalidTokenError
 import os
@@ -17,7 +17,8 @@ def authenticateUser(f):
         raise Unauthorized("Authentication cookie is missing.")
 
       token = auth_cookie.split("=")[1]
-      # payload = decode(token, os.environ.get("JWT_SECRET"), algorithms=["HS256"])
+      g.payload = decode(token, os.environ.get("JWT_SECRET"), algorithms=["HS256"])
+      
       return f(*args, **kwargs)
     except Unauthorized as e:
       return jsonify({"error" : str(e)}), 401

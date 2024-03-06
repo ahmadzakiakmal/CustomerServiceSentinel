@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, g
 from app import Organization
 from models import Membership
 from werkzeug.exceptions import BadRequest, NotFound, Conflict
@@ -13,10 +13,8 @@ organization_bp = Blueprint("organization_blueprint", __name__)
 def create_organization():
   try:
     data = request.get_json()
-    cookies = request.headers.get("Cookie", "")
-    auth_cookie = next((cookie for cookie in cookies.split("; ") if cookie.startswith("Authentication=")), None)
-    token = auth_cookie.split("=")[1]
-    payload = decode(token, os.environ.get("JWT_SECRET"), algorithms=["HS256"])
+    
+    payload = g.payload
 
     if not data.get("organizationName"):
       raise BadRequest("Missing required parameters")
@@ -43,10 +41,8 @@ def create_organization():
 def add_member():
   try:
     data = request.get_json()
-    cookies = request.headers.get("Cookie", "")
-    auth_cookie = next((cookie for cookie in cookies.split("; ") if cookie.startswith("Authentication=")), None)
-    token = auth_cookie.split("=")[1]
-    payload = decode(token, os.environ.get("JWT_SECRET"), algorithms=["HS256"])
+    
+    payload = g.payload
 
     if not data.get("organizationId") or not data.get("email"):
       raise BadRequest("Missing required parameters")
