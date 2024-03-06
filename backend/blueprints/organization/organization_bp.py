@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify, g
 from app import Organization
 from models import Membership
-from werkzeug.exceptions import BadRequest, NotFound, Conflict
+from werkzeug.exceptions import BadRequest, NotFound, Conflict, Unauthorized
 from middlewares.authentications import authenticateUser
 from jwt import decode
 import os
@@ -51,8 +51,11 @@ def add_member():
     if not org:
       raise NotFound("Organization Not Found")
     
+    if payload.get("email") != org.owner:
+      raise Unauthorized("Only organization owner can add members")
+    
     check_duplicate = Membership.objects(organization=data["organizationId"], user=data["email"])
-    print(check_duplicate)
+
     if check_duplicate:
       raise Conflict("This membership relation already exist")
     
