@@ -81,3 +81,23 @@ def add_member():
     return jsonify({
       "message": str(e)
     })
+  
+@organization_bp.route("/", methods=["GET"], endpoint="Get Organizations")
+@authenticateUser
+def get_orgs():
+  payload = g.payload
+  owned_orgs = Organization.objects(owner=payload.get("email"))
+  owned_orgs_ids = []
+  for org in owned_orgs:
+    owned_orgs_ids.append(org.id)
+  memberships = Membership.objects(user=payload.get("email"))
+  # filter owned_orgs oid != membership org oid
+  filtered_membership = []
+  for membership in memberships:
+    if membership.organization.id not in owned_orgs_ids:
+      filtered_membership.append(membership.organization.id)
+
+  return jsonify({
+    "owned": owned_orgs_ids,
+    "member": filtered_membership
+  })
