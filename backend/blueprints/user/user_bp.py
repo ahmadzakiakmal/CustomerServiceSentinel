@@ -1,7 +1,8 @@
-from flask import Blueprint, request, jsonify, make_response
+from flask import Blueprint, request, jsonify, make_response, g
 from werkzeug.exceptions import BadRequest, Unauthorized, NotFound
 from mongoengine.errors import NotUniqueError, ValidationError
 from app import User
+from middlewares.authentications import authenticateUser
 import bcrypt
 import jwt
 import datetime
@@ -55,7 +56,11 @@ def login():
     }, os.environ.get("JWT_SECRET"), algorithm="HS256")
     if not bcrypt.checkpw(data["password"].encode("utf-8"), user.password.encode("utf-8")):
       raise Unauthorized("Invalid credentials")
-    response = make_response(jsonify({"message" : "login success"}))
+    response = make_response(jsonify({
+      "message" : "login success",
+      # ! FOR DEMO ONLY
+      "token" : jw_token
+      }))
     response.set_cookie("Authentication", jw_token, max_age=6*3600)
     return response, 200
     
@@ -65,7 +70,6 @@ def login():
     return jsonify({"message": str(e)}), 401
   except NotFound as e:
     return jsonify({"message": str(e)}), 401
-
   
 @user_bp.route("/logout", methods=["POST"])
 def logout():
@@ -73,3 +77,17 @@ def logout():
   a_day_ago = datetime.datetime.utcnow() - datetime.timedelta(days=1)
   response.set_cookie("Authentication", "", max_age=0, expires=a_day_ago,)
   return response
+
+@user_bp.route("/", methods=["GET"])
+@authenticateUser
+def get_user_data():
+  payload = g.payload
+  print(payload.get("email"))
+  user = User.objects(email=payload.get("email")).first()
+  print(user.user_name)
+  return jsonify({
+    "data": {
+      "username": user.user_name,
+      "email": payload.get("email")
+    }
+  })
