@@ -101,3 +101,18 @@ def get_orgs():
     "owned": owned_orgs_ids,
     "member": filtered_membership
   })
+
+@organization_bp.route("/member/<id>", methods=["GET"], endpoint="Get Members")
+@authenticateUser
+def get_org_members(id):
+  memberships = Membership.objects(organization=id)
+  organization = Organization.objects(id=id).first()
+  members = []
+  for membership in memberships:
+    if membership.user != organization.owner:
+      members.append(membership.user)
+  return jsonify({
+    "organization" : organization.organization_name,
+    "owner" : organization.owner,
+    "members" : members
+  })
