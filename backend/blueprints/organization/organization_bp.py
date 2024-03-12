@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify, g
-from app import Organization
+from app import Organization, User
 from models import Membership
 from werkzeug.exceptions import BadRequest, NotFound, Conflict, Unauthorized
 from middlewares.authentications import authenticateUser
@@ -110,7 +110,11 @@ def get_org_members(id):
   members = []
   for membership in memberships:
     if membership.user != organization.owner:
-      members.append(membership.user)
+      member = User.objects(email=membership.user).first()
+      members.append({
+        "email": member.email,
+        "username": member.user_name
+      })
   return jsonify({
     "organization" : organization.organization_name,
     "owner" : organization.owner,
