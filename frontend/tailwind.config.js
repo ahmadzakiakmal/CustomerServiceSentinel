@@ -13,6 +13,7 @@ module.exports = {
       "green-edit": "#73B125",
       "red-delete": "#B12525",
       "white-bg": "#FFFFFF",
+      "light-gray": "#EBEBEB"
     },
     extend: {
       backgroundImage: {
