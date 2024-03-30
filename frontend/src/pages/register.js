@@ -85,7 +85,7 @@ export default function LoginPage() {
             onClick={handleSubmit}
             className="w-full mt-4 lg:mt-8 rounded bg-dark-brown px-4 py-2 text-white-bg text-sm md:text-md lg:text-lg text-center font-semibold"
           >
-            Login
+            Register
           </button>
           <a href="" className="text-xs lg:text-sm">
             Do you have an account?{" "}
