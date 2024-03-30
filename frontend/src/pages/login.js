@@ -40,7 +40,7 @@ export default function LoginPage() {
           </div>
           <div className="w-90">
             <input
-              type="text"
+              type="password"
               className="h-[32px]  w-full 
       rounded-md bg-light-gray 
       p-3 text-xs mt-2

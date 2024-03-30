@@ -18,7 +18,7 @@ export default function LoginPage() {
       <div className="flex h-screen justify-center items-center">
         <div className="w-96 p-6 shadow-lg bg-white-bg rounded-md">
           <h1 className="text-center font-bold text-base md:text-lg lg:text-xl">
-            Login Here!
+            Register Here!
           </h1>
           <div className="mt-8 md:text-md text-sm font-bold lg:text-lg text-left text-dark-brown">
             Email
@@ -40,7 +40,7 @@ export default function LoginPage() {
           </div>
           <div className="w-90">
             <input
-              type="text"
+              type="password"
               className="h-[32px]  w-full 
       rounded-md bg-light-gray 
       p-3 text-xs mt-2 lg:mt-4
@@ -58,9 +58,9 @@ export default function LoginPage() {
             Login
           </button>
           <a href="" className="text-xs lg:text-sm">
-            Don't have an account yet?{" "}
+            Do you have an account?{" "}
             <span className="hover:underline hover:font-medium cursor-pointer">
-              Register here!
+              Login here!
             </span>
           </a>
         </div>
