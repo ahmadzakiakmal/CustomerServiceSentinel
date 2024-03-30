@@ -28,7 +28,7 @@ export default function LoginPage() {
               type="text"
               className="h-[32px]  w-full 
       rounded-md bg-light-gray 
-      p-3 text-xs mt-2
+      p-3 text-xs
       text-black
       md:h-[36px] md:text-sm
       lg:h-[40px] lg:text-base"
@@ -43,7 +43,7 @@ export default function LoginPage() {
               type="password"
               className="h-[32px]  w-full 
       rounded-md bg-light-gray 
-      p-3 text-xs mt-2
+      p-3 text-xs
       text-black
       md:h-[36px] md:text-sm
       lg:h-[40px] lg:text-base"
