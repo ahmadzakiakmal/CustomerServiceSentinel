@@ -3,3 +3,4 @@ from .thread import Thread
 from .organization import Organization
 from .user import User
 from ._membership import Membership
+from .assistant_data import AssistantData

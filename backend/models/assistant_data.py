@@ -1,5 +1,6 @@
 from mongoengine import Document, ListField, StringField
 class AssistantData(Document):
-  data = ListField(StringField)
+  instruction = StringField(required=True)
+  organization = StringField(required=True)
 
   meta = {"collection" : "AssistantDatas"}
