@@ -22,10 +22,11 @@ app.config["MONGODB_SETTINGS"] = {
 db = MongoEngine(app)
 
 # Register Blueprints
-from blueprints import user_bp, chatbot_bp, organization_bp
+from blueprints import user_bp, chatbot_bp, organization_bp, data_bp
 app.register_blueprint(user_bp, url_prefix="/user")
 app.register_blueprint(chatbot_bp, url_prefix="/chatbot")
 app.register_blueprint(organization_bp, url_prefix="/organization")
+app.register_blueprint(data_bp, url_prefix="/data")
 
 if __name__ == '__main__':
   app.run(debug=True)
