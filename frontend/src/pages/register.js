@@ -10,7 +10,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="h-screen relative bg-white-bg">
+    <div className="relative bg-white-bg">
         <div className="flex justify-between mx-8 pt-4">
             <a>Back</a>
             <img src="../public/assets/css_logo.svg" alt="logo" width="40px" />
@@ -18,9 +18,24 @@ export default function LoginPage() {
       <div className="flex h-screen justify-center items-center">
         <div className="w-96 p-6 shadow-lg bg-white-bg rounded-md">
           <h1 className="text-center font-bold text-base md:text-lg lg:text-xl">
-            Login Here!
+            Register Here!
           </h1>
           <div className="mt-8 md:text-md text-sm font-bold lg:text-lg text-left text-dark-brown">
+            Username
+          </div>
+          <div className="w-90">
+            <input
+              type="text"
+              className="h-[32px]  w-full 
+      rounded-md bg-light-gray 
+      p-3 text-xs
+      text-black
+      md:h-[36px] md:text-sm
+      lg:h-[40px] lg:text-base"
+              placeholder="username"
+            />
+          </div>
+          <div className="mt-2 lg:mt-4 md:text-md text-sm font-bold lg:text-lg text-left text-dark-brown">
             Email
           </div>
           <div className="w-90">
@@ -28,11 +43,26 @@ export default function LoginPage() {
               type="text"
               className="h-[32px]  w-full 
       rounded-md bg-light-gray 
-      p-3 text-xs mt-2 lg:mt-4
+      p-3 text-xs
       text-black
       md:h-[36px] md:text-sm
       lg:h-[40px] lg:text-base"
               placeholder="email address"
+            />
+          </div>
+          <div className="mt-2 lg:mt-4 md:text-md text-sm font-bold lg:text-lg text-left text-dark-brown">
+            Organization
+          </div>
+          <div className="w-90">
+            <input
+              type="text"
+              className="h-[32px]  w-full 
+      rounded-md bg-light-gray 
+      p-3 text-xs
+      text-black
+      md:h-[36px] md:text-sm
+      lg:h-[40px] lg:text-base"
+              placeholder="organization name"
             />
           </div>
           <div className="md:text-md mt-2 lg:mt-4 text-sm font-bold lg:text-lg text-left text-dark-brown">
@@ -40,10 +70,10 @@ export default function LoginPage() {
           </div>
           <div className="w-90">
             <input
-              type="text"
+              type="password"
               className="h-[32px]  w-full 
       rounded-md bg-light-gray 
-      p-3 text-xs mt-2 lg:mt-4
+      p-3 text-xs
       text-black
       md:h-[36px] md:text-sm
       lg:h-[40px] lg:text-base"
@@ -55,12 +85,12 @@ export default function LoginPage() {
             onClick={handleSubmit}
             className="w-full mt-4 lg:mt-8 rounded bg-dark-brown px-4 py-2 text-white-bg text-sm md:text-md lg:text-lg text-center font-semibold"
           >
-            Login
+            Register
           </button>
           <a href="" className="text-xs lg:text-sm">
-            Don't have an account yet?{" "}
+            Do you have an account?{" "}
             <span className="hover:underline hover:font-medium cursor-pointer">
-              Register here!
+              Login here!
             </span>
           </a>
         </div>
