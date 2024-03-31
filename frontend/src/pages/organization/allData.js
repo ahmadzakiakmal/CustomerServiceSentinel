@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 export default function LoginPage({}) {
-  const categories = ["Organization A", "Organization B", "Organization C"];
+  const categories = ["Organization A", "Organization B", "Organization C", "Organization D"];
   const tableData = [
     {
       id: 1,
@@ -180,13 +180,13 @@ export default function LoginPage({}) {
                 <th className="py-2 pl-3">Delete</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="w-full border">
               {filteredData.map((data, index) => (
                 <tr key={index} className="font-bold text-black">
-                  <td className="py-4 pl-3">{index + 1}</td>
-                  <td className="py-2 pl-3">{data.name}</td>
-                  <td className="py-2 pl-3">{data.position}</td>
-                  <td className="py-2 pl-3">{data.organization}</td>
+                  <td className="py-4 pl-3 text-center">{index + 1}</td>
+                  <td className="py-2 pl-3 text-left">{data.name}</td>
+                  <td className="py-2 pl-3 text-left">{data.position}</td>
+                  <td className="py-2 pl-3 text-left">{data.organization}</td>
                   <td className="py-2 pl-3 text-center">
                     <div className="flex justify-center items-center h-full">
                       <button
