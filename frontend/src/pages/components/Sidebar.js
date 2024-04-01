@@ -64,7 +64,7 @@ const Sidebar = () => {
       <div
         className={`${getNavItemClasses(
           {}
-        )} px-3 py-4 sm:mt-10 md:mt-20 lg:mt-72`}
+        )} px-3 py-4 justify-center sm:mt-10 md:mt-20 lg:mt-72`}
       >
         <span className={classNames("text-md font-medium text-text-white")}>
           Logout
