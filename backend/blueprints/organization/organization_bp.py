@@ -36,32 +36,29 @@ def create_organization():
       "message": str(e)
     }), 400
   
-@organization_bp.route("/member", methods=["POST"], endpoint="Add Member")
+@organization_bp.route("/member/<id>", methods=["POST"], endpoint="Add Member")
 @authenticateUser
-def add_member():
+def add_member(id):
   try:
     data = request.get_json()
     
     payload = g.payload
-
-    if not data.get("organizationId") or not data.get("email"):
-      raise BadRequest("Missing required parameters")
     
-    org = Organization.objects(id=data["organizationId"]).first()
+    org = Organization.objects(id=id).first()
     if not org:
       raise NotFound("Organization Not Found")
     
     if payload.get("email") != org.owner:
       raise Unauthorized("Only organization owner can add members")
     
-    check_duplicate = Membership.objects(organization=data["organizationId"], user=data["email"])
+    check_duplicate = Membership.objects(organization=id, user=data["email"])
 
     if check_duplicate:
       raise Conflict("This membership relation already exist")
     
     membership = Membership(
       user = data["email"],
-      organization = str(org.id)
+      organization = str(id)
     )
     membership.save()
 
