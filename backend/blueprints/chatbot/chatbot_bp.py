@@ -74,7 +74,6 @@ def chat_customized(id):
       messages=messages,
       max_tokens=500
     )
-    print(completion.choices[0].message.content)
     return jsonify(
       {
         "completion" : completion.choices[0].message.content,
