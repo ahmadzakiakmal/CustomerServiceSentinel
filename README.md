@@ -5,7 +5,7 @@ Repository for Senior Project 2024
 
 A customized chat bot customer service for your company.
 
-GitHub Page : [Customer Service Sentinel](https://ahmadzaki2975.github.io/CustomerServiceSentinel/)
+GitHub Page : [Customer Service Sentinel](https://ahmadzakiakmal.github.io/CustomerServiceSentinel/)
 
 
 ## Kelompok 17
