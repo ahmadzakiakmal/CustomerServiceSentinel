@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify, g
 from models import Membership, AssistantData, Organization, User
 from werkzeug.exceptions import BadRequest, NotFound, Conflict, Unauthorized
+from mongoengine.errors import DoesNotExist
 from middlewares.authentications import authenticateUser
 from jwt import decode
 import os
@@ -36,8 +37,10 @@ def create_organization():
 @authenticateUser
 def add_member(id):
   data = request.get_json()
-  
   payload = g.payload
+
+  if not data.get("email"):
+    raise BadRequest("Missing required parameter, email")
   
   org = Organization.objects(id=id).first()
   if not org:
@@ -58,10 +61,40 @@ def add_member(id):
   membership.save()
 
   return jsonify({
-    "organizationId": org.id,
-    "email": str(org.id)
-  })
+    "message": f"Successfully added {data["email"]} to {org.organization_name}"
+  }), 200
   
+@organization_bp.route("/member/<id>", methods=["DELETE"], endpoint="Remove Member")
+@authenticateUser
+def remove_member(id):
+  data = request.get_json()
+  payload = g.payload
+
+  if not data.get("email"):
+    raise BadRequest("Missing required parameter, email")
+  
+  org = Organization.objects(id=id).first()
+  if not org:
+    raise NotFound("Organization Not Found")
+  
+  if payload.get("email") != org.owner:
+    raise Unauthorized("Only organization owner can remove members")
+  
+  membership = Membership.objects(
+    user = data["email"],
+    organization = str(id)
+  ).first()
+
+  if not membership:
+    raise DoesNotExist("This user is not a member in the organization")
+  
+  membership.delete()
+  membership.save()
+
+  return jsonify({
+    "message": f"Successfully deleted {data["email"]} from {org.organization_name}"
+  }), 200
+
 @organization_bp.route("/", methods=["GET"], endpoint="Get Organizations")
 @authenticateUser
 def get_orgs():

@@ -46,6 +46,7 @@ def handle_exception(e):
 
 @app.errorhandler(Exception)
 def error_handler(e):
+  print(e)
   if isinstance(e, NotFound):
     return jsonify({"message": str(e)}), 404
   elif isinstance(e, BadRequest):
