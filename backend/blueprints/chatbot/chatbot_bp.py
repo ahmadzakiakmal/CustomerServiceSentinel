@@ -51,17 +51,22 @@ def chat_customized(id):
       raise BadRequest("Message is empty")
     assistant_data = AssistantData.objects(organization=id).first()
     messages = []
-    messages.append(
+    if assistant_data.instruction == "" or not assistant_data.instruction:
+      messages.append(
       {
       "role": "system", "content": 
-      """
-      Refrain from answering questions beyond your job as a customer service.
-      """
+      (
+        "You are named 'CustomerServiceSentinel'. "
+        "Made to as a customer service assistant. "
+        "The user can customize you to fit their organization by giving you data. Tell them to customize your instruction. "
+        "Refrain from answering questions beyond your job as a customer service. "
+      )
       },
     )
-    messages.append(
-      {"role": "system", "content": assistant_data.instruction}
-    )
+    else:
+      messages.append(
+        {"role": "system", "content": assistant_data.instruction}
+      )
     messages.append({"role": "user", "content": data.get("message")})
     completion = client.chat.completions.create(
       model="gpt-3.5-turbo",
