@@ -6,15 +6,12 @@ assistant_data_bp = Blueprint("data_blueprint", __name__)
 
 @assistant_data_bp.route("/instruction/<id>", methods=["PATCH"])
 def update_instruction(id):
-  try:
-    body = request.get_json()
-    if not body.get("instruction"):
-      raise BadRequest("Missing required parameter: instruction")
-    assistant_data = AssistantData.objects(organization=id).first()
-    if not assistant_data:
-      raise NotFound("Organization does not exist")
-    assistant_data.instruction = body.get("instruction")
-    assistant_data.save()
-    return jsonify({"message": "Updated instruction successfully", "assistant-data": assistant_data}), 200
-  except BadRequest as e:
-    return str(e), 400
+  body = request.get_json()
+  if not body.get("instruction"):
+    raise BadRequest("Missing required parameter: instruction")
+  assistant_data = AssistantData.objects(organization=id).first()
+  if not assistant_data:
+    raise NotFound("Organization does not exist")
+  assistant_data.instruction = body.get("instruction")
+  assistant_data.save()
+  return jsonify({"message": "Updated instruction successfully", "assistant-data": assistant_data}), 200

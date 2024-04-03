@@ -4,6 +4,13 @@ import os
 from flask_mongoengine import MongoEngine
 from mongoengine.base.common import get_document
 import models
+from werkzeug.exceptions import NotFound, BadRequest, Conflict, UnsupportedMediaType, Unauthorized
+from mongoengine.errors import (
+    NotRegistered, InvalidDocumentError, LookUpError, DoesNotExist,
+    MultipleObjectsReturned, InvalidQueryError, OperationError, NotUniqueError,
+    BulkWriteError, FieldDoesNotExist, ValidationError, SaveConditionError,
+    DeprecatedError
+)
 
 from dotenv import load_dotenv
 load_dotenv()
@@ -37,10 +44,23 @@ def handle_exception(e):
         "description": str(e),
     }), 500
 
-@app.errorhandler(404)
-def not_found(e):
-  print(e)
-  return "404: Route not found", 404
+@app.errorhandler(Exception)
+def error_handler(e):
+  if isinstance(e, NotFound):
+    return jsonify({"message": str(e)}), 404
+  elif isinstance(e, BadRequest):
+    return jsonify({"message": str(e)}), 400
+  elif isinstance(e, Conflict):
+    return jsonify({"message": str(e)}), 409
+  elif isinstance(e, UnsupportedMediaType):
+    return jsonify({"message": str(e)}), 415
+  elif isinstance(e, Unauthorized):
+    return jsonify({"message": str(e)}), 401
+  elif isinstance(e, DoesNotExist):
+    return jsonify({"message": "Object does not exist: " + str(e)}), 404
+  else:
+    return jsonify({"message": "Unexpected error: " + str(e)}), 500
+
 
 @app.route("/")
 def hello_world():
