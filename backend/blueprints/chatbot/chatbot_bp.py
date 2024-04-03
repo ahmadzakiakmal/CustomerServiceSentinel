@@ -49,25 +49,19 @@ def chat_customized(id):
     data = request.get_json()
     if not data.get("message"):
       raise BadRequest("Message is empty")
-    assistant_datas = AssistantData.objects(organization=id)
+    assistant_data = AssistantData.objects(organization=id).first()
     messages = []
-    if not assistant_datas:
-      messages.append(
-        {
-        "role": "system", "content": 
-        """
-        You are CustomerServiceSentinel. 
-        Made to as a customer service assistant. 
-        The user can customize you to fit their organization by giving you data. 
-        The user is the part of the organization.
-        """
-        },
-      )
-    else:
-      for assistant_data in assistant_datas:
-        messages.append(
-          {"role": "system", "content": assistant_data.instruction}
-        )
+    messages.append(
+      {
+      "role": "system", "content": 
+      """
+      Refrain from answering questions beyond your job as a customer service.
+      """
+      },
+    )
+    messages.append(
+      {"role": "system", "content": assistant_data.instruction}
+    )
     messages.append({"role": "user", "content": data.get("message")})
     completion = client.chat.completions.create(
       model="gpt-3.5-turbo",
@@ -77,7 +71,7 @@ def chat_customized(id):
     return jsonify(
       {
         "completion" : completion.choices[0].message.content,
-        "instructions": assistant_datas
+        "instructions": assistant_data
       }
     ), 200
   except BadRequest as e:

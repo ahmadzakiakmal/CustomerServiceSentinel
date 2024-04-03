@@ -5,9 +5,6 @@ from flask_mongoengine import MongoEngine
 from mongoengine.base.common import get_document
 import models
 
-User = get_document("User")
-Organization = get_document("Organization")
-
 from dotenv import load_dotenv
 load_dotenv()
 

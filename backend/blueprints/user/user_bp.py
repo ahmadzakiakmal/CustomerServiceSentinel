@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify, make_response, g
 from werkzeug.exceptions import BadRequest, Unauthorized, NotFound
 from mongoengine.errors import NotUniqueError, ValidationError
-from app import User
+from models import User
 from middlewares.authentications import authenticateUser
 import bcrypt
 import jwt

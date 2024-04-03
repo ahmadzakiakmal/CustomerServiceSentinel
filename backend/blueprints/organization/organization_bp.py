@@ -1,6 +1,5 @@
 from flask import Blueprint, request, jsonify, g
-from app import Organization, User
-from models import Membership
+from models import Membership, AssistantData, Organization, User
 from werkzeug.exceptions import BadRequest, NotFound, Conflict, Unauthorized
 from middlewares.authentications import authenticateUser
 from jwt import decode
@@ -23,6 +22,8 @@ def create_organization():
       owner=payload.get("email")
     )
     org.save()
+    org_assistant_data = AssistantData(organization=str(org.id))
+    org_assistant_data.save()
     return jsonify({
       "message": "Organization created successfully",
       "data": {
@@ -35,7 +36,7 @@ def create_organization():
     return jsonify({
       "message": str(e)
     }), 400
-  
+
 @organization_bp.route("/member/<id>", methods=["POST"], endpoint="Add Member")
 @authenticateUser
 def add_member(id):
