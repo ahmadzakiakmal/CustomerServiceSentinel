@@ -2,7 +2,8 @@ from mongoengine import Document, ListField, StringField
 class AssistantData(Document):
   instruction = StringField(
         required=True, 
-        default=""
+        default="",
+        max_length=400
   )
   organization = StringField(required=True)
   files = ListField(StringField(default=[]))
