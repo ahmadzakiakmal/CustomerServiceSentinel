@@ -21,6 +21,9 @@ module.exports = {
         "white-bg": "#FFFFFF",
         "light-gray": "#EBEBEB"
       },
+      fontFamily: {
+        "rubik": "Rubik"
+      }
     },
   },
   plugins: [],
