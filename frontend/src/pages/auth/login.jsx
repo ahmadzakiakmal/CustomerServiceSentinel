@@ -2,10 +2,8 @@ import { useState } from "react";
 import Image from "next/image";
 import Logo from "@/../public/assets/css_logo.svg";
 import Link from "next/link";
-import { useRouter } from "next/router";
 
 export default function LoginPage() {
-  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
