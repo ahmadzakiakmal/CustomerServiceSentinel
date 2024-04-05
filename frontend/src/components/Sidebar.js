@@ -23,7 +23,9 @@ const Sidebar = () => {
       </div>
 
       <div className="w-full px-[50px]">
-        <button className="block text-[18px] font-medium rounded-[5px] px-3 py-2 hover:bg-light-yellow/20 active:bg-light-yellow/50 transition w-full">Log Out</button>
+        <Link href="/">
+          <button className="block text-[18px] font-medium rounded-[5px] px-3 py-2 hover:bg-light-yellow/20 active:bg-light-yellow/50 transition w-full">Log Out</button>
+        </Link>
       </div>
     </aside>
   );
@@ -33,7 +35,7 @@ function SidebarLink({ text, link, active = false }) {
   return (
     <Link
       className={`block text-[18px] font-medium rounded-[5px] px-3 py-2 hover:bg-light-yellow/20 transition 
-      ${active ? "bg-light-yellow/40" : ""}`
+      ${active ? "!bg-light-yellow/40" : ""}`
       }
       href={link}
     >
