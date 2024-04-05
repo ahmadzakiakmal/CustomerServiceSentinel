@@ -8,7 +8,7 @@ const Landing = () => {
       <nav className="flex flex-row justify-end w-full fixed top-0 px-[5%] py-[50px] lg:px-[128px] lg:py-[64px] gap-8 text-[18px]">
         <NavbarLink href="/about-us" text="About Us" />
         <NavbarLink href="/auth/login" text="Login" />
-        <NavbarLink href="/auth/sign-up" text="Sign Up" />
+        <NavbarLink href="/auth/register" text="Sign Up" />
       </nav>
 
       <div className="flex flex-col-reverse lg:flex-row justify-evenly items-center gap-[20px] //md:gap-[40px] //lg:gap-[128px] w-full max-w-[90%] 2xl:max-w-[1900px]">
@@ -21,7 +21,7 @@ const Landing = () => {
           </h2>
         </div>
         <div className="flex justify-center items-center relative">
-          <Image src={Logo} alt="Logo" className="w-[240px] lg:w-[272.25px] !flex-shrink-0 z-[1]" />
+          <Image priority src={Logo} alt="Logo" className="w-[240px] lg:w-[272.25px] !flex-shrink-0 z-[1]" />
           <div className="w-full h-[95%] bg-dark-brown/60 absolute top-0 blur-[30px] rounded-full" />
         </div>
       </div>
