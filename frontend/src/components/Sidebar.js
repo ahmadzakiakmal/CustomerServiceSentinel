@@ -8,7 +8,7 @@ const Sidebar = () => {
   const router = useRouter();
 
   return (
-    <side className="bg-dark-brown w-[275px] h-screen flex flex-col items-center justify-between py-10 text-white">
+    <aside className="bg-dark-brown w-[275px] h-screen flex flex-col items-center justify-between py-10 text-white">
       <div className="w-full">
         <div className="text-white flex flex-col justify-center items-center mb-[75px]">
           <div className="bg-white size-[60px] rounded-full mb-5" />
@@ -25,7 +25,7 @@ const Sidebar = () => {
       <div className="w-full px-[50px]">
         <button className="block text-[18px] font-medium rounded-[5px] px-3 py-2 hover:bg-light-yellow/20 active:bg-light-yellow/50 transition w-full">Log Out</button>
       </div>
-    </side>
+    </aside>
   );
 };
 
