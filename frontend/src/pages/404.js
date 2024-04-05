@@ -9,7 +9,7 @@ const NotFound = () => {
         Not Found
       </h2>
       <p className="text-center text-base md:text-lg font-normal text-light-brown mt-6">
-        Oops, the page you are looking for doesn't exist or another error
+        Oops, the page you are looking for doesn&apos;t exist or another error
         occurred.
       </p>
     </div>
