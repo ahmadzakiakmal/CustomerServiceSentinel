@@ -16,14 +16,15 @@ export default function Dropdown({
       value: "Organization C",
     },
   ],
+  state, setState
 }) {
-  const [value, setValue] = useState(null);
-  const [display, setDisplay] = useState(null);
+  const [value, setValue] = useState(options[0].value);
+  const [label, setLabel] = useState(options[0].label);
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
-    setIsOpen(false);
-  }, [value]);
+    setState(value);
+  }, [value, setState]);
 
   if (!Array.isArray(options)) throw Error("options params must be an array");
   return (
@@ -32,7 +33,7 @@ export default function Dropdown({
         className="px-[12px] py-3 outline-1 outline w-fit rounded-[8px] cursor-pointer flex items-center justify-between min-w-[200px] select-none hover:bg-slate-400/20"
         onClick={() => setIsOpen(!isOpen)}
       >
-        <h1>{value ?? "Select..."}</h1>
+        <h1>{label ?? "Select..."}</h1>
         <RxCaretDown className={`text-[24px] transition ${isOpen ? "-rotate-180" : ""}`} />
       </div>
 
@@ -41,7 +42,7 @@ export default function Dropdown({
           isOpen ? "grid-rows-[1fr] outline-1" : "grid-rows-[0fr] outline-0"
         }`}
       >
-        <div className="overflow-hidden w-full">
+        <div className="overflow-hidden w-full bg-white">
           {options.map((option) => {
             return (
               <DropdownItem
@@ -49,7 +50,8 @@ export default function Dropdown({
                 label={option.label}
                 value={option.value}
                 setValue={setValue}
-                setDisplay={setDisplay}
+                setLabel={setLabel}
+                setIsOpen={setIsOpen}
               />
             );
           })}
@@ -59,13 +61,14 @@ export default function Dropdown({
   );
 }
 
-function DropdownItem({ label, value, setValue, setDisplay }) {
+function DropdownItem({ label, value, setValue, setLabel, setIsOpen }) {
   return (
     <div
       className="hover:bg-slate-400/20 p-2 cursor-pointer"
       onClick={() => {
         setValue(value);
-        setDisplay(label);
+        setLabel(label);
+        setIsOpen(false);
       }}
     >
       {label}
