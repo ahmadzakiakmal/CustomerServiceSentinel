@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { RxCaretDown } from "react-icons/rx";
 
 export default function Dropdown({
@@ -18,7 +18,12 @@ export default function Dropdown({
   ],
 }) {
   const [value, setValue] = useState(null);
+  const [display, setDisplay] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(() => {
+    setIsOpen(false);
+  }, [value]);
 
   if (!Array.isArray(options)) throw Error("options params must be an array");
   return (
@@ -44,6 +49,7 @@ export default function Dropdown({
                 label={option.label}
                 value={option.value}
                 setValue={setValue}
+                setDisplay={setDisplay}
               />
             );
           })}
@@ -53,11 +59,14 @@ export default function Dropdown({
   );
 }
 
-function DropdownItem({ label, value, setValue }) {
+function DropdownItem({ label, value, setValue, setDisplay }) {
   return (
     <div
       className="hover:bg-slate-400/20 p-2 cursor-pointer"
-      onClick={() => setValue(value)}
+      onClick={() => {
+        setValue(value);
+        setDisplay(label);
+      }}
     >
       {label}
     </div>
