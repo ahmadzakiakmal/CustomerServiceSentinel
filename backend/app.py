@@ -11,6 +11,7 @@ from mongoengine.errors import (
     BulkWriteError, FieldDoesNotExist, ValidationError, SaveConditionError,
     DeprecatedError
 )
+from flask_cors import CORS
 
 from dotenv import load_dotenv
 load_dotenv()
@@ -19,6 +20,7 @@ if not os.environ.get("OPENAI_API_KEY") or not os.environ.get("MONGODB_URI") or 
   raise ValueError("Required environment variables are not found.")  
 
 app = Flask(__name__)
+CORS(app, supports_credentials=True, origins="*")
 app.config["MONGODB_SETTINGS"] = {
   "db": os.environ.get("MONGODB_DB"),
   "host": os.environ.get("MONGODB_URI")
