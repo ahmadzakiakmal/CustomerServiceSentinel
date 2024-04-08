@@ -2,15 +2,50 @@ import { useState } from "react";
 import Image from "next/image";
 import Logo from "@/../public/assets/css_logo.svg";
 import Link from "next/link";
+import axios from "axios";
+import { useRouter } from "next/router";
+import { toast } from "react-toastify";
+import cutMessage from "@/utilities/cutMessage";
 
 export default function LoginPage() {
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    // TODO: Handle register logic here
-    alert(email + "\n" + password);
+    if(email.length < 1 || !email.includes("@") || !email.includes(".")) return toast.error("Invalid email");
+    const toastify = toast.loading("Loading", {className: "custom-loading"});
+    setIsLoading(true);
+    axios
+      .post(process.env.NEXT_PUBLIC_API_URL + "/user/login", {
+        email,
+        password,
+      },
+      {
+        withCredentials: true
+      })
+      .then((res) => {
+        router.replace("/dashboard");
+        toast.update(toastify, {
+          render: "Login success",
+          type: "success",
+          isLoading: false,
+          autoClose: 5000,
+          className: "custom-success"
+        });
+      })
+      .catch((err) => {
+        toast.update(toastify, {
+          render: cutMessage(err?.response?.data?.message) ?? "Can't connect to the server",
+          type: "error",
+          isLoading: false,
+          autoClose: 5000,
+          className: "custom-error"
+        });
+      })
+      .finally(() => setIsLoading(false));
   };
 
   return (
@@ -35,6 +70,7 @@ export default function LoginPage() {
             name="email"
             state={email}
             onChange={(e) => setEmail(e.target.value)}
+            placeholder="johndoe@mail.com"
           />
           <FormInput
             label="Password"
@@ -42,11 +78,13 @@ export default function LoginPage() {
             name="password"
             state={password}
             onChange={(e) => setPassword(e.target.value)}
+            placeholder="Enter your password here"
           />
           <button
             type="button"
             onClick={handleSubmit}
-            className="w-full mt-4 rounded bg-dark-brown hover:bg-dark-brown/90 active:bg-dark-brown/80 transition px-4 py-2 text-white-bg text-lg text-center font-semibold"
+            className="w-full mt-4 rounded bg-dark-brown hover:bg-dark-brown/90 active:bg-dark-brown/80 transition px-4 py-2 text-white-bg text-lg text-center font-semibold disabled:opacity-60 disabled:cursor-not-allowed"
+            disabled={isLoading}
           >
             Login
           </button>

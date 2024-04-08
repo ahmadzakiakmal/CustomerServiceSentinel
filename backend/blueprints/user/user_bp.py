@@ -51,6 +51,7 @@ def login():
     raise Unauthorized("Invalid credentials")
   response = make_response(jsonify({
     "message" : "login success",
+    "data" : {"username" : user.user_name}
     }))
   response.set_cookie("Authentication", jw_token, max_age=6*3600)
   return response, 200
