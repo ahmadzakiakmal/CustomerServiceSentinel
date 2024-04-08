@@ -102,13 +102,20 @@ def get_orgs():
   owned_orgs = Organization.objects(owner=payload.get("email"))
   owned_orgs_ids = []
   for org in owned_orgs:
-    owned_orgs_ids.append(org.id)
+    owned_orgs_ids.append({
+      "name": org.organization_name,
+      "id": org.id
+    })
   memberships = Membership.objects(user=payload.get("email"))
   # filter owned_orgs oid != membership org oid
   filtered_membership = []
   for membership in memberships:
     if membership.organization.id not in owned_orgs_ids:
-      filtered_membership.append(membership.organization.id)
+      # filtered_membership.append(membership.organization.id)
+      filtered_membership.append({
+      "name": Organization.objects(id=membership.organization.id).first().get("organization_name"),
+      "id": membership.organization.id
+    })
 
   return jsonify({
     "owned": owned_orgs_ids,
