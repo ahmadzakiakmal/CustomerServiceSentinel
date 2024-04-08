@@ -16,7 +16,7 @@ export default function Dropdown({
       value: "Organization C",
     },
   ],
-  state, setState
+  state, setState, className
 }) {
   const [value, setValue] = useState(options[0].value);
   const [label, setLabel] = useState(options[0].label);
@@ -28,9 +28,9 @@ export default function Dropdown({
 
   if (!Array.isArray(options)) throw Error("options params must be an array");
   return (
-    <div className="w-fit relative">
+    <div className={`w-fit relative ${className}`}>
       <div
-        className="px-[12px] py-3 outline-1 outline w-fit rounded-[8px] cursor-pointer flex items-center justify-between min-w-[200px] select-none hover:bg-slate-400/20"
+        className="px-[12px] py-3 outline-1 outline w-full rounded-[8px] cursor-pointer flex items-center justify-between min-w-[200px] select-none hover:bg-slate-400/20"
         onClick={() => setIsOpen(!isOpen)}
       >
         <h1>{label ?? "Select..."}</h1>
