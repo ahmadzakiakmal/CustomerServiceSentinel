@@ -5,7 +5,7 @@ function Layout({ children }) {
   return (
     <div className="h-screen flex flex-row justify-start text-dark-brown">
       <Sidebar />
-      <div className="bg-white flex-1 p-10 text-dark-brown">{children}</div>
+      <div className="bg-white flex-1 text-dark-brown">{children}</div>
     </div>
   );
 }

@@ -21,7 +21,7 @@ export default function Dashboard() {
   return(
     <main>
       <Layout>
-        <main className="text-dark-brown">
+        <main className="text-dark-brown p-10">
           <h1 className="text-[24px] font-medium mb-[50px]">Organization</h1>
           <Dropdown state={dropdownValue} setState={setDropdownValue} />
           <div className="mt-10">
