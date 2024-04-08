@@ -6,6 +6,7 @@ import axios from "axios";
 import { useRouter } from "next/router";
 import { toast } from "react-toastify";
 import cutMessage from "@/utilities/cutMessage";
+import Button from "@/components/Button";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -15,17 +16,20 @@ export default function LoginPage() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    if(email.length < 1 || !email.includes("@") || !email.includes(".")) return toast.error("Invalid email");
-    const toastify = toast.loading("Loading", {className: "custom-loading"});
+    if (email.length < 1 || !email.includes("@") || !email.includes(".")) return toast.error("Invalid email");
+    const toastify = toast.loading("Loading", { className: "custom-loading" });
     setIsLoading(true);
     axios
-      .post(process.env.NEXT_PUBLIC_API_URL + "/user/login", {
-        email,
-        password,
-      },
-      {
-        withCredentials: true
-      })
+      .post(
+        process.env.NEXT_PUBLIC_API_URL + "/user/login",
+        {
+          email,
+          password,
+        },
+        {
+          withCredentials: true,
+        }
+      )
       .then((res) => {
         router.replace("/dashboard");
         toast.update(toastify, {
@@ -33,7 +37,7 @@ export default function LoginPage() {
           type: "success",
           isLoading: false,
           autoClose: 5000,
-          className: "custom-success"
+          className: "custom-success",
         });
       })
       .catch((err) => {
@@ -42,7 +46,7 @@ export default function LoginPage() {
           type: "error",
           isLoading: false,
           autoClose: 5000,
-          className: "custom-error"
+          className: "custom-error",
         });
       })
       .finally(() => setIsLoading(false));
@@ -80,14 +84,7 @@ export default function LoginPage() {
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Enter your password here"
           />
-          <button
-            type="button"
-            onClick={handleSubmit}
-            className="w-full mt-4 rounded bg-dark-brown hover:bg-dark-brown/90 active:bg-dark-brown/80 transition px-4 py-2 text-white-bg text-lg text-center font-semibold disabled:opacity-60 disabled:cursor-not-allowed"
-            disabled={isLoading}
-          >
-            Login
-          </button>
+          <Button onClick={handleSubmit} className="w-full" disabled={isLoading}>Login</Button>
           <Link
             href="/auth/register"
             className="text-sm"

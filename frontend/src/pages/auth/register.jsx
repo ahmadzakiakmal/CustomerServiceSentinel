@@ -2,6 +2,7 @@ import { useState } from "react";
 import Image from "next/image";
 import Logo from "@/../public/assets/css_logo.svg";
 import Link from "next/link";
+import Button from "@/components/Button";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -59,13 +60,7 @@ export default function LoginPage() {
             state={username}
             onChange={(e) => setUsername(e.target.value)}
           />
-          <button
-            type="button"
-            onClick={handleSubmit}
-            className="w-full mt-4 rounded bg-dark-brown hover:bg-dark-brown/90 active:bg-dark-brown/80 transition px-4 py-2 text-white-bg text-lg text-center font-semibold"
-          >
-            Login
-          </button>
+          <Button onClick={() => alert("Not implemented")} className="w-full" disabled={true}>Register</Button>
           <Link
             href="/auth/login"
             className="text-sm"
