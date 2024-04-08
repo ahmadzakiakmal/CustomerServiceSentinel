@@ -18,7 +18,7 @@ def create_user():
     raise BadRequest("Missing required parameters")
   
   check_duplicate = User.objects(email = data["email"])
-  if check_duplicate != None:
+  if check_duplicate == []:
     raise Conflict("Email already registered")
 
   user = User(
