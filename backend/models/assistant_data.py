@@ -7,5 +7,6 @@ class AssistantData(Document):
   )
   organization = StringField(required=True)
   files = ListField(StringField(default=[]))
+  name = StringField(required=True, default="Customer Service Sentinel")
 
   meta = {"collection" : "AssistantDatas"}

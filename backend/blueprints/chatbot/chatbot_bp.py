@@ -20,12 +20,14 @@ def chat_customized(id):
     raise BadRequest("Message is empty")
   assistant_data = AssistantData.objects(organization=id).first()
   messages = []
+  messages.append(
+      {"role": "system", "content": f"You are named '{assistant_data.name}'"},
+    )
   if assistant_data.instruction == "" or not assistant_data.instruction:
     messages.append(
     {
     "role": "system", "content": 
     (
-      "You are named 'CustomerServiceSentinel'. "
       "Made to as a customer service assistant. "
       "The user can customize you to fit their organization by giving you data. Tell them to customize your instruction. "
       "Refrain from answering questions beyond your job as a customer service. "
