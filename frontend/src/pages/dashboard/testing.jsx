@@ -37,14 +37,12 @@ export default function Dashboard() {
   }, []);
 
   useEffect(() => {
-    console.log(activeOrganization);
     if (!activeOrganization) return;
     axios
       .get(process.env.NEXT_PUBLIC_API_URL + "/assistant-data/" + activeOrganization, {
         withCredentials: true,
       })
       .then((res) => {
-        console.log(res.data);
         setName(res.data.name);
         if (res.data.instruction !== "") {
           setInstructions(res.data.instruction);
@@ -80,7 +78,6 @@ export default function Dashboard() {
               Instructions
               <textarea
                 className="w-full text-justify min-h-[150px] rounded-md outline outline-1 outline-light-brown px-3 py-2 lg:py-2.5 font-normal text-black"
-                value={instruction}
                 onChange={(e) => setInstructions(e.target.value)}
               >
                 {instruction}
