@@ -1,5 +1,6 @@
 import Dropdown from "@/components/Dropdown";
 import Layout from "@/components/Layout";
+import cutMessage from "@/utilities/cutMessage";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
@@ -32,7 +33,7 @@ export default function Dashboard() {
         setActiveOrganization(mapOwnedOrgs[0]._id);
       })
       .catch((err) => {
-        toast.error(err?.response?.data?.message ?? "Can't connect to server", {className: "custom-error"});
+        toast.error(cutMessage(err?.response?.data?.message) ?? "Can't connect to server", { className: "custom-error" });
       });
   }, []);
 
@@ -47,10 +48,14 @@ export default function Dashboard() {
         if (res.data.instruction !== "") {
           setInstructions(res.data.instruction);
         } else {
-          setInstructions("You are made as a customer service assistant. The user can customize you to fit their organization by giving you data. Tell them to customize your instruction. Refrain from answering questions beyond your job as a customer service.");
+          setInstructions(
+            "You are made as a customer service assistant. The user can customize you to fit their organization by giving you data. Tell them to customize your instruction. Refrain from answering questions beyond your job as a customer service."
+          );
         }
       })
-      .catch((err) => toast.error(err?.response?.data?.message ?? "Can't connect to server", {className: "custom-error"}));
+      .catch((err) => {
+        toast.error(cutMessage(err?.response?.data?.message) ?? "Can't connect to server", { className: "custom-error" });
+      });
   }, [activeOrganization]);
 
   return (
@@ -79,9 +84,8 @@ export default function Dashboard() {
               <textarea
                 className="w-full text-justify min-h-[150px] rounded-md outline outline-1 outline-light-brown px-3 py-2 lg:py-2.5 font-normal text-black"
                 onChange={(e) => setInstructions(e.target.value)}
-              >
-                {instruction}
-              </textarea>
+                value={instruction}
+              />
             </label>
             <label className="flex flex-col gap-2 font-medium mt-4">
               Additional Data
