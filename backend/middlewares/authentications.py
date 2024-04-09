@@ -20,10 +20,8 @@ def authenticateUser(f):
       g.payload = decode(token, os.environ.get("JWT_SECRET"), algorithms=["HS256"])
       
       return f(*args, **kwargs)
-    except Unauthorized as e:
-      return jsonify({"error" : str(e)}), 401
     except ExpiredSignatureError as e:
-      return jsonify({"error" : str(e), "message" : "Token expired"}), 401
+      return jsonify({"message" : str(e), "message" : "Token expired"}), 401
     except InvalidTokenError as e:
-      return jsonify({"error" : str(e), "message" : "Invalid token"}), 401
+      return jsonify({"message" : str(e), "message" : "Invalid token"}), 401
   return wrapper
