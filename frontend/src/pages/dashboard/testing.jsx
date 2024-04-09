@@ -1,3 +1,4 @@
+import ChatBubble from "@/components/ChatBubble";
 import Dropdown from "@/components/Dropdown";
 import Layout from "@/components/Layout";
 import cutMessage from "@/utilities/cutMessage";
@@ -62,7 +63,7 @@ export default function Dashboard() {
     <main>
       <Layout>
         <main className="text-dark-brown flex min-h-screen">
-          <section className="min-w-[340px] border-r border-[#CACACA] p-10">
+          <section className="min-w-[340px] border-r border-[#CACACA] p-10 flex-shrink-0">
             <h1 className="text-[24px] font-medium mb-[50px]">Testing</h1>
             <Dropdown
               className="w-full"
@@ -99,8 +100,16 @@ export default function Dashboard() {
             </label>
           </section>
 
-          <section>
-            <h1 className="text-[24px] font-medium p-10">Chat</h1>
+          <section className="w-full flex flex-col">
+            <h1 className="text-[24px] font-medium p-10 ">Chat</h1>
+
+            <div className="flex flex-col h-full">
+              <div className="px-10 flex-1 bg-blue-500/20 flex-grow overflow-y-auto">
+                <ChatBubble isSender={true} />
+                <ChatBubble />
+              </div>
+              <form className="h-[100px] bg-red-500/20"></form>
+            </div>
           </section>
         </main>
       </Layout>
