@@ -34,7 +34,6 @@ export default function Dashboard() {
           };
         });
         setOrganizations([...mapOwnedOrgs, ...mapMemberOrgs]);
-        setActiveOrganization(mapOwnedOrgs[0]._id);
       })
       .catch((err) => {
         toast.error(cutMessage(err?.response?.data?.message) ?? "Can't connect to server", {
@@ -69,12 +68,38 @@ export default function Dashboard() {
   function handleChat(e) {
     e.preventDefault();
     const newMessage = {
-      text: message,
+      content: message,
       isSender: true,
       time: new Date(),
     };
+    const newMessages = [...messages, newMessage];
     setMessages((prev) => [...prev, newMessage]);
     setMessage("");
+    axios
+      .post(
+        process.env.NEXT_PUBLIC_API_URL + "/chatbot/chat/" + activeOrganization,
+        {
+          messages: newMessages.map((message) => {
+            return({
+              role: message.isSender ? "user" : "assistant",
+              content: message.content 
+            });
+          })
+        },
+        {
+          withCredentials: true,
+        }
+      )
+      .then((res) => {
+        console.log(res);
+        const completion = res.data.completion;
+        const reply = {
+          role: "assistant",
+          content: completion
+        };
+        setMessages((prev) => [...prev, reply]);
+      })
+      .catch((err) => toast.error(err?.response?.data?.message ?? "Can't connect to server"));
   }
 
   return (
@@ -128,7 +153,7 @@ export default function Dashboard() {
                     <ChatBubble
                       key={index}
                       isSender={message.isSender}
-                      text={message.text}
+                      content={message.content}
                       time={message.time}
                     />
                   );

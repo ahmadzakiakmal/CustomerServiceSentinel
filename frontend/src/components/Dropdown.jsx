@@ -30,7 +30,7 @@ export default function Dropdown({
   }, [options]);
 
   useEffect(() => {
-    setState(value);
+    if(value) setState(value);
   }, [value, setState]);
 
   if (!Array.isArray(options)) throw Error("options params must be an array");
