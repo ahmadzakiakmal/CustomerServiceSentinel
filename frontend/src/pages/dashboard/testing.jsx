@@ -5,12 +5,15 @@ import cutMessage from "@/utilities/cutMessage";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import { IoSendSharp } from "react-icons/io5";
 
 export default function Dashboard() {
   const [activeOrganization, setActiveOrganization] = useState("");
   const [organizatons, setOrganizations] = useState([]);
   const [name, setName] = useState("");
   const [instruction, setInstructions] = useState("");
+  const [message, setMessage] = useState("");
+  const [messages, setMessages] = useState([]);
 
   useEffect(() => {
     axios
@@ -34,7 +37,9 @@ export default function Dashboard() {
         setActiveOrganization(mapOwnedOrgs[0]._id);
       })
       .catch((err) => {
-        toast.error(cutMessage(err?.response?.data?.message) ?? "Can't connect to server", { className: "custom-error" });
+        toast.error(cutMessage(err?.response?.data?.message) ?? "Can't connect to server", {
+          className: "custom-error",
+        });
       });
   }, []);
 
@@ -55,14 +60,26 @@ export default function Dashboard() {
         }
       })
       .catch((err) => {
-        toast.error(cutMessage(err?.response?.data?.message) ?? "Can't connect to server", { className: "custom-error" });
+        toast.error(cutMessage(err?.response?.data?.message) ?? "Can't connect to server", {
+          className: "custom-error",
+        });
       });
   }, [activeOrganization]);
+
+  function handleChat(e) {
+    e.preventDefault();
+    const newMessage = {
+      text: message,
+      isSender: true
+    };
+    setMessages((prev) => [...prev, newMessage]);
+    setMessage("");
+  }
 
   return (
     <main>
       <Layout>
-        <main className="text-dark-brown flex min-h-screen">
+        <main className="text-dark-brown flex min-h-screen overflow-y-hidden">
           <section className="min-w-[340px] border-r border-[#CACACA] p-10 flex-shrink-0">
             <h1 className="text-[24px] font-medium mb-[50px]">Testing</h1>
             <Dropdown
@@ -75,7 +92,7 @@ export default function Dashboard() {
               Name
               <input
                 type="text"
-                className="w-full rounded-md outline outline-1 outline-light-brown px-3 py-2 lg:py-2.5 font-medium text-black"
+                className="w-full rounded-md outline outline-1 outline-light-brown px-3 py-2 lg:py-2.5 text-black font-normal"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
               />
@@ -100,15 +117,40 @@ export default function Dashboard() {
             </label>
           </section>
 
-          <section className="w-full flex flex-col">
+          <section className="w-full flex flex-col max-h-screen relative">
             <h1 className="text-[24px] font-medium p-10 ">Chat</h1>
 
-            <div className="flex flex-col h-full">
-              <div className="px-10 flex-1 bg-blue-500/20 flex-grow overflow-y-auto">
-                <ChatBubble isSender={true} />
-                <ChatBubble />
+            <div className="max-h-full overflow-y-auto">
+              <div className="px-10 bg-white mb-[80px]">
+                {messages.map((message, index) => {
+                  return(
+                    <ChatBubble key={index} isSender={message.isSender} text={message.text} />
+                  );
+                })}
               </div>
-              <form className="h-[100px] bg-red-500/20"></form>
+              <form
+                className="pb-2 pt-4 px-10 absolute bottom-0 w-full bg-white border-t gap-2"
+                onSubmit={(e) => {
+                  handleChat(e);
+                }}
+              >
+                <div className="flex outline outline-1 outline-[#CACACA] rounded-md">
+                  <input
+                    type="text"
+                    className="w-full px-3 py-2 lg:py-2.5 text-black font-normal focus:outline-none"
+                    placeholder="Write your message here..."
+                    value={message}
+                    onChange={(e) => setMessage(e.target.value)}
+                  />
+                  <button
+                    type="submit"
+                    className="p-3 text-[20px] text-black disabled:opacity-30 disabled:cursor-not-allowed"
+                    disabled={message === ""}
+                  >
+                    <IoSendSharp />
+                  </button>
+                </div>
+              </form>
             </div>
           </section>
         </main>
