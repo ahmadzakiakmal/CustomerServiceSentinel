@@ -70,7 +70,8 @@ export default function Dashboard() {
     e.preventDefault();
     const newMessage = {
       text: message,
-      isSender: true
+      isSender: true,
+      time: new Date(),
     };
     setMessages((prev) => [...prev, newMessage]);
     setMessage("");
@@ -123,8 +124,13 @@ export default function Dashboard() {
             <div className="max-h-full overflow-y-auto">
               <div className="px-10 bg-white mb-[80px]">
                 {messages.map((message, index) => {
-                  return(
-                    <ChatBubble key={index} isSender={message.isSender} text={message.text} />
+                  return (
+                    <ChatBubble
+                      key={index}
+                      isSender={message.isSender}
+                      text={message.text}
+                      time={message.time}
+                    />
                   );
                 })}
               </div>
