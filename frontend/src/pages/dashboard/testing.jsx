@@ -6,6 +6,8 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { IoSendSharp } from "react-icons/io5";
+import { ImSpinner8 } from "react-icons/im";
+
 
 export default function Dashboard() {
   const [activeOrganization, setActiveOrganization] = useState("");
@@ -14,6 +16,7 @@ export default function Dashboard() {
   const [instruction, setInstructions] = useState("");
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
+  const [isBotTyping, setIsBotTyping] = useState(false);
 
   useEffect(() => {
     axios
@@ -44,6 +47,7 @@ export default function Dashboard() {
 
   useEffect(() => {
     if (!activeOrganization) return;
+    setMessages([]);
     axios
       .get(process.env.NEXT_PUBLIC_API_URL + "/assistant-data/" + activeOrganization, {
         withCredentials: true,
@@ -67,6 +71,7 @@ export default function Dashboard() {
 
   function handleChat(e) {
     e.preventDefault();
+    setIsBotTyping(true);
     const newMessage = {
       content: message,
       isSender: true,
@@ -74,17 +79,21 @@ export default function Dashboard() {
     };
     const newMessages = [...messages, newMessage];
     setMessages((prev) => [...prev, newMessage]);
+    const filteredMessages = newMessages.filter((message) => {
+      return !message.isError;
+    });
     setMessage("");
     axios
       .post(
         process.env.NEXT_PUBLIC_API_URL + "/chatbot/chat/" + activeOrganization,
         {
-          messages: newMessages.map((message) => {
-            return({
+          messages: filteredMessages.map((message) => {
+            if (message.isError) return;
+            return {
               role: message.isSender ? "user" : "assistant",
-              content: message.content 
-            });
-          })
+              content: message.content,
+            };
+          }),
         },
         {
           withCredentials: true,
@@ -95,11 +104,24 @@ export default function Dashboard() {
         const completion = res.data.completion;
         const reply = {
           role: "assistant",
-          content: completion
+          content: completion,
         };
         setMessages((prev) => [...prev, reply]);
       })
-      .catch((err) => toast.error(err?.response?.data?.message ?? "Can't connect to server"));
+      .catch((err) => {
+        toast.error(err?.response?.data?.message ?? "Can't connect to server", {
+          className: "custom-error",
+        });
+        const errorMessage = {
+          role: "assistant",
+          content: err?.response?.data?.message ?? "Can't connect to server",
+          isError: true,
+        };
+        setMessages((prev) => [...prev, errorMessage]);
+      })
+      .finally(() => {
+        setIsBotTyping(false);
+      });
   }
 
   return (
@@ -155,9 +177,20 @@ export default function Dashboard() {
                       isSender={message.isSender}
                       content={message.content}
                       time={message.time}
+                      isError={message.isError}
                     />
                   );
                 })}
+                {isBotTyping && (
+                  <div className="w-full flex gap-4 items-start py-[7px]">
+                    <div className="size-[44px] flex-shrink-0 bg-gradient-to-br from-dark-brown to-light-yellow rounded-full" />
+                    <div className="bg-[#EBEBEB] py-[10px] px-4 rounded-[8px] max-w-[50ch] flex gap-2">
+                      <div className="size-[6px] bg-dark-brown rounded-full animate-bounce" />
+                      <div className="size-[6px] bg-dark-brown rounded-full animate-bounce delay-1" />
+                      <div className="size-[6px] bg-dark-brown rounded-full animate-bounce delay-2" />
+                    </div>
+                  </div>
+                )}
               </div>
               <form
                 className="pb-2 pt-4 px-10 absolute bottom-0 w-full bg-white border-t gap-2"
@@ -176,9 +209,11 @@ export default function Dashboard() {
                   <button
                     type="submit"
                     className="p-3 text-[20px] text-black disabled:opacity-30 disabled:cursor-not-allowed"
-                    disabled={message === ""}
+                    disabled={message === "" || isBotTyping}
                   >
-                    <IoSendSharp />
+                    {
+                      isBotTyping ? <ImSpinner8 className="text-black animate-spin" /> : <IoSendSharp />
+                    }
                   </button>
                 </div>
               </form>

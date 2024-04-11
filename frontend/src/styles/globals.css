@@ -43,3 +43,11 @@
   color: white !important;
   box-shadow: 0px 5px 10px #39311D !important;
 }
+
+.delay-1 {
+  animation-delay: 150ms
+}
+
+.delay-2 {
+  animation-delay: 300ms
+}
