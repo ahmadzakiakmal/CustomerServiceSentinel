@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { IoSendSharp } from "react-icons/io5";
 import { ImSpinner8 } from "react-icons/im";
-
+import { isBot } from "next/dist/server/web/spec-extension/user-agent";
 
 export default function Dashboard() {
   const [activeOrganization, setActiveOrganization] = useState("");
@@ -85,7 +85,7 @@ export default function Dashboard() {
     setMessage("");
     axios
       .post(
-        process.env.NEXT_PUBLIC_API_URL + "/chatbot/chat/" + activeOrganization,
+        process.env.NEXT_PUBLIC_API_URL + "/chatbot/test/" + activeOrganization,
         {
           messages: filteredMessages.map((message) => {
             if (message.isError) return;
@@ -184,10 +184,10 @@ export default function Dashboard() {
                 {isBotTyping && (
                   <div className="w-full flex gap-4 items-start py-[7px]">
                     <div className="size-[44px] flex-shrink-0 bg-gradient-to-br from-dark-brown to-light-yellow rounded-full" />
-                    <div className="bg-[#EBEBEB] py-[10px] px-4 rounded-[8px] max-w-[50ch] flex gap-2">
-                      <div className="size-[6px] bg-dark-brown rounded-full animate-bounce" />
-                      <div className="size-[6px] bg-dark-brown rounded-full animate-bounce delay-1" />
-                      <div className="size-[6px] bg-dark-brown rounded-full animate-bounce delay-2" />
+                    <div className="bg-[#EBEBEB] py-[10px] px-4 rounded-[8px] flex gap-3 min-h-[44px] items-center">
+                      <div className="size-[6px] bg-dark-brown rounded-full animate-chat-loading" />
+                      <div className="size-[6px] bg-dark-brown rounded-full animate-chat-loading delay-1" />
+                      <div className="size-[6px] bg-dark-brown rounded-full animate-chat-loading delay-2" />
                     </div>
                   </div>
                 )}
@@ -201,19 +201,20 @@ export default function Dashboard() {
                 <div className="flex outline outline-1 outline-[#CACACA] rounded-md">
                   <input
                     type="text"
-                    className="w-full px-3 py-2 lg:py-2.5 text-black font-normal focus:outline-none"
+                    className="w-full px-3 py-2 lg:py-2.5 text-black font-normal focus:outline-none disabled:bg-slate-400/10"
                     placeholder="Write your message here..."
                     value={message}
-                    onChange={(e) => setMessage(e.target.value)}
+                    onChange={(e) => {
+                      if (isBotTyping) return;
+                      else setMessage(e.target.value);
+                    }}
                   />
                   <button
                     type="submit"
-                    className="p-3 text-[20px] text-black disabled:opacity-30 disabled:cursor-not-allowed"
+                    className="p-3 text-[20px] text-black disabled:cursor-not-allowed"
                     disabled={message === "" || isBotTyping}
                   >
-                    {
-                      isBotTyping ? <ImSpinner8 className="text-black animate-spin" /> : <IoSendSharp />
-                    }
+                    {isBotTyping ? <ImSpinner8 className="text-black animate-spin" /> : <IoSendSharp />}
                   </button>
                 </div>
               </form>

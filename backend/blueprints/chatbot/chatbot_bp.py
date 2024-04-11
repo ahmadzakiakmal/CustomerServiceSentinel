@@ -9,46 +9,54 @@ chatbot_bp = Blueprint("chatbot_blueprint", __name__)
 
 client = OpenAI()
 
-@chatbot_bp.route("/chat/<id>", methods=["POST"])
+@chatbot_bp.route("/test/<id>", methods=["POST"])
 def chat_customized(id):
-  org = Organization.objects(id=id)
+  org = Organization.objects(id=id).first()
   if not org:
     raise DoesNotExist("Organization does not exist")
   data = request.get_json()
-  # print(data)
   if not data.get("messages"):
-    raise BadRequest("Message is empty")
+    raise BadRequest("Messages is empty")
   assistant_data = AssistantData.objects(organization=id).first()
   messages = []
-  messages.append(
-      {"role": "system", "content": f"You are named '{assistant_data.name}'"},
-    )
   if len(messages) < 3:
+    messages.append(
+      {"role": "system", "content": f"You are named '{assistant_data.name}'. Serving the organization, '{org.organization_name}'"},
+    )
     if assistant_data.instruction == "":
       messages.append(
-      {
-      "role": "system", "content": 
-        (
-        "You are made as a customer service assistant. "
-        "The user can customize you to fit their organization by giving you data. Tell them to customize your instruction. "
-        "Refrain from answering questions beyond your job as a customer service. "
-        )
-      }
+        {
+        "role": "system", "content": 
+          (
+          "You are made as a customer service assistant. "
+          "The user can customize you to fit their organization by giving you data. Tell them to customize your instruction. "
+          "The user is the owner of the organization. "
+          "Refrain from answering questions beyond your scope as a customer service. "
+          )
+        }
       )
     else:
       messages.append(
         {
           "role": "system",
-        "content": assistant_data.instruction
+          "content": assistant_data.instruction
         }
       )
-    for message in data.get("messages"):
-      messages.append(message)
+  messages.append(
+    {
+    "role": "system",
+    "content" : "The user is one of the admins of the organization. They are testing your responses."
+    }
+  )
+  for message in data.get("messages"):
+    messages.append(message)
   completion = client.chat.completions.create(
     model="gpt-3.5-turbo",
     messages=messages,
     max_tokens=500
   )
+  for message in messages:
+    print(message)
   return jsonify(
     {
       "completion" : completion.choices[0].message.content,

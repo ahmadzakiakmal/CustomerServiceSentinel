@@ -44,10 +44,26 @@
   box-shadow: 0px 5px 10px #39311D !important;
 }
 
+@keyframes chat-loading {
+  from {
+    opacity: 1;
+    transform: translateY(-1px) scale(1.2);
+  }
+  to {
+    opacity: .5;
+    transform: translateY(2px);
+    background-color: red !important;
+  }
+}
+
+.animate-chat-loading {
+  animation: chat-loading 1000ms infinite alternate;
+}
+
 .delay-1 {
-  animation-delay: 150ms
+  animation-delay: 200ms
 }
 
 .delay-2 {
-  animation-delay: 300ms
+  animation-delay: 400ms
 }
