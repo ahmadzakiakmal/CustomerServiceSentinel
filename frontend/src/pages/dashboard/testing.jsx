@@ -169,7 +169,7 @@ export default function Dashboard() {
                 value={instruction}
               />
             </label>
-            <label className="flex flex-col gap-2 font-medium mt-4">
+            <label className="flex flex-col gap-2 font-medium mt-4 mb-2">
               Additional Data
               <input
                 type="file"
@@ -179,8 +179,8 @@ export default function Dashboard() {
                 File
               </div>
             </label>
-            <div className="mt-4 text-red-delete">{isDataChanged? "⚠️ You have unsaved changes" : ""}</div>
-            <Button disabled={!isDataChanged} className="text-[16px] !font-medium mt-2">Save</Button>
+            {isDataChanged && <div className="mt-4 text-red-delete">⚠️ You have unsaved changes</div>}
+            <Button disabled={!isDataChanged} className="w-full text-[16px] !font-medium mt-2">Save</Button>
           </form>
 
           <section className="w-full flex flex-col max-h-screen relative">
