@@ -20,12 +20,16 @@
   background: #39311D !important;
   color: white !important;
   box-shadow: 0px 5px 10px #39311D !important;
+  font-family: "Rubik", sans-serif;
+  font-weight: 500;
 }
 
 .custom-error {
   background: #39311D !important;
   color: white !important;
   box-shadow: 0px 5px 10px #39311D !important;
+  font-family: "Rubik", sans-serif;
+  font-weight: 500;
 }
 
 .custom-error svg {
@@ -36,6 +40,8 @@
   background: #39311D !important;
   color: white !important;
   box-shadow: 0px 5px 10px #39311D !important;
+  font-family: "Rubik", sans-serif;
+  font-weight: 500;
 }
 
 .custom-info {
