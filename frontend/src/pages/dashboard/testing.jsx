@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 import { IoSendSharp } from "react-icons/io5";
 import { ImSpinner8 } from "react-icons/im";
 import { isBot } from "next/dist/server/web/spec-extension/user-agent";
+import Button from "@/components/Button";
 
 export default function Dashboard() {
   const [activeOrganization, setActiveOrganization] = useState("");
@@ -17,6 +18,11 @@ export default function Dashboard() {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
   const [isBotTyping, setIsBotTyping] = useState(false);
+  const [initialName, setInitialName] = useState("");
+  const [initialInstruction, setInitialInstruction] = useState("");
+  // const [initialFile, setInitialFile] = useState("");
+
+  const [isDataChanged, SetIsDataChanged] = useState(false);
 
   useEffect(() => {
     axios
@@ -54,10 +60,15 @@ export default function Dashboard() {
       })
       .then((res) => {
         setName(res.data.name);
+        setInitialName(res.data.name);
         if (res.data.instruction !== "") {
           setInstructions(res.data.instruction);
+          setInitialInstruction(res.data.instruction);
         } else {
           setInstructions(
+            "You are made as a customer service assistant. The user can customize you to fit their organization by giving you data. Tell them to customize your instruction. Refrain from answering questions beyond your job as a customer service."
+          );
+          setInitialInstruction(
             "You are made as a customer service assistant. The user can customize you to fit their organization by giving you data. Tell them to customize your instruction. Refrain from answering questions beyond your job as a customer service."
           );
         }
@@ -68,6 +79,11 @@ export default function Dashboard() {
         });
       });
   }, [activeOrganization]);
+
+  useEffect(() => {
+    if (name !== initialName || instruction !== initialInstruction) SetIsDataChanged(true);  
+    else SetIsDataChanged(false);
+  }, [name, instruction, initialInstruction, initialName]);
 
   function handleChat(e) {
     e.preventDefault();
@@ -128,7 +144,7 @@ export default function Dashboard() {
     <main>
       <Layout>
         <main className="text-dark-brown flex min-h-screen overflow-y-hidden">
-          <section className="min-w-[340px] border-r border-[#CACACA] p-10 flex-shrink-0">
+          <form className="min-w-[340px] border-r border-[#CACACA] p-10 flex-shrink-0">
             <h1 className="text-[24px] font-medium mb-[50px]">Testing</h1>
             <Dropdown
               className="w-full"
@@ -163,7 +179,9 @@ export default function Dashboard() {
                 File
               </div>
             </label>
-          </section>
+            <div className="mt-4 text-red-delete">{isDataChanged? "⚠️ You have unsaved changes" : ""}</div>
+            <Button disabled={!isDataChanged} className="text-[16px] !font-medium mt-2">Save</Button>
+          </form>
 
           <section className="w-full flex flex-col max-h-screen relative">
             <h1 className="text-[24px] font-medium p-10 ">Chat</h1>
