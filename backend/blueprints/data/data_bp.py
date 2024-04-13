@@ -1,7 +1,9 @@
 from flask import Flask, Blueprint, request, g, jsonify
 from models import Organization, AssistantData
-from werkzeug.exceptions import NotFound, BadRequest
+from werkzeug.exceptions import NotFound, BadRequest, Conflict
+from werkzeug.utils import secure_filename
 from mongoengine.errors import DoesNotExist
+import os
 
 assistant_data_bp = Blueprint("data_blueprint", __name__)
 
@@ -26,3 +28,31 @@ def get_assistant_data(id):
   if not assistant_data:
     raise DoesNotExist("Organization does not exist")
   return jsonify(assistant_data), 200
+
+@assistant_data_bp.route("/file/<id>", methods=["POST"])
+def upload_file(id):
+  if "file" not in request.files:
+    raise BadRequest("No file found")
+  
+  file = request.files["file"]
+  if file.filename == "":
+    raise BadRequest("No selected file")
+  
+  if file:
+    filename = secure_filename(file.filename)
+    directory = os.path.join("file", str(id))
+    os.makedirs(directory, exist_ok=True)
+    file.save(os.path.join("file", str(id), filename))
+
+    assistant_data = AssistantData.objects(organization=id).first()
+
+    duplicate_check = list(filter(lambda file: file == filename, assistant_data.files))
+    if len(duplicate_check) != 0:
+      raise Conflict("File of the same name already exist")
+
+    assistant_data.files.append(filename)
+    assistant_data.save()
+
+    return jsonify({
+      "message": "File upload successful"
+    }), 200
