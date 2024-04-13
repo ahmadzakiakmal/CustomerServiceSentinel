@@ -7,7 +7,6 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { IoSendSharp } from "react-icons/io5";
 import { ImSpinner8 } from "react-icons/im";
-import { isBot } from "next/dist/server/web/spec-extension/user-agent";
 import Button from "@/components/Button";
 
 export default function Dashboard() {
@@ -21,8 +20,9 @@ export default function Dashboard() {
   const [initialName, setInitialName] = useState("");
   const [initialInstruction, setInitialInstruction] = useState("");
   // const [initialFile, setInitialFile] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
-  const [isDataChanged, SetIsDataChanged] = useState(false);
+  const [isDataChanged, setIsDataChanged] = useState(false);
 
   useEffect(() => {
     axios
@@ -81,8 +81,8 @@ export default function Dashboard() {
   }, [activeOrganization]);
 
   useEffect(() => {
-    if (name !== initialName || instruction !== initialInstruction) SetIsDataChanged(true);  
-    else SetIsDataChanged(false);
+    if (name !== initialName || instruction !== initialInstruction) setIsDataChanged(true);
+    else setIsDataChanged(false);
   }, [name, instruction, initialInstruction, initialName]);
 
   function handleChat(e) {
@@ -140,11 +140,47 @@ export default function Dashboard() {
       });
   }
 
+  function saveData(e) {
+    setIsLoading(true);
+    const loadingToast = toast.loading("Saving...", {className: "custom-loading"});
+    axios
+      .patch(
+        process.env.NEXT_PUBLIC_API_URL + "/assistant-data/" + activeOrganization,
+        {
+          instruction,
+          name,
+        },
+        { withCredentials: true }
+      )
+      .then(() => {
+        toast.update(loadingToast, {
+          render: "Success",
+          type: "success",
+          isLoading: false,
+          autoClose: 5000,
+          className: "custom-success",
+        });
+        setMessages([]);
+      })
+      .catch((err) => {
+        toast.update(loadingToast, {
+          render: err?.response?.data?.message ?? "Can't connect to server",
+          type: "error",
+          isLoading: false,
+          autoClose: 5000,
+          className: "custom-error",
+        });
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }
+
   return (
     <main>
       <Layout>
         <main className="text-dark-brown flex min-h-screen overflow-y-hidden">
-          <form className="min-w-[340px] border-r border-[#CACACA] p-10 flex-shrink-0">
+          <section className="min-w-[340px] border-r border-[#CACACA] p-10 flex-shrink-0">
             <h1 className="text-[24px] font-medium mb-[50px]">Testing</h1>
             <Dropdown
               className="w-full"
@@ -180,8 +216,17 @@ export default function Dashboard() {
               </div>
             </label>
             {isDataChanged && <div className="mt-4 text-red-delete">⚠️ You have unsaved changes</div>}
-            <Button disabled={!isDataChanged} className="w-full text-[16px] !font-medium mt-2">Save</Button>
-          </form>
+            <Button
+              disabled={!isDataChanged || isLoading}
+              className="w-full text-[16px] !font-medium mt-2"
+              onClick={() => {
+                setIsDataChanged(false);
+                saveData();
+              }}
+            >
+              Save
+            </Button>
+          </section>
 
           <section className="w-full flex flex-col max-h-screen relative">
             <h1 className="text-[24px] font-medium p-10 ">Chat</h1>
@@ -229,7 +274,7 @@ export default function Dashboard() {
                   />
                   <button
                     type="submit"
-                    className="p-3 text-[20px] text-black disabled:cursor-not-allowed"
+                    className="p-3 text-[20px] text-black disabled:cursor-not-allowed disabled:text-black/60"
                     disabled={message === "" || isBotTyping}
                   >
                     {isBotTyping ? <ImSpinner8 className="text-black animate-spin" /> : <IoSendSharp />}
