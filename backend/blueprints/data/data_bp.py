@@ -1,6 +1,6 @@
 from flask import Flask, Blueprint, request, g, jsonify
 from models import Organization, AssistantData
-from werkzeug.exceptions import NotFound, BadRequest, Conflict
+from werkzeug.exceptions import NotFound, BadRequest, Conflict, Unauthorized
 from werkzeug.utils import secure_filename
 from mongoengine.errors import DoesNotExist
 import os
@@ -56,3 +56,23 @@ def upload_file(id):
     return jsonify({
       "message": "File upload successful"
     }), 200
+  
+@assistant_data_bp.route("/file/<id>/<filename>", methods=["DELETE"])
+def delete_file(id, filename):
+  assistant_data = AssistantData.objects(organization=id).first()
+  filtered_files = list(filter(lambda file: file != filename, assistant_data.files))
+  assistant_data.files = filtered_files
+  assistant_data.save()
+
+  try:
+    os.remove(os.path.join("file", str(id), filename))
+  except FileNotFoundError:
+    raise DoesNotExist("File does not exist")
+  except PermissionError:
+    raise Unauthorized("Permission denied, unable to delete file")
+
+  return jsonify({
+    "message": f"File '{filename}' deleted succesfully",
+    "files": filtered_files
+  }), 200
+  
