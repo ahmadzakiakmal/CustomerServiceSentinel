@@ -4,7 +4,7 @@ import os
 from flask_mongoengine import MongoEngine
 from mongoengine.base.common import get_document
 import models
-from werkzeug.exceptions import NotFound, BadRequest, Conflict, UnsupportedMediaType, Unauthorized
+from werkzeug.exceptions import NotFound, BadRequest, Conflict, UnsupportedMediaType, Unauthorized, RequestEntityTooLarge
 from mongoengine.errors import (
     NotRegistered, InvalidDocumentError, LookUpError, DoesNotExist,
     MultipleObjectsReturned, InvalidQueryError, OperationError, NotUniqueError,
@@ -21,6 +21,7 @@ if not os.environ.get("OPENAI_API_KEY") or not os.environ.get("MONGODB_URI") or 
 
 app = Flask(__name__)
 CORS(app, supports_credentials=True, origins="*")
+app.config["MAX_CONTENT_LENGTH"] = 2 * 1024 * 1024
 app.config["MONGODB_SETTINGS"] = {
   "db": os.environ.get("MONGODB_DB"),
   "host": os.environ.get("MONGODB_URI")
@@ -61,6 +62,8 @@ def error_handler(e):
     return jsonify({"message": str(e)}), 401
   elif isinstance(e, DoesNotExist):
     return jsonify({"message": "Object does not exist: " + str(e)}), 404
+  elif isinstance(e, RequestEntityTooLarge):
+    return jsonify({"message": str(e)}), 413
   else:
     return jsonify({"message": "Unexpected error: " + str(e)}), 500
 
