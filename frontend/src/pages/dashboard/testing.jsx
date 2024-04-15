@@ -7,6 +7,9 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { IoSendSharp } from "react-icons/io5";
 import { ImSpinner8 } from "react-icons/im";
+import { MdOutlineFileUpload } from "react-icons/md";
+import { FaFileAlt } from "react-icons/fa";
+
 import Button from "@/components/Button";
 
 export default function Dashboard() {
@@ -14,6 +17,7 @@ export default function Dashboard() {
   const [organizatons, setOrganizations] = useState([]);
   const [name, setName] = useState("");
   const [instruction, setInstructions] = useState("");
+  const [files, setFiles] = useState([]);
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
   const [isBotTyping, setIsBotTyping] = useState(false);
@@ -59,6 +63,7 @@ export default function Dashboard() {
         withCredentials: true,
       })
       .then((res) => {
+        setFiles(res.data.files);
         setName(res.data.name);
         setInitialName(res.data.name);
         if (res.data.instruction !== "") {
@@ -116,7 +121,6 @@ export default function Dashboard() {
         }
       )
       .then((res) => {
-        console.log(res);
         const completion = res.data.completion;
         const reply = {
           role: "assistant",
@@ -142,7 +146,7 @@ export default function Dashboard() {
 
   function saveData(e) {
     setIsLoading(true);
-    const loadingToast = toast.loading("Saving...", {className: "custom-loading"});
+    const loadingToast = toast.loading("Saving...", { className: "custom-loading" });
     axios
       .patch(
         process.env.NEXT_PUBLIC_API_URL + "/assistant-data/" + activeOrganization,
@@ -205,16 +209,33 @@ export default function Dashboard() {
                 value={instruction}
               />
             </label>
-            <label className="flex flex-col gap-2 font-medium mt-4 mb-2">
-              Additional Data
-              <input
-                type="file"
-                className="hidden"
-              />
-              <div className="w-full py-5 cursor-pointer text-light-brown rounded-md outline-1 outline-light-brown outline-dashed px-3 lg:py-2.5 font-medium">
-                File
-              </div>
+            <h1 className="flex flex-col gap-2 font-medium mt-4 mb-2">Additional Data</h1>
+            <div className="flex flex-col gap-1 my-2">
+              {files.map((file, index) => {
+                // console.log();
+                return (
+                  <div
+                    key={index}
+                    className="flex items-center gap-1"
+                  >
+                    <FaFileAlt />
+                    {file.length > 15 ? file.slice(0, 15) + "..." + file.slice(file.length - 3, file.length) : file}
+                  </div>
+                );
+              })}
+            </div>
+            <label
+              htmlFor="file-input"
+              className="w-full flex justify-center items-center h-[80px] gap-2 py-5 cursor-pointer text-light-brown rounded-md outline-1 outline-light-brown outline-dashed px-3 lg:py-2.5 font-medium"
+            >
+              Upload File
             </label>
+            <input
+              type="file"
+              className="hidden"
+              id="file-input"
+              name="file-input"
+            />
             {isDataChanged && <div className="mt-4 text-red-delete">⚠️ You have unsaved changes</div>}
             <Button
               disabled={!isDataChanged || isLoading}
