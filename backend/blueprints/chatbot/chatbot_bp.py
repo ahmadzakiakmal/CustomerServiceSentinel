@@ -4,10 +4,40 @@ from werkzeug.exceptions import BadRequest, NotFound
 from mongoengine.errors import DoesNotExist
 from openai import OpenAI
 from models import AssistantData, Organization
+from llama_index.llms.openai import OpenAI
+try:
+  from llama_index import VectorStoreIndex, ServiceContext, Document, SimpleDirectoryReader
+except ImportError:
+  from llama_index.core import VectorStoreIndex, ServiceContext, Document, SimpleDirectoryReader
 
 chatbot_bp = Blueprint("chatbot_blueprint", __name__)
 
 client = OpenAI()
+
+def load_data(id):
+  reader = SimpleDirectoryReader(input_dir=f"./file/{str(id)}", recursive=True)
+  docs = reader.load_data()
+  # llm = OpenAI(model="gpt-3.5-turbo", temperature=0.5, system_prompt="You are an expert o$
+  # index = VectorStoreIndex.from_documents(docs)
+  service_context = ServiceContext.from_defaults(llm=OpenAI(model="gpt-3.5-turbo", temperature=0.9, system_prompt=""))
+  index = VectorStoreIndex.from_documents(docs, service_context=service_context)
+  return index
+  
+
+@chatbot_bp.route("/file/<id>", methods=["POST"])
+def chat_with_file(id):
+  body = request.get_json()
+  if not body.get("question"):
+    raise BadRequest("Question is required")
+  question = body.get("question")
+  index = load_data(id)
+  chat_engine = index.as_chat_engine(chat_mode="condense_question", verbose=True)
+  response = chat_engine.chat(question)
+  print(response.response)
+  return jsonify({
+    "reply": response.response
+  }), 200
+  
 
 @chatbot_bp.route("/test/<id>", methods=["POST"])
 def chat_customized(id):
