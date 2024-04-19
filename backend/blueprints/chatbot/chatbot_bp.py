@@ -24,14 +24,14 @@ def load_data(id):
   return index
   
 
-@chatbot_bp.route("/file/<id>", methods=["POST"])
+@chatbot_bp.route("/llamaindex/<id>", methods=["POST"])
 def chat_with_file(id):
   body = request.get_json()
   if not body.get("question"):
     raise BadRequest("Question is required")
   question = body.get("question")
   index = load_data(id)
-  chat_engine = index.as_chat_engine(chat_mode="condense_question", verbose=True)
+  chat_engine = index.as_chat_engine(chat_mode="best", verbose=True)
   response = chat_engine.chat(question)
   print(response.response)
   return jsonify({
