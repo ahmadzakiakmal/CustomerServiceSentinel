@@ -1,13 +1,29 @@
+from langchain_openai import OpenAIEmbeddings
 from flask import Blueprint, request, jsonify
 from middlewares.authentications import authenticateUser
 from werkzeug.exceptions import BadRequest
 from mongoengine.errors import DoesNotExist
 from openai import OpenAI
 from models import AssistantData, Organization
+from langchain_community.document_loaders import DirectoryLoader
+from langchain.indexes import VectorstoreIndexCreator
+from langchain_openai import ChatOpenAI
 
 chatbot_bp = Blueprint("chatbot_blueprint", __name__)
 
 client = OpenAI()
+
+@chatbot_bp.route("/langchain/<id>", methods=["POST"])
+def chat(id):
+  body = request.get_json()
+  query = body.get("query")
+
+  dir_loader = DirectoryLoader(f"./file/{id}", glob="*.txt")
+  index = VectorstoreIndexCreator().from_loaders([dir_loader])
+
+  print(index.query(query, llm=ChatOpenAI()))
+
+  return jsonify(index.query(query, llm=ChatOpenAI()))
   
 @chatbot_bp.route("/test/<id>", methods=["POST"])
 def chat_customized(id):
