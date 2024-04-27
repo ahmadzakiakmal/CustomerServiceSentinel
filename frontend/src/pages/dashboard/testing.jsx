@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 import { IoSendSharp } from "react-icons/io5";
 import { ImSpinner8 } from "react-icons/im";
 import { MdOutlineFileUpload } from "react-icons/md";
+import { RiDeleteBin6Fill } from "react-icons/ri";
 import { FaFileAlt } from "react-icons/fa";
 
 import Button from "@/components/Button";
@@ -216,10 +217,15 @@ export default function Dashboard() {
                 return (
                   <div
                     key={index}
-                    className="flex items-center gap-1"
+                    className="flex justify-between items-center"
                   >
-                    <FaFileAlt />
-                    {file.length > 15 ? file.slice(0, 15) + "..." + file.slice(file.length - 3, file.length) : file}
+                    <div className="flex items-center gap-1">
+                      <FaFileAlt />
+                      {file.length > 15 ? file.slice(0, 15) + "..." + file.slice(file.length - 3, file.length) : file}
+                    </div>
+                    <button className="pr-1">
+                      <RiDeleteBin6Fill className="text-red-delete hover:text-red-900" />
+                    </button>
                   </div>
                 );
               })}
