@@ -1,6 +1,6 @@
 from flask import Flask, Blueprint, request, g, jsonify, Response
 from models import Organization, AssistantData
-from werkzeug.exceptions import NotFound, BadRequest, Conflict, Unauthorized
+from werkzeug.exceptions import NotFound, BadRequest, Conflict, Unauthorized, RequestEntityTooLarge
 from werkzeug.utils import secure_filename
 from mongoengine.errors import DoesNotExist
 import os
@@ -93,16 +93,13 @@ def upload_image(id):
     "message": "Image uploaded successfully"
   }), 200
 
-@assistant_data_bp.route('/image/<image_id>', methods=["GET"])
-def serve_image(image_id):
-    try:
-        # Assuming `image` is a FileField in your AssistantData model
-        assistant_data = AssistantData.objects(id=image_id).first()
-        if not assistant_data or not assistant_data.image:
-            return "Image not found", 404
-        
-        response = Response(assistant_data.image.read())
-        response.headers['Content-Type'] = assistant_data.image.content_type
-        return response
-    except Exception as e:
-        return str(e), 500
+@assistant_data_bp.route('/image/<org_id>', methods=["GET"])
+def serve_image(org_id):
+  print(org_id)
+  assistant_data = AssistantData.objects(organization=org_id).first()
+  if not assistant_data or not assistant_data.image:
+    raise DoesNotExist("Image not found")
+  
+  response = Response(assistant_data.image.read())
+  response.headers['Content-Type'] = assistant_data.image.content_type
+  return response
