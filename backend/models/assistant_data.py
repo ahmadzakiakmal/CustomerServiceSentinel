@@ -1,4 +1,4 @@
-from mongoengine import Document, ListField, StringField
+from mongoengine import Document, ListField, StringField, FileField
 class AssistantData(Document):
   instruction = StringField(
         required=True, 
@@ -8,5 +8,5 @@ class AssistantData(Document):
   organization = StringField(required=True)
   files = ListField(StringField(default=[]))
   name = StringField(required=True, default="Customer Service Sentinel")
-
+  image = FileField()
   meta = {"collection" : "AssistantDatas"}

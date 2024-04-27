@@ -1,4 +1,4 @@
-from flask import Flask, Blueprint, request, g, jsonify
+from flask import Flask, Blueprint, request, g, jsonify, Response
 from models import Organization, AssistantData
 from werkzeug.exceptions import NotFound, BadRequest, Conflict, Unauthorized
 from werkzeug.utils import secure_filename
@@ -75,4 +75,34 @@ def delete_file(id, filename):
     "message": f"File '{filename}' deleted succesfully",
     "files": filtered_files
   }), 200
-  
+
+@assistant_data_bp.route("/image/<id>", methods=["POST"])
+def upload_image(id):
+  if 'file' not in request.files:
+    raise BadRequest("No file found")
+  assistant_data = AssistantData.objects(organization=id).first()
+  if not assistant_data:
+    raise DoesNotExist("Organization does not exist")
+  image = request.files['file']
+  if not image or image.filename == '':
+    raise BadRequest("No selected file")
+
+  assistant_data.image.replace(image, content_type='image/jpeg', filename='image.jpg')
+  assistant_data.save()
+  return jsonify({
+    "message": "Image uploaded successfully"
+  }), 200
+
+@assistant_data_bp.route('/image/<image_id>', methods=["GET"])
+def serve_image(image_id):
+    try:
+        # Assuming `image` is a FileField in your AssistantData model
+        assistant_data = AssistantData.objects(id=image_id).first()
+        if not assistant_data or not assistant_data.image:
+            return "Image not found", 404
+        
+        response = Response(assistant_data.image.read())
+        response.headers['Content-Type'] = assistant_data.image.content_type
+        return response
+    except Exception as e:
+        return str(e), 500
