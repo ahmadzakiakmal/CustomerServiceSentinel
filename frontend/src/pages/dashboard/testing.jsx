@@ -91,7 +91,7 @@ export default function Dashboard() {
     else setIsDataChanged(false);
   }, [name, instruction, initialInstruction, initialName]);
 
-  function handleChat(e) {
+  function sendMessage(e) {
     e.preventDefault();
     setIsBotTyping(true);
     const newMessage = {
@@ -181,6 +181,33 @@ export default function Dashboard() {
       });
   }
 
+  function deleteFile(filename) {
+    const toastPromise = toast.loading("Deleting...", {
+      className: "custom-loading"
+    });
+    axios.delete(process.env.NEXT_PUBLIC_API_URL + "/assistant-data/file/" + activeOrganization + "/" + filename)
+      .then(() => {
+        toast.update(toastPromise, {
+          type: "success",
+          isLoading: false,
+          render: "File deleted successfully",
+          className: "custom-success",
+          autoClose: 5000,
+        });
+        const newFiles = files.filter((file) => file !== filename);
+        setFiles(newFiles);
+      })
+      .catch((err) => {
+        toast.update(toastPromise, {
+          render: err?.response?.data?.message ?? "Can't connect to server",
+          type: "error",
+          isLoading: false,
+          autoClose: 5000,
+          className: "custom-error",
+        });
+      });
+  }
+
   return (
     <main>
       <Layout>
@@ -223,7 +250,7 @@ export default function Dashboard() {
                       <FaFileAlt />
                       {file.length > 15 ? file.slice(0, 15) + "..." + file.slice(file.length - 3, file.length) : file}
                     </div>
-                    <button className="pr-1">
+                    <button className="pr-1" onClick={() => deleteFile(file)}>
                       <RiDeleteBin6Fill className="text-red-delete hover:text-red-900" />
                     </button>
                   </div>
@@ -285,7 +312,7 @@ export default function Dashboard() {
               <form
                 className="pb-2 pt-4 px-10 absolute bottom-0 w-full bg-white border-t gap-2"
                 onSubmit={(e) => {
-                  handleChat(e);
+                  sendMessage(e);
                 }}
               >
                 <div className="flex outline outline-1 outline-[#CACACA] rounded-md">
