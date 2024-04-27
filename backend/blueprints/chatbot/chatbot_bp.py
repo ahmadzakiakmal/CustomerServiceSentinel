@@ -56,6 +56,12 @@ def chat(id):
     "content" : index.query("write the important information from the documents")
     }
   )
+  messages.append(
+    {
+    "role": "system",
+    "content" : "use markdown syntax"
+    }
+  )
   for message in data.get("messages"):
     messages.append(message)
   completion = client.chat.completions.create(
