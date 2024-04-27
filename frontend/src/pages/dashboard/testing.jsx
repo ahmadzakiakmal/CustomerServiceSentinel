@@ -123,7 +123,7 @@ export default function Dashboard() {
       )
       .then((res) => {
         const completion = res.data.completion;
-        console.log(completion);
+        // console.log(completion);
         const reply = {
           role: "assistant",
           content: completion,
@@ -249,7 +249,7 @@ export default function Dashboard() {
                   >
                     <div className="flex items-center gap-1">
                       <FaFileAlt />
-                      {file.length > 15 ? file.slice(0, 15) + "..." + file.slice(file.length - 3, file.length) : file}
+                      {file.length > 15 ? file.slice(0, file.length - 4).slice(0, 15) + "... [" + file.slice(file.length - 4, file.length) + "]" : file}
                     </div>
                     <button className="pr-1" onClick={() => deleteFile(file)}>
                       <RiDeleteBin6Fill className="text-red-delete hover:text-red-900" />
