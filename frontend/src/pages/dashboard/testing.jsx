@@ -107,7 +107,7 @@ export default function Dashboard() {
     setMessage("");
     axios
       .post(
-        process.env.NEXT_PUBLIC_API_URL + "/chatbot/test/" + activeOrganization,
+        process.env.NEXT_PUBLIC_API_URL + "/chatbot/langchain/" + activeOrganization,
         {
           messages: filteredMessages.map((message) => {
             if (message.isError) return;
@@ -123,6 +123,7 @@ export default function Dashboard() {
       )
       .then((res) => {
         const completion = res.data.completion;
+        console.log(completion);
         const reply = {
           role: "assistant",
           content: completion,
@@ -145,7 +146,7 @@ export default function Dashboard() {
       });
   }
 
-  function saveData(e) {
+  function saveData() {
     setIsLoading(true);
     const loadingToast = toast.loading("Saving...", { className: "custom-loading" });
     axios

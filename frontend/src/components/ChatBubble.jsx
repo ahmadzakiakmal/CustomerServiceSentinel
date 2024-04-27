@@ -1,10 +1,12 @@
+import MarkdownRenderer from "./MarkdownRenderer";
+
 export default function ChatBubble({ isSender, content, time, isError }) {
   if (isSender)
     return (
       <div className="w-full flex flex-row-reverse gap-4 items-center justify-start py-[7px]">
         {/* <div className="size-[44px] bg-gradient-to-br from-dark-brown to-light-yellow rounded-full" /> */}
         <div className="bg-light-yellow py-[10px] px-4 rounded-[8px] max-w-[50ch] text-justify flex flex-col">
-          {content}
+          <MarkdownRenderer text={content} />
           <span className="text-[12px] font-medium text-right">
             {time?.getHours()}:{time?.getMinutes()}
           </span>
@@ -19,7 +21,7 @@ export default function ChatBubble({ isSender, content, time, isError }) {
           "bg-[#EBEBEB] py-[10px] px-4 rounded-[8px] max-w-[50ch] text-justify " + (isError ? "text-red-delete" : "")
         }
       >
-        {content}
+        <MarkdownRenderer text={content} />
       </div>
     </div>
   );
