@@ -12,6 +12,7 @@ import { RiDeleteBin6Fill } from "react-icons/ri";
 import { FaFileAlt } from "react-icons/fa";
 
 import Button from "@/components/Button";
+import Image from "next/image";
 
 export default function Dashboard() {
   const [activeOrganization, setActiveOrganization] = useState("");
@@ -24,6 +25,7 @@ export default function Dashboard() {
   const [isBotTyping, setIsBotTyping] = useState(false);
   const [initialName, setInitialName] = useState("");
   const [initialInstruction, setInitialInstruction] = useState("");
+  const [botImage, setBotImage] = useState("");
   // const [initialFile, setInitialFile] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -64,9 +66,11 @@ export default function Dashboard() {
         withCredentials: true,
       })
       .then((res) => {
+        console.log(res);
         setFiles(res.data.files);
         setName(res.data.name);
         setInitialName(res.data.name);
+        setBotImage(res.data.image ? process.env.NEXT_PUBLIC_API_URL + "/assistant-data/image/" + activeOrganization : "");
         if (res.data.instruction !== "") {
           setInstructions(res.data.instruction);
           setInitialInstruction(res.data.instruction);
@@ -123,10 +127,11 @@ export default function Dashboard() {
       )
       .then((res) => {
         const completion = res.data.completion;
-        // console.log(completion);
+        console.log(res.data);
         const reply = {
           role: "assistant",
           content: completion,
+          image: botImage
         };
         setMessages((prev) => [...prev, reply]);
       })
@@ -221,6 +226,14 @@ export default function Dashboard() {
               setState={setActiveOrganization}
               options={organizatons}
             />
+            {
+              botImage && (
+                <div>
+                  <h1 className="font-medium mt-4">Bot Photo</h1>
+                  <Image src={botImage} alt="Bot Photo" width={80} height={80} className="mt-2"/>
+                </div>
+              )
+            }
             <label className="flex flex-col gap-2 font-medium mt-4">
               Name
               <input
@@ -269,6 +282,7 @@ export default function Dashboard() {
               className="hidden"
               id="file-input"
               name="file-input"
+              accept=".txt"
             />
             {isDataChanged && <div className="mt-4 text-red-delete">⚠️ You have unsaved changes</div>}
             <Button
@@ -296,12 +310,15 @@ export default function Dashboard() {
                       content={message.content}
                       time={message.time}
                       isError={message.isError}
+                      image={message.image}
                     />
                   );
                 })}
                 {isBotTyping && (
                   <div className="w-full flex gap-4 items-start py-[7px]">
-                    <div className="size-[44px] flex-shrink-0 bg-gradient-to-br from-dark-brown to-light-yellow rounded-full" />
+                    <div className="size-[44px] flex-shrink-0 bg-gradient-to-br from-dark-brown to-light-yellow rounded-full">
+                      <Image alt="Bot Image" src={botImage} width={44} height={44} />
+                    </div>
                     <div className="bg-[#EBEBEB] py-[10px] px-4 rounded-[8px] flex gap-3 min-h-[44px] items-center">
                       <div className="size-[6px] bg-dark-brown rounded-full animate-chat-loading" />
                       <div className="size-[6px] bg-dark-brown rounded-full animate-chat-loading delay-1" />
