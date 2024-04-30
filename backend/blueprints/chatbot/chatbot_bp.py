@@ -69,8 +69,8 @@ def chat(id):
     messages=messages,
     max_tokens=500
   )
-  for message in messages:
-    print(message)
+  # for message in messages:
+  #   print(message)
   return jsonify(
     {
       "completion" : completion.choices[0].message.content,
@@ -79,7 +79,7 @@ def chat(id):
     }
   ), 200
   
-@chatbot_bp.route("/test/<id>", methods=["POST"])
+@chatbot_bp.route("/default/<id>", methods=["POST"])
 def chat_customized(id):
   org = Organization.objects(id=id).first()
   if not org:
@@ -112,12 +112,6 @@ def chat_customized(id):
           "content": assistant_data.instruction
         }
       )
-  messages.append(
-    {
-    "role": "system",
-    "content" : "The user is one of the admins of the organization. They are testing your responses."
-    }
-  )
   for message in data.get("messages"):
     messages.append(message)
   completion = client.chat.completions.create(
@@ -125,8 +119,8 @@ def chat_customized(id):
     messages=messages,
     max_tokens=500
   )
-  for message in messages:
-    print(message)
+  # for message in messages:
+  #   print(message)
   return jsonify(
     {
       "completion" : completion.choices[0].message.content,
