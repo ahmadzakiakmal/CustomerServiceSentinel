@@ -10,6 +10,7 @@ import { ImSpinner8 } from "react-icons/im";
 import { MdOutlineFileUpload } from "react-icons/md";
 import { RiDeleteBin6Fill } from "react-icons/ri";
 import { FaFileAlt } from "react-icons/fa";
+import { FaArrowRotateLeft } from "react-icons/fa6";
 
 import Button from "@/components/Button";
 import Image from "next/image";
@@ -70,7 +71,9 @@ export default function Dashboard() {
         setFiles(res.data.files);
         setName(res.data.name);
         setInitialName(res.data.name);
-        setBotImage(res.data.image ? process.env.NEXT_PUBLIC_API_URL + "/assistant-data/image/" + activeOrganization : "");
+        setBotImage(
+          res.data.image ? process.env.NEXT_PUBLIC_API_URL + "/assistant-data/image/" + activeOrganization : ""
+        );
         if (res.data.instruction !== "") {
           setInstructions(res.data.instruction);
           setInitialInstruction(res.data.instruction);
@@ -111,7 +114,10 @@ export default function Dashboard() {
     setMessage("");
     axios
       .post(
-        process.env.NEXT_PUBLIC_API_URL + "/chatbot/langchain/" + activeOrganization,
+        process.env.NEXT_PUBLIC_API_URL +
+          "/chatbot/" +
+          (files.length == 0 ? "default/" : "langchain/") +
+          activeOrganization,
         {
           messages: filteredMessages.map((message) => {
             if (message.isError) return;
@@ -127,11 +133,11 @@ export default function Dashboard() {
       )
       .then((res) => {
         const completion = res.data.completion;
-        // console.log(res.data);
+        console.log(completion);
         const reply = {
           role: "assistant",
           content: completion,
-          image: botImage
+          image: botImage,
         };
         setMessages((prev) => [...prev, reply]);
       })
@@ -189,9 +195,10 @@ export default function Dashboard() {
 
   function deleteFile(filename) {
     const toastPromise = toast.loading("Deleting...", {
-      className: "custom-loading"
+      className: "custom-loading",
     });
-    axios.delete(process.env.NEXT_PUBLIC_API_URL + "/assistant-data/file/" + activeOrganization + "/" + filename)
+    axios
+      .delete(process.env.NEXT_PUBLIC_API_URL + "/assistant-data/file/" + activeOrganization + "/" + filename)
       .then(() => {
         toast.update(toastPromise, {
           type: "success",
@@ -226,14 +233,18 @@ export default function Dashboard() {
               setState={setActiveOrganization}
               options={organizatons}
             />
-            {
-              botImage && (
-                <div>
-                  <h1 className="font-medium mt-4">Bot Photo</h1>
-                  <Image src={botImage} alt="Bot Photo" width={80} height={80} className="mt-2"/>
-                </div>
-              )
-            }
+            {botImage && (
+              <div>
+                <h1 className="font-medium mt-4">Bot Photo</h1>
+                <Image
+                  src={botImage}
+                  alt="Bot Photo"
+                  width={80}
+                  height={80}
+                  className="mt-2"
+                />
+              </div>
+            )}
             <label className="flex flex-col gap-2 font-medium mt-4">
               Name
               <input
@@ -262,9 +273,17 @@ export default function Dashboard() {
                   >
                     <div className="flex items-center gap-1">
                       <FaFileAlt />
-                      {file.length > 15 ? file.slice(0, file.length - 4).slice(0, 15) + "... [" + file.slice(file.length - 4, file.length) + "]" : file}
+                      {file.length > 15
+                        ? file.slice(0, file.length - 4).slice(0, 15) +
+                          "... [" +
+                          file.slice(file.length - 4, file.length) +
+                          "]"
+                        : file}
                     </div>
-                    <button className="pr-1" onClick={() => deleteFile(file)}>
+                    <button
+                      className="pr-1"
+                      onClick={() => deleteFile(file)}
+                    >
                       <RiDeleteBin6Fill className="text-red-delete hover:text-red-900" />
                     </button>
                   </div>
@@ -298,7 +317,17 @@ export default function Dashboard() {
           </section>
 
           <section className="w-full flex flex-col max-h-screen relative">
-            <h1 className="text-[24px] font-medium p-10 ">Chat</h1>
+            <div className="flex w-full justify-between items-center p-10">
+              <h1 className="text-[24px] font-medium">Chat</h1>
+              <button
+                className=" flex justify-center items-center gap-2 hover:bg-dark-brown/10 px-3 py-2 rounded-md transition-colors active:bg-dark-brown/20"
+                onClick={() => {
+                  setMessages([]);
+                }}
+              >
+                Reset Chat <FaArrowRotateLeft className="" />
+              </button>
+            </div>
 
             <div className="max-h-full overflow-y-auto">
               <div className="px-10 bg-white mb-[80px]">
@@ -317,7 +346,14 @@ export default function Dashboard() {
                 {isBotTyping && (
                   <div className="w-full flex gap-4 items-start py-[7px]">
                     <div className="size-[44px] flex-shrink-0 bg-gradient-to-br from-dark-brown to-light-yellow rounded-full">
-                      <Image alt="Bot Image" src={botImage} width={44} height={44} />
+                      {botImage && (
+                        <Image
+                          alt="Bot Image"
+                          src={botImage}
+                          width={44}
+                          height={44}
+                        />
+                      )}
                     </div>
                     <div className="bg-[#EBEBEB] py-[10px] px-4 rounded-[8px] flex gap-3 min-h-[44px] items-center">
                       <div className="size-[6px] bg-dark-brown rounded-full animate-chat-loading" />
