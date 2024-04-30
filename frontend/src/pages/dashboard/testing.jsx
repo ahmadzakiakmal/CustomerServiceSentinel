@@ -66,7 +66,7 @@ export default function Dashboard() {
         withCredentials: true,
       })
       .then((res) => {
-        console.log(res);
+        // console.log(res);
         setFiles(res.data.files);
         setName(res.data.name);
         setInitialName(res.data.name);
@@ -127,7 +127,7 @@ export default function Dashboard() {
       )
       .then((res) => {
         const completion = res.data.completion;
-        console.log(res.data);
+        // console.log(res.data);
         const reply = {
           role: "assistant",
           content: completion,
