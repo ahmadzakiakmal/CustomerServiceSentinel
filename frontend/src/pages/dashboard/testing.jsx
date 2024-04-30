@@ -348,7 +348,8 @@ export default function Dashboard() {
             <div className="flex w-full justify-between items-center p-10">
               <h1 className="text-[24px] font-medium">Chat</h1>
               <button
-                className=" flex justify-center items-center gap-2 hover:bg-dark-brown/10 px-3 py-2 rounded-md transition-colors active:bg-dark-brown/20"
+                className={" flex justify-center items-center gap-2 hover:bg-dark-brown/10 px-3 py-2 rounded-md transition-colors active:bg-dark-brown/20" + 
+                (messages.length == 0 ? " hidden" : "")}
                 onClick={() => {
                   setMessages([]);
                 }}
