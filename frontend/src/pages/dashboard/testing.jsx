@@ -233,18 +233,46 @@ export default function Dashboard() {
               setState={setActiveOrganization}
               options={organizatons}
             />
-            {botImage && (
-              <div>
-                <h1 className="font-medium mt-4">Bot Photo</h1>
-                <Image
-                  src={botImage}
-                  alt="Bot Photo"
-                  width={80}
-                  height={80}
-                  className="mt-2"
-                />
-              </div>
-            )}
+            <div>
+              <h1 className="font-medium mt-4 mb-2">Bot Photo</h1>
+              {
+                botImage !== "" ? (
+                  <div className="flex gap-2 items-end">
+                    <Image
+                      src={botImage}
+                      alt="Bot Photo"
+                      width={80}
+                      height={80}
+                    />
+                    <label htmlFor="photo-change-input" className="cursor-pointer underline font-semibold">
+                      Change
+                    </label>
+                    <input
+                      type="file"
+                      className="hidden"
+                      id="photo-change-input"
+                      name="photo-change-input"
+                      accept=".jpg,.png"
+                    />
+                  </div>
+                ) : (
+                  <>
+                    <label
+                      htmlFor="photo-input"
+                      className="w-[80px] h-[80px] flex justify-center items-center gap-2 py-5 cursor-pointer text-light-brown rounded-md outline-1 outline-light-brown outline-dashed px-3 lg:py-2.5 font-medium text-center"
+                    >
+                      Add Photo
+                    </label>
+                    <input
+                      type="file"
+                      className="hidden"
+                      id="photo-input"
+                      name="photo-input"
+                      accept=".jpg,.png"
+                    /></>
+                )
+              }
+            </div>
             <label className="flex flex-col gap-2 font-medium mt-4">
               Name
               <input
