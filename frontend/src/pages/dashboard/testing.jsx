@@ -61,6 +61,7 @@ export default function Dashboard() {
 
   useEffect(() => {
     if (!activeOrganization) return;
+    setIsLoading(true);
     setMessages([]);
     axios
       .get(process.env.NEXT_PUBLIC_API_URL + "/assistant-data/" + activeOrganization, {
@@ -90,6 +91,9 @@ export default function Dashboard() {
         toast.error(cutMessage(err?.response?.data?.message) ?? "Can't connect to server", {
           className: "custom-error",
         });
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
   }, [activeOrganization]);
 
@@ -133,7 +137,7 @@ export default function Dashboard() {
       )
       .then((res) => {
         const completion = res.data.completion;
-        console.log(completion);
+        // console.log(completion);
         const reply = {
           role: "assistant",
           content: completion,
@@ -225,7 +229,14 @@ export default function Dashboard() {
     <main>
       <Layout>
         <main className="text-dark-brown flex min-h-screen overflow-y-hidden">
-          <section className="min-w-[340px] border-r border-[#CACACA] p-10 flex-shrink-0">
+          <section className="min-w-[340px] border-r border-[#CACACA] p-10 flex-shrink-0 relative">
+            {isLoading && (
+              <div className="w-full h-full bg-dark-brown/60 backdrop-blur-[8px] absolute left-0 top-0 z-[1] flex justify-center items-center">
+                <h1 className="text-[25px] font-semibold animate-pulse text-white">
+                  Loading...
+                </h1>
+              </div>
+            )}
             <h1 className="text-[24px] font-medium mb-[50px]">Testing</h1>
             <Dropdown
               className="w-full"
@@ -408,11 +419,12 @@ export default function Dashboard() {
                       if (isBotTyping) return;
                       else setMessage(e.target.value);
                     }}
+                    disabled={isBotTyping || isLoading}
                   />
                   <button
                     type="submit"
-                    className="p-3 text-[20px] text-black disabled:cursor-not-allowed disabled:text-black/60"
-                    disabled={message === "" || isBotTyping}
+                    className="p-3 text-[20px] text-black disabled:cursor-not-allowed disabled:text-black/60 disabled:bg-slate-400/10"
+                    disabled={message === "" || isBotTyping || isLoading}
                   >
                     {isBotTyping ? <ImSpinner8 className="text-black animate-spin" /> : <IoSendSharp />}
                   </button>
