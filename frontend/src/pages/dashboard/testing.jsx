@@ -7,11 +7,10 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { IoSendSharp } from "react-icons/io5";
 import { ImSpinner8 } from "react-icons/im";
-import { MdOutlineFileUpload } from "react-icons/md";
 import { RiDeleteBin6Fill } from "react-icons/ri";
 import { FaFileAlt } from "react-icons/fa";
 import { FaArrowRotateLeft } from "react-icons/fa6";
-
+import { BsInfoCircleFill } from "react-icons/bs";
 import Button from "@/components/Button";
 import Image from "next/image";
 
@@ -29,8 +28,9 @@ export default function Dashboard() {
   const [botImage, setBotImage] = useState("");
   // const [initialFile, setInitialFile] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-
   const [isDataChanged, setIsDataChanged] = useState(false);
+  const [inputImage, setInputImage] = useState({});
+  const [inputImageLink, setInputImageLink] = useState("");
 
   useEffect(() => {
     axios
@@ -231,7 +231,7 @@ export default function Dashboard() {
         <main className="text-dark-brown flex min-h-screen overflow-y-hidden">
           <section className="min-w-[340px] border-r border-[#CACACA] p-10 flex-shrink-0 relative">
             {isLoading && (
-              <div className="w-full h-full bg-dark-brown/60 backdrop-blur-[8px] absolute left-0 top-0 z-[1] flex justify-center items-center">
+              <div className="w-full h-full bg-dark-brown/60 backdrop-blur-[8px] absolute left-0 top-0 z-[2] flex justify-center items-center">
                 <h1 className="text-[25px] font-semibold animate-pulse text-white">
                   Loading...
                 </h1>
@@ -239,22 +239,49 @@ export default function Dashboard() {
             )}
             <h1 className="text-[24px] font-medium mb-[50px]">Testing</h1>
             <Dropdown
-              className="w-full"
+              className="w-full z-[1]"
               state={activeOrganization}
               setState={setActiveOrganization}
               options={organizatons}
             />
-            <div>
-              <h1 className="font-medium mt-4 mb-2">Bot Photo</h1>
+            <div className="mt-4 mb-2">
+              <div className="flex items-center gap-2">
+                <h1 className="font-medium">Bot Photo</h1>
+                <div className="relative select-none">
+                  <BsInfoCircleFill className="cursor-pointer" onMouseEnter={() => {
+                    const info = document.querySelector("#image-info");
+                    info.classList.toggle("hidden");
+                    setTimeout(() => {
+                      info.classList.toggle("opacity-100");
+                    }, 100);
+                  }} 
+                  onMouseLeave={() => {
+                    const info = document.querySelector("#image-info");
+                    info.classList.toggle("opacity-0");
+                    setTimeout(() => {
+                      info.classList.toggle("hidden");
+                    }, 100);
+                  }}
+                  />
+                  <div id="image-info" className="hidden opacity-0 transition-opacity bg-white outline outline-1 outline-dark-brown absolute w-max px-2 py-1 rounded-md top-[calc(100%+8px)] left-0">
+                    Use <strong>1:1 aspect ratio</strong> images
+                    <br />
+                    Max size <strong>1 MB</strong>
+                  </div>
+                </div>
+              </div>
               {
                 botImage !== "" ? (
                   <div className="flex gap-2 items-end">
-                    <Image
-                      src={botImage}
-                      alt="Bot Photo"
-                      width={80}
-                      height={80}
-                    />
+                    <div className="size-[80px] relative flex justify-center items-center">
+                      <Image
+                        src={inputImageLink !== "" ? inputImageLink : botImage}
+                        alt="Bot Photo"
+                        width={80}
+                        height={80}
+                        className="h-full absolute select-none"
+                      />
+                    </div>
                     <label htmlFor="photo-change-input" className="cursor-pointer underline font-semibold">
                       Change
                     </label>
@@ -264,6 +291,16 @@ export default function Dashboard() {
                       id="photo-change-input"
                       name="photo-change-input"
                       accept=".jpg,.png"
+                      onChange={(e) => {
+                        if(e.target.files[0].size > 1024 * 1024) {
+                          return toast.error("Image exceeds size limit", {
+                            className: "custom-error"
+                          });
+                        }
+                        const blob = URL.createObjectURL(e.target.files[0]);
+                        setInputImage(e.target.files[0]);
+                        setInputImageLink(blob);
+                      }}
                     />
                   </div>
                 ) : (
@@ -280,7 +317,8 @@ export default function Dashboard() {
                       id="photo-input"
                       name="photo-input"
                       accept=".jpg,.png"
-                    /></>
+                    />
+                  </>
                 )
               }
             </div>
