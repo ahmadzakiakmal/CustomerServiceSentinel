@@ -10,10 +10,10 @@ assistant_data_bp = Blueprint("data_blueprint", __name__)
 @assistant_data_bp.route("/<id>", methods=["PATCH"])
 def update_instruction(id):
   assistant_data = AssistantData.objects(organization=id).first()
-  if request.form.get('username', 'default_username'):
-    assistant_data.instruction = request.form.get('username', 'default_username')
-  if request.form.get('description', 'No description provided'):
-    assistant_data.name = request.form.get('description', 'No description provided')
+  if request.form.get('name'):
+    assistant_data.name = request.form.get('name')
+  if request.form.get('instruction'):
+    assistant_data.instruction = request.form.get('instruction')
   if "file" in request.files:
     assistant_data.image.replace(request.files["file"], content_type='image/jpeg', filename='image.jpg')
     assistant_data.save()
