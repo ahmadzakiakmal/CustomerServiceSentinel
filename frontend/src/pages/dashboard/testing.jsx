@@ -401,9 +401,6 @@ export default function Dashboard() {
             >
               Save
             </Button>
-            {isDataChanged ? "udh diubah" : "blm diubah"}
-            <br/ >
-            {inputImageLink === "" ? "ada gambar" : "gk ada" }
           </section>
 
           <section className="w-full flex flex-col max-h-screen relative">
@@ -443,6 +440,7 @@ export default function Dashboard() {
                           src={botImage}
                           width={44}
                           height={44}
+                          className="h-[44px] absolute select-none"
                         />
                       )}
                     </div>
