@@ -9,16 +9,15 @@ assistant_data_bp = Blueprint("data_blueprint", __name__)
 
 @assistant_data_bp.route("/<id>", methods=["PATCH"])
 def update_instruction(id):
-  body = request.get_json()
-  if not body.get("instruction") and body.get("name"):
-    raise BadRequest("Missing required parameter")
   assistant_data = AssistantData.objects(organization=id).first()
-  if not assistant_data:
-    raise NotFound("Organization does not exist")
-  if body.get("instruction"):
-    assistant_data.instruction = body.get("instruction")
-  if body.get("name"):
-    assistant_data.name = body.get("name")
+  if request.form.get('username', 'default_username'):
+    assistant_data.instruction = request.form.get('username', 'default_username')
+  if request.form.get('description', 'No description provided'):
+    assistant_data.name = request.form.get('description', 'No description provided')
+  if "file" in request.files:
+    assistant_data.image.replace(request.files["file"], content_type='image/jpeg', filename='image.jpg')
+    assistant_data.save()
+
   assistant_data.save()
   return jsonify({"message": "Updated instruction successfully", "assistant-data": assistant_data}), 200
 
@@ -78,12 +77,12 @@ def delete_file(id, filename):
 
 @assistant_data_bp.route("/image/<id>", methods=["POST"])
 def upload_image(id):
-  if 'file' not in request.files:
+  if "file" not in request.files:
     raise BadRequest("No file found")
   assistant_data = AssistantData.objects(organization=id).first()
   if not assistant_data:
     raise DoesNotExist("Organization does not exist")
-  image = request.files['file']
+  image = request.files["file"]
   if not image or image.filename == '':
     raise BadRequest("No selected file")
 
