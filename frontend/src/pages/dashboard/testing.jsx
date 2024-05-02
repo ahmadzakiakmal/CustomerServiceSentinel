@@ -164,6 +164,11 @@ export default function Dashboard() {
   }
 
   function saveData() {
+    if(!isDataChanged && inputImageLink === "") {
+      return toast.error("No changes to save", {
+        className: "custom-error"
+      });
+    }
     setIsLoading(true);
     const loadingToast = toast.loading("Saving...", { className: "custom-loading" });
     const formData = new FormData();
@@ -199,6 +204,7 @@ export default function Dashboard() {
       })
       .finally(() => {
         setIsLoading(false);
+        setIsDataChanged(false);
       });
   }
 
@@ -390,12 +396,6 @@ export default function Dashboard() {
             <Button
               className="w-full text-[16px] !font-medium mt-2"
               onClick={() => {
-                if(!isDataChanged && inputImage === "") {
-                  toast.error("No changes to save", {
-                    className: "custom-error"
-                  });
-                }
-                setIsDataChanged(false);
                 saveData();
               }}
             >
