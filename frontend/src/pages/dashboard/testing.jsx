@@ -63,6 +63,8 @@ export default function Dashboard() {
     if (!activeOrganization) return;
     setIsLoading(true);
     setMessages([]);
+    setInputImage({});
+    setInputImageLink("");
     axios
       .get(process.env.NEXT_PUBLIC_API_URL + "/assistant-data/" + activeOrganization, {
         withCredentials: true,
@@ -164,13 +166,16 @@ export default function Dashboard() {
   function saveData() {
     setIsLoading(true);
     const loadingToast = toast.loading("Saving...", { className: "custom-loading" });
+    const formData = new FormData();
+    if(isDataChanged) {
+      formData.append("name", name);
+      formData.append("instruction", instruction);
+    }
+    formData.append("file", inputImage);
     axios
       .patch(
         process.env.NEXT_PUBLIC_API_URL + "/assistant-data/" + activeOrganization,
-        {
-          instruction,
-          name,
-        },
+        formData,
         { withCredentials: true }
       )
       .then(() => {
@@ -292,6 +297,7 @@ export default function Dashboard() {
                       name="photo-change-input"
                       accept=".jpg,.png"
                       onChange={(e) => {
+                        if(!e.target.files[0]) return;
                         if(e.target.files[0].size > 1024 * 1024) {
                           return toast.error("Image exceeds size limit", {
                             className: "custom-error"
@@ -380,17 +386,24 @@ export default function Dashboard() {
               name="file-input"
               accept=".txt"
             />
-            {isDataChanged && <div className="mt-4 text-red-delete">⚠️ You have unsaved changes</div>}
+            {(isDataChanged || inputImageLink !== "")  && <div className="mt-4 text-red-delete">⚠️ You have unsaved changes</div>}
             <Button
-              disabled={!isDataChanged || isLoading}
               className="w-full text-[16px] !font-medium mt-2"
               onClick={() => {
+                if(!isDataChanged && inputImage === "") {
+                  toast.error("No changes to save", {
+                    className: "custom-error"
+                  });
+                }
                 setIsDataChanged(false);
                 saveData();
               }}
             >
               Save
             </Button>
+            {isDataChanged ? "udh diubah" : "blm diubah"}
+            <br/ >
+            {inputImageLink === "" ? "ada gambar" : "gk ada" }
           </section>
 
           <section className="w-full flex flex-col max-h-screen relative">
