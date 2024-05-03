@@ -164,25 +164,23 @@ export default function Dashboard() {
   }
 
   function saveData() {
-    if(!isDataChanged && inputImageLink === "") {
+    if (!isDataChanged && inputImageLink === "") {
       return toast.error("No changes to save", {
-        className: "custom-error"
+        className: "custom-error",
       });
     }
     setIsLoading(true);
     const loadingToast = toast.loading("Saving...", { className: "custom-loading" });
     const formData = new FormData();
-    if(isDataChanged) {
+    if (isDataChanged) {
       formData.append("name", name);
       formData.append("instruction", instruction);
     }
     formData.append("file", inputImage);
     axios
-      .patch(
-        process.env.NEXT_PUBLIC_API_URL + "/assistant-data/" + activeOrganization,
-        formData,
-        { withCredentials: true }
-      )
+      .patch(process.env.NEXT_PUBLIC_API_URL + "/assistant-data/" + activeOrganization, formData, {
+        withCredentials: true,
+      })
       .then(() => {
         toast.update(loadingToast, {
           render: "Success",
@@ -243,9 +241,7 @@ export default function Dashboard() {
           <section className="min-w-[340px] border-r border-[#CACACA] p-10 flex-shrink-0 relative">
             {isLoading && (
               <div className="w-full h-full bg-dark-brown/60 backdrop-blur-[8px] absolute left-0 top-0 z-[2] flex justify-center items-center">
-                <h1 className="text-[25px] font-semibold animate-pulse text-white">
-                  Loading...
-                </h1>
+                <h1 className="text-[25px] font-semibold animate-pulse text-white">Loading...</h1>
               </div>
             )}
             <h1 className="text-[24px] font-medium mb-[50px]">Testing</h1>
@@ -259,80 +255,108 @@ export default function Dashboard() {
               <div className="flex items-center gap-2">
                 <h1 className="font-medium">Bot Photo</h1>
                 <div className="relative select-none">
-                  <BsInfoCircleFill className="cursor-pointer" onMouseEnter={() => {
-                    const info = document.querySelector("#image-info");
-                    info.classList.toggle("hidden");
-                    setTimeout(() => {
-                      info.classList.toggle("opacity-100");
-                    }, 100);
-                  }} 
-                  onMouseLeave={() => {
-                    const info = document.querySelector("#image-info");
-                    info.classList.toggle("opacity-0");
-                    setTimeout(() => {
+                  <BsInfoCircleFill
+                    className="cursor-pointer"
+                    onMouseEnter={() => {
+                      const info = document.querySelector("#image-info");
                       info.classList.toggle("hidden");
-                    }, 100);
-                  }}
+                      setTimeout(() => {
+                        info.classList.toggle("opacity-100");
+                      }, 100);
+                    }}
+                    onMouseLeave={() => {
+                      const info = document.querySelector("#image-info");
+                      info.classList.toggle("opacity-0");
+                      setTimeout(() => {
+                        info.classList.toggle("hidden");
+                      }, 100);
+                    }}
                   />
-                  <div id="image-info" className="hidden opacity-0 transition-opacity bg-white outline outline-1 outline-dark-brown absolute w-max px-2 py-1 rounded-md top-[calc(100%+8px)] left-0">
+                  <div
+                    id="image-info"
+                    className="hidden opacity-0 transition-opacity bg-white outline outline-1 outline-dark-brown absolute w-max px-2 py-1 rounded-md top-[calc(100%+8px)] left-0"
+                  >
                     Use <strong>1:1 aspect ratio</strong> images
                     <br />
                     Max size <strong>1 MB</strong>
                   </div>
                 </div>
               </div>
-              {
-                botImage !== "" ? (
-                  <div className="flex gap-2 items-end">
-                    <div className="size-[80px] relative flex justify-center items-center">
-                      <Image
-                        src={inputImageLink !== "" ? inputImageLink : botImage}
-                        alt="Bot Photo"
-                        width={80}
-                        height={80}
-                        className="h-full absolute select-none"
-                      />
-                    </div>
-                    <label htmlFor="photo-change-input" className="cursor-pointer underline font-semibold">
-                      Change
-                    </label>
-                    <input
-                      type="file"
-                      className="hidden"
-                      id="photo-change-input"
-                      name="photo-change-input"
-                      accept=".jpg,.png"
-                      onChange={(e) => {
-                        if(!e.target.files[0]) return;
-                        if(e.target.files[0].size > 1024 * 1024) {
-                          return toast.error("Image exceeds size limit", {
-                            className: "custom-error"
-                          });
-                        }
-                        const blob = URL.createObjectURL(e.target.files[0]);
-                        setInputImage(e.target.files[0]);
-                        setInputImageLink(blob);
-                      }}
+              {botImage !== "" ? (
+                <div className="flex gap-2 items-end">
+                  <div className="size-[80px] relative flex justify-center items-center">
+                    <Image
+                      src={inputImageLink !== "" ? inputImageLink : botImage}
+                      alt="Bot Photo"
+                      width={80}
+                      height={80}
+                      className="h-full absolute select-none"
                     />
                   </div>
-                ) : (
-                  <>
-                    <label
-                      htmlFor="photo-input"
-                      className="w-[80px] h-[80px] flex justify-center items-center gap-2 py-5 cursor-pointer text-light-brown rounded-md outline-1 outline-light-brown outline-dashed px-3 lg:py-2.5 font-medium text-center"
-                    >
-                      Add Photo
-                    </label>
-                    <input
-                      type="file"
-                      className="hidden"
-                      id="photo-input"
-                      name="photo-input"
-                      accept=".jpg,.png"
-                    />
-                  </>
-                )
-              }
+                  <label
+                    htmlFor="photo-change-input"
+                    className="cursor-pointer underline font-semibold"
+                  >
+                    Change
+                  </label>
+                  <input
+                    type="file"
+                    className="hidden"
+                    id="photo-change-input"
+                    name="photo-change-input"
+                    accept=".jpg,.png"
+                    onChange={(e) => {
+                      if (!e.target.files[0]) return;
+                      if (e.target.files[0].size > 1024 * 1024) {
+                        return toast.error("Image exceeds size limit", {
+                          className: "custom-error",
+                        });
+                      }
+                      const blob = URL.createObjectURL(e.target.files[0]);
+                      setInputImage(e.target.files[0]);
+                      setInputImageLink(blob);
+                    }}
+                  />
+                </div>
+              ) : (
+                <div className="flex gap-2 items-end">
+                  <Image
+                    src={inputImageLink}
+                    alt="Bot Photo"
+                    width={80}
+                    height={80}
+                    className={"h-[80px] select-none " + (inputImageLink === "" ? "hidden" : "")}
+                  />
+                  <label
+                    htmlFor="photo-input"
+                    className={
+                      inputImageLink === ""
+                        ? "w-[80px] h-[80px] flex justify-center items-center gap-2 py-5 cursor-pointer text-light-brown rounded-md outline-1 outline-light-brown outline-dashed px-3 lg:py-2.5 font-medium text-center "
+                        : "cursor-pointer underline font-semibold"
+                    }
+                  >
+                    {inputImageLink === "" ? "Add Photo" : "Change"}
+                  </label>
+                  <input
+                    type="file"
+                    className="hidden"
+                    id="photo-input"
+                    name="photo-input"
+                    accept=".jpg,.png"
+                    onChange={(e) => {
+                      if (!e.target.files[0]) return;
+                      if (e.target.files[0].size > 1024 * 1024) {
+                        return toast.error("Image exceeds size limit", {
+                          className: "custom-error",
+                        });
+                      }
+                      const blob = URL.createObjectURL(e.target.files[0]);
+                      setInputImage(e.target.files[0]);
+                      setInputImageLink(blob);
+                    }}
+                  />
+                </div>
+              )}
             </div>
             <label className="flex flex-col gap-2 font-medium mt-4">
               Name
@@ -392,7 +416,9 @@ export default function Dashboard() {
               name="file-input"
               accept=".txt"
             />
-            {(isDataChanged || inputImageLink !== "")  && <div className="mt-4 text-red-delete">⚠️ You have unsaved changes</div>}
+            {(isDataChanged || inputImageLink !== "") && (
+              <div className="mt-4 text-red-delete">⚠️ You have unsaved changes</div>
+            )}
             <Button
               className="w-full text-[16px] !font-medium mt-2"
               onClick={() => {
@@ -407,8 +433,10 @@ export default function Dashboard() {
             <div className="flex w-full justify-between items-center p-10">
               <h1 className="text-[24px] font-medium">Chat</h1>
               <button
-                className={" flex justify-center items-center gap-2 hover:bg-dark-brown/10 px-3 py-2 rounded-md transition-colors active:bg-dark-brown/20" + 
-                (messages.length == 0 ? " hidden" : "")}
+                className={
+                  " flex justify-center items-center gap-2 hover:bg-dark-brown/10 px-3 py-2 rounded-md transition-colors active:bg-dark-brown/20" +
+                  (messages.length == 0 ? " hidden" : "")
+                }
                 onClick={() => {
                   setMessages([]);
                 }}
