@@ -3,30 +3,30 @@ import Dropdown from "@/components/Dropdown";
 import Layout from "@/components/Layout";
 import cutMessage from "@/utilities/cutMessage";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { act, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { IoSendSharp } from "react-icons/io5";
 import { ImSpinner8 } from "react-icons/im";
-import { RiDeleteBin6Fill } from "react-icons/ri";
+import { RiArrowDownLine, RiArrowUpCircleFill, RiArrowUpCircleLine, RiDeleteBin6Fill } from "react-icons/ri";
 import { FaFileAlt } from "react-icons/fa";
 import { FaArrowRotateLeft } from "react-icons/fa6";
 import { BsInfoCircleFill } from "react-icons/bs";
 import Button from "@/components/Button";
 import Image from "next/image";
 
-export default function Dashboard() {
+export default function TestingDashboard() {
   const [activeOrganization, setActiveOrganization] = useState("");
   const [organizatons, setOrganizations] = useState([]);
   const [name, setName] = useState("");
   const [instruction, setInstructions] = useState("");
   const [files, setFiles] = useState([]);
+  const [tempFiles, setTempFiles] = useState([]);
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
   const [isBotTyping, setIsBotTyping] = useState(false);
   const [initialName, setInitialName] = useState("");
   const [initialInstruction, setInitialInstruction] = useState("");
   const [botImage, setBotImage] = useState("");
-  // const [initialFile, setInitialFile] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isDataChanged, setIsDataChanged] = useState(false);
   const [inputImage, setInputImage] = useState({});
@@ -54,7 +54,7 @@ export default function Dashboard() {
       })
       .catch((err) => {
         toast.error(cutMessage(err?.response?.data?.message) ?? "Can't connect to server", {
-          className: "custom-error",
+          className: "custom",
         });
       });
   }, []);
@@ -65,6 +65,7 @@ export default function Dashboard() {
     setMessages([]);
     setInputImage({});
     setInputImageLink("");
+    setTempFiles([]);
     axios
       .get(process.env.NEXT_PUBLIC_API_URL + "/assistant-data/" + activeOrganization, {
         withCredentials: true,
@@ -91,7 +92,7 @@ export default function Dashboard() {
       })
       .catch((err) => {
         toast.error(cutMessage(err?.response?.data?.message) ?? "Can't connect to server", {
-          className: "custom-error",
+          className: "custom",
         });
       })
       .finally(() => {
@@ -149,7 +150,7 @@ export default function Dashboard() {
       })
       .catch((err) => {
         toast.error(err?.response?.data?.message ?? "Can't connect to server", {
-          className: "custom-error",
+          className: "custom",
         });
         const errorMessage = {
           role: "assistant",
@@ -166,11 +167,11 @@ export default function Dashboard() {
   function saveData() {
     if (!isDataChanged && inputImageLink === "") {
       return toast.error("No changes to save", {
-        className: "custom-error",
+        className: "custom",
       });
     }
     setIsLoading(true);
-    const loadingToast = toast.loading("Saving...", { className: "custom-loading" });
+    const loadingToast = toast.loading("Saving...", { className: "custom" });
     const formData = new FormData();
     if (isDataChanged) {
       formData.append("name", name);
@@ -187,7 +188,7 @@ export default function Dashboard() {
           type: "success",
           isLoading: false,
           autoClose: 5000,
-          className: "custom-success",
+          className: "custom",
         });
         setMessages([]);
       })
@@ -197,7 +198,7 @@ export default function Dashboard() {
           type: "error",
           isLoading: false,
           autoClose: 5000,
-          className: "custom-error",
+          className: "custom",
         });
       })
       .finally(() => {
@@ -208,7 +209,7 @@ export default function Dashboard() {
 
   function deleteFile(filename) {
     const toastPromise = toast.loading("Deleting...", {
-      className: "custom-loading",
+      className: "custom",
     });
     axios
       .delete(process.env.NEXT_PUBLIC_API_URL + "/assistant-data/file/" + activeOrganization + "/" + filename)
@@ -217,7 +218,7 @@ export default function Dashboard() {
           type: "success",
           isLoading: false,
           render: "File deleted successfully",
-          className: "custom-success",
+          className: "custom",
           autoClose: 5000,
         });
         const newFiles = files.filter((file) => file !== filename);
@@ -229,7 +230,47 @@ export default function Dashboard() {
           type: "error",
           isLoading: false,
           autoClose: 5000,
-          className: "custom-error",
+          className: "custom",
+        });
+      });
+  }
+
+  function deleteTempFile(filename) {
+    const newTempFile = tempFiles.filter((file) => file.name !== filename);
+    setTempFiles(newTempFile);
+  }
+
+  function uploadTempFile(filename) {
+    // console.log(tempFiles.filter((file) => file.name === filename));
+    const toastPromise = toast.loading("Uploading...", { className: "custom" });
+    const formData = new FormData();
+    const file = tempFiles.filter((file) => file.name === filename)[0];
+    formData.append(
+      "file",
+      file
+    );
+    axios
+      .post(process.env.NEXT_PUBLIC_API_URL + "/assistant-data/file/" + activeOrganization, formData, {
+        withCredentials: true,
+      })
+      .then((res) => {
+        const newTempFiles = tempFiles.filter((file) => file.name !== filename);
+        setTempFiles(newTempFiles);
+        setFiles((prev) => [...prev, res.data.filename]);
+        toast.update(toastPromise, {
+          render: "Upload success",
+          isLoading: false,
+          autoClose: 5000,
+          type: "success",
+        });
+      })
+      .catch((err) => {
+        toast.update(toastPromise, {
+          render: err?.response?.data?.message ?? "Can't connect to server",
+          type: "error",
+          isLoading: false,
+          autoClose: 5000,
+          className: "custom",
         });
       });
   }
@@ -238,7 +279,7 @@ export default function Dashboard() {
     <main>
       <Layout>
         <main className="text-dark-brown flex min-h-screen overflow-y-hidden">
-          <section className="min-w-[340px] border-r border-[#CACACA] p-10 flex-shrink-0 relative">
+          <section className="min-w-[340px] border-r border-[#CACACA] p-10 flex-shrink-0 relative max-h-screen overflow-y-auto">
             {isLoading && (
               <div className="w-full h-full bg-dark-brown/60 backdrop-blur-[8px] absolute left-0 top-0 z-[2] flex justify-center items-center">
                 <h1 className="text-[25px] font-semibold animate-pulse text-white">Loading...</h1>
@@ -309,7 +350,7 @@ export default function Dashboard() {
                       if (!e.target.files[0]) return;
                       if (e.target.files[0].size > 1024 * 1024) {
                         return toast.error("Image exceeds size limit", {
-                          className: "custom-error",
+                          className: "custom",
                         });
                       }
                       const blob = URL.createObjectURL(e.target.files[0]);
@@ -347,7 +388,7 @@ export default function Dashboard() {
                       if (!e.target.files[0]) return;
                       if (e.target.files[0].size > 1024 * 1024) {
                         return toast.error("Image exceeds size limit", {
-                          className: "custom-error",
+                          className: "custom",
                         });
                       }
                       const blob = URL.createObjectURL(e.target.files[0]);
@@ -378,7 +419,6 @@ export default function Dashboard() {
             <h1 className="flex flex-col gap-2 font-medium mt-4 mb-2">Additional Data</h1>
             <div className="flex flex-col gap-1 my-2">
               {files.map((file, index) => {
-                // console.log();
                 return (
                   <div
                     key={index}
@@ -402,6 +442,39 @@ export default function Dashboard() {
                   </div>
                 );
               })}
+              {tempFiles.length != 0 && <h1 className="flex flex-col gap-2 font-medium mt-4 mb-1">Unsaved Data</h1>}
+              {tempFiles.map((file, index) => {
+                return (
+                  <div
+                    key={index}
+                    className="flex justify-between items-center"
+                  >
+                    <div className="flex items-center gap-1">
+                      <FaFileAlt />
+                      {file?.name?.length > 15
+                        ? file?.name.slice(0, file.name.length - 4).slice(0, 15) +
+                          "... [" +
+                          file?.name.slice(file.name.length - 4, file.name.length) +
+                          "]"
+                        : file?.name}
+                    </div>
+                    <div className="flex items-center">
+                      <button
+                        className="pr-1"
+                        onClick={() => uploadTempFile(file.name)}
+                      >
+                        <RiArrowUpCircleFill className="text-[18px] text-blue-500 hover:text-blue-900" />
+                      </button>
+                      <button
+                        className="pr-1"
+                        onClick={() => deleteTempFile(file.name)}
+                      >
+                        <RiDeleteBin6Fill className="text-red-delete hover:text-red-900" />
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
             <label
               htmlFor="file-input"
@@ -415,6 +488,21 @@ export default function Dashboard() {
               id="file-input"
               name="file-input"
               accept=".txt"
+              onInput={(e) => {
+                if (e.target.files[0] === undefined)
+                  return toast.error("Max amount of file reached", {
+                    className: "custom",
+                  });
+                else {
+                  if (3 - tempFiles.length - files.length <= 0) {
+                    toast.error("Max amount of file reached", {
+                      className: "custom",
+                    });
+                  } else {
+                    setTempFiles((prev) => [...prev, e.target.files[0]]);
+                  }
+                }
+              }}
             />
             {(isDataChanged || inputImageLink !== "") && (
               <div className="mt-4 text-red-delete">⚠️ You have unsaved changes</div>
