@@ -17,7 +17,7 @@ export default function LoginPage() {
   const handleSubmit = (event) => {
     event.preventDefault();
     if (email.length < 1 || !email.includes("@") || !email.includes(".")) return toast.error("Invalid email");
-    const toastify = toast.loading("Loading", { className: "custom-loading" });
+    const toastify = toast.loading("Loading", { className: "custom" });
     setIsLoading(true);
     axios
       .post(
@@ -37,7 +37,7 @@ export default function LoginPage() {
           type: "success",
           isLoading: false,
           autoClose: 5000,
-          className: "custom-success",
+          className: "custom",
         });
       })
       .catch((err) => {
@@ -46,7 +46,7 @@ export default function LoginPage() {
           type: "error",
           isLoading: false,
           autoClose: 5000,
-          className: "custom-error",
+          className: "custom",
         });
       })
       .finally(() => setIsLoading(false));
