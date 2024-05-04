@@ -53,7 +53,8 @@ def upload_file(id):
     assistant_data.save()
 
     return jsonify({
-      "message": "File upload successful"
+      "message": "File upload successful",
+      "filename": filename
     }), 200
   
 @assistant_data_bp.route("/file/<id>/<filename>", methods=["DELETE"])
