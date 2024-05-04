@@ -67,7 +67,8 @@ def chat(id):
   completion = client.chat.completions.create(
     model="gpt-3.5-turbo",
     messages=messages,
-    max_tokens=500
+    max_tokens=500,
+    temperature=0.0
   )
   # for message in messages:
   #   print(message)
@@ -117,7 +118,8 @@ def chat_customized(id):
   completion = client.chat.completions.create(
     model="gpt-3.5-turbo",
     messages=messages,
-    max_tokens=500
+    max_tokens=500,
+    temperature=0.0
   )
   # for message in messages:
   #   print(message)
