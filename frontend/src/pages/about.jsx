@@ -1,63 +1,70 @@
 import Link from "next/link";
 import Image from "next/image";
+import Logo from "@/../public/assets/css_logo.svg";
 
-const AboutUs = () => {
+const Landing = () => {
   return (
-    <div className="h-screen bg-white-bg relative">
-      <div className="absolute flex flex-row top-0 right-0 mt-4">
-        <h1 className="mr-4 text-sm md:text-base lg:text-lg font-medium text-dark-brown">
-          Login
-        </h1>
-        <h1 className="mr-4 text-sm md:text-base lg:text-lg font-medium text-dark-brown">
-          Sign Up
-        </h1>
-      </div>
-      <div className="absolute top-20 w-full flex justify-center">
-        <div className="mx-auto flex flex-col items-center justify-center">
-          <img
-            src="../public/assets/css_logo_wtext.svg"
-            alt="logo"
-            width="300px"
-          />
-          <h2 className="text-center text-xl md:text-2xl lg:text-3xl font-medium text-dark-brown mt-4">
-            Your AI Partner in Customer Satisfaction
+    <div className="min-h-screen relative bg-white px-[5%] lg:px-0 flex flex-col justify-center items-center">
+      <nav className="flex flex-row justify-end w-full fixed top-0 px-[5%] py-[50px] lg:px-[128px] lg:py-[32px] gap-8 text-[18px]">
+        <NavbarLink href="/auth/login" text="Login" />
+        <NavbarLink href="/auth/register" text="Register" />
+      </nav>
+      <div className="flex flex-row items-center">
+        <Image
+          priority
+          src={Logo}
+          alt="Logo"
+          className="w-[100px] lg:w-[130.25px] !flex-shrink-0 z-[1]"
+        />
+        <div className="flex flex-col justify-start ml-2">
+          <h2 className="font-extrabold drop-shadow text-2xl">
+            CUSTOMER SERVICE
           </h2>
-          <div className="flex justify-center items-center">
-            <div className="mt-8 mr-8 ml-8 flex flex-row">
-              <div className="flex-1 mr-4 p-4">
-                <h1 className="text-lg md:text-xl lg:text-2xl font-medium text-dark-brown">
-                  Fast
-                </h1>
-                <h1 className="mt-4 text-sm md:text-base lg:text-lg font-medium text-dark-brown">
-                  Fast customer service AI ensures prompt assistance to meet the
-                  needs of customers efficiently
-                </h1>
-              </div>
-              <div className="flex-1 mr-4 p-4">
-                <h1 className="text-lg md:text-xl lg:text-2xl font-medium text-dark-brown">
-                  Responsive
-                </h1>
-                <h1 className="mt-4 text-sm md:text-base lg:text-lg font-medium text-dark-brown">
-                  Responsive customer service AI guarantees quick and attentive
-                  assistance, adapting swiftly to address customer inquiries
-                </h1>
-              </div>
-              <div className="flex-1 p-4">
-                <h1 className="text-lg md:text-xl lg:text-2xl font-medium text-dark-brown">
-                  Adaptable
-                </h1>
-                <h1 className="mt-4 text-sm md:text-base lg:text-lg font-medium text-dark-brown">
-                  An adaptable customer service AI swiftly adjusts to various
-                  scenarios, offering tailored solutions to meet diverse
-                  customer needs effectively
-                </h1>
-              </div>
-            </div>
-          </div>
+          <h2 className="text-5xl font-bold drop-shadow ">SENTINEL</h2>
+        </div>
+      </div>
+      <div className="mt-4 lg:mt-8">
+        <h2 className="text-[25px] lg:text-[32px] text-center lg:text-left font-medium text-dark-brown max-w-[500px] xl:max-w-[624px] mb-[74px]">
+          Your AI Partner in Customer Satisfaction
+        </h2>
+      </div>
+      <div className="grid grid-cols-3 justify-center gap-4 lg:px-[212px] text-dark-brown">
+        <div className="flex flex-col justify-center  w-auto">
+          <h2 className="text-[22px] mb-[18px]">Fast</h2>
+          <h2 className="text-[18px]">
+            Fast customer service AI ensures prompt assistance to meet the needs
+            of customers efficiently
+          </h2>
+        </div>
+        <div className="flex flex-col justify-center w-auto">
+          <h2 className="text-[22px] mb-[18px]">Responsive</h2>
+          <h2 className="text-[18px]">
+            Responsive customer service AI guarantees quick and attentive
+            assistance, adapting swiftly to address customer inquiries
+          </h2>
+        </div>
+        <div className="flex flex-col justify-center w-auto">
+          <h2 className="text-[22px] mb-[18px]">Adaptable</h2>
+          <h2 className="text-[18px]">
+            An adaptable customer service AI swiftly adjusts to various
+            scenarios, offering tailored solutions to meet diverse customer
+            needs effectively
+          </h2>
         </div>
       </div>
     </div>
   );
 };
 
-export default AboutUs;
+function NavbarLink({ href, text }) {
+  return (
+    <Link
+      href={href}
+      className="font-medium text-dark-brown relative flex flex-col after:w-full after:h-[3px] after:bg-dark-brown after:origin-left after:scale-x-0 after:hover:scale-100 after:transition"
+    >
+      {text}
+    </Link>
+  );
+}
+
+export default Landing;
