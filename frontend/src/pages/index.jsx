@@ -6,7 +6,7 @@ const Landing = () => {
   return (
     <div className="min-h-screen relative bg-light-yellow px-[5%] lg:px-0 flex justify-center items-center">
       <nav className="flex flex-row justify-end w-full fixed top-0 px-[5%] py-[50px] lg:px-[128px] lg:py-[64px] gap-8 text-[18px]">
-        <NavbarLink href="/about-us" text="About Us" />
+        <NavbarLink href="/about" text="About Us" />
         <NavbarLink href="/auth/login" text="Login" />
         <NavbarLink href="/auth/register" text="Sign Up" />
       </nav>
@@ -21,7 +21,12 @@ const Landing = () => {
           </h2>
         </div>
         <div className="flex justify-center items-center relative">
-          <Image priority src={Logo} alt="Logo" className="w-[240px] lg:w-[272.25px] !flex-shrink-0 z-[1]" />
+          <Image
+            priority
+            src={Logo}
+            alt="Logo"
+            className="w-[240px] lg:w-[272.25px] !flex-shrink-0 z-[1]"
+          />
           <div className="w-full h-[95%] bg-dark-brown/60 absolute top-0 blur-[30px] rounded-full" />
         </div>
       </div>
@@ -29,9 +34,12 @@ const Landing = () => {
   );
 };
 
-function NavbarLink({href, text}) {
-  return(
-    <Link href={href} className="font-medium text-dark-brown relative flex flex-col after:w-full after:h-[3px] after:bg-dark-brown after:origin-left after:scale-x-0 after:hover:scale-100 after:transition">
+function NavbarLink({ href, text }) {
+  return (
+    <Link
+      href={href}
+      className="font-medium text-dark-brown relative flex flex-col after:w-full after:h-[3px] after:bg-dark-brown after:origin-left after:scale-x-0 after:hover:scale-100 after:transition"
+    >
       {text}
     </Link>
   );
