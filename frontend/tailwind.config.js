@@ -15,16 +15,16 @@ module.exports = {
       colors: {
         "dark-brown": "#39311D",
         "light-brown": "#7E7474",
-        "yellow": "#FFDD93",
+        yellow: "#FFDD93",
         "light-yellow": "#FFF3D9",
         "green-edit": "#73B125",
         "red-delete": "#B12525",
-        "white-bg": "#FFFFFF",
-        "light-gray": "#EBEBEB"
+        "light-gray": "#EBEBEB",
+        "bright-yellow": "FEF2D8",
       },
       fontFamily: {
-        "rubik": "Rubik"
-      }
+        rubik: "Rubik",
+      },
     },
   },
   plugins: [],
