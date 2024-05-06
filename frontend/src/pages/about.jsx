@@ -28,23 +28,25 @@ const Landing = () => {
           Your AI Partner in Customer Satisfaction
         </h2>
       </div>
-      <div className="grid grid-cols-3 justify-center gap-4 lg:px-[212px] text-dark-brown">
-        <div className="flex flex-col justify-center  w-auto">
-          <h2 className="text-[22px] mb-[18px]">Fast</h2>
+      <div className="grid grid-cols-3 justify-center gap-4 lg:px-[212px] text-dark-brown relative">
+        <div className="flex flex-col justify-center  w-auto border-r-[1px] border-solid border-lightgray relative">
+          <h2 className="text-[22px] mb-[18px] border-r-[1px] border-solid border-lightgray">
+            Fast
+          </h2>
           <h2 className="text-[18px]">
             Fast customer service AI ensures prompt assistance to meet the needs
             of customers efficiently
           </h2>
         </div>
-        <div className="flex flex-col justify-center w-auto">
+        <div className="flex flex-col justify-center w-auto border-r-[1px] border-solid border-lightgray relative">
           <h2 className="text-[22px] mb-[18px]">Responsive</h2>
           <h2 className="text-[18px]">
             Responsive customer service AI guarantees quick and attentive
             assistance, adapting swiftly to address customer inquiries
           </h2>
         </div>
-        <div className="flex flex-col justify-center w-auto">
-          <h2 className="text-[22px] mb-[18px]">Adaptable</h2>
+        <div className="flex flex-col justify-center w-auto relative">
+          <h2 className="text-[22px] mb-[18px] ">Adaptable</h2>
           <h2 className="text-[18px]">
             An adaptable customer service AI swiftly adjusts to various
             scenarios, offering tailored solutions to meet diverse customer
