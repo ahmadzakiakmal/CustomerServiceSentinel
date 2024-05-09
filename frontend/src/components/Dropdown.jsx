@@ -17,7 +17,7 @@ export default function Dropdown({
     },
   ],
   state,
-  setState,
+  setState = () => {},
   className,
 }) {
   const [value, setValue] = useState(options[0]?.value);

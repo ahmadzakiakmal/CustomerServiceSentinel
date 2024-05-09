@@ -4,7 +4,7 @@ import Logo from "@/../public/assets/css_logo.svg";
 
 const Landing = () => {
   return (
-    <div className="min-h-screen relative bg-white px-[5%] lg:px-0 flex flex-col justify-center items-center">
+    <div className="min-h-screen relative bg-light-yellow px-[5%] lg:px-0 flex flex-col justify-center items-center">
       <nav className="flex flex-row justify-end w-full fixed top-0 px-[5%] py-[50px] lg:px-[128px] lg:py-[32px] gap-8 text-[18px]">
         <NavbarLink href="/auth/login" text="Login" />
         <NavbarLink href="/auth/register" text="Register" />
