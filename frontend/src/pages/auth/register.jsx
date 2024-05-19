@@ -34,33 +34,37 @@ export default function LoginPage() {
         >
           <h1 className="text-center font-bold text-lg md:text-xl lg:text-2xl">Register Here!</h1>
           <FormInput
-            label="Email"
-            name="email"
-            state={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <FormInput
-            label="Confirm Password"
-            type="password"
-            name="password"
-            state={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <FormInput
-            label="Password"
-            type="password"
-            name="password"
-            state={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-          />
-          <FormInput
             label="Username"
             type="text"
             name="username"
             state={username}
             onChange={(e) => setUsername(e.target.value)}
+            placeholder="johndoe123"
           />
-          <Button onClick={() => alert("Not implemented")} className="w-full" disabled={true}>Register</Button>
+          <FormInput
+            label="Email"
+            name="email"
+            state={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="johndoe@mail.com"
+          />
+          <FormInput
+            label="Password"
+            type="password"
+            name="password"
+            state={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Enter your password here"
+          />
+          <FormInput
+            label="Confirm Password"
+            type="password"
+            name="password"
+            state={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            placeholder="Enter your password here"
+          />
+          <Button onClick={() => alert("Not implemented")} className="w-full text-white" disabled={true}>Register</Button>
           <Link
             href="/auth/login"
             className="text-sm"
