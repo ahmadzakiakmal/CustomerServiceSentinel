@@ -1,7 +1,12 @@
 import { useState } from "react";
 
 export default function LoginPage({}) {
-  const categories = ["Organization A", "Organization B", "Organization C", "Organization D"];
+  const categories = [
+    "Organization A",
+    "Organization B",
+    "Organization C",
+    "Organization D",
+  ];
   const tableData = [
     {
       id: 1,
@@ -79,19 +84,24 @@ export default function LoginPage({}) {
 
     // Filter data berdasarkan kategori yang dipilih
     if (category === null || category === "All Organizations") {
-      // Jika kategori "All Organizations" dipilih, tampilkan semua data
+      // Jika kategori "All Organizations" dipilih, tampilkan semua data dan sembunyikan div
       setFilteredData(tableData);
+      setDisplayOrganizationButtons(false); // Menyembunyikan div
     } else {
-      // Jika kategori tertentu dipilih, filter data berdasarkan organisasi yang sesuai
+      // Jika kategori tertentu dipilih, filter data berdasarkan organisasi yang sesuai dan tampilkan div
       const filtered = tableData.filter(
         (item) => item.organization === category,
       );
       setFilteredData(filtered);
+      setDisplayOrganizationButtons(true); // Menampilkan div
     }
 
     // Sembunyikan dropdown setelah kategori dipilih
     toggleDropdown();
   };
+
+  const [displayOrganizationButtons, setDisplayOrganizationButtons] =
+    useState(false);
 
   const toggleDropdown = () => {
     const dropdown = document.getElementById("dropdown");
@@ -105,10 +115,10 @@ export default function LoginPage({}) {
           Organization Data
         </div>
         <div className="mt-8">
-          <div>
-            <form className="max-w-lg">
+          <div className="flex-row">
+            <form className="items-center max-w-lg">
               <div className="flex">
-                <div id="dropdown-button">
+                <div id="dropdown-button" className="mr-4">
                   <label
                     htmlFor="search-dropdown"
                     className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white"
@@ -166,6 +176,23 @@ export default function LoginPage({}) {
                     </ul>
                   </div>
                 </div>
+                <div>
+                  <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                    Add Organization
+                  </button>
+                </div>
+                {displayOrganizationButtons && (
+          <div className="flex">
+            <div className="ml-4">
+              <button
+                type="button"
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+              >
+                Add Staff
+              </button>
+            </div>
+          </div>
+        )}
               </div>
             </form>
           </div>
@@ -214,26 +241,28 @@ export default function LoginPage({}) {
             </tbody>
           </table>
         </div>
-        <div className="flex mt-4">
-          <div className="flex h-full px-2 py-4">
-            <button
-              type="button"
-              className="flex font-bold items-center justify-center rounded bg-green-edit px-4 py-2 text-white-bg"
-            >
-              {/* <IoColorWandSharp className="mr-2" /> */}
-              Edit Organization
-            </button>
+        {displayOrganizationButtons && (
+          <div className="flex mt-4">
+            <div className="flex h-full px-2 py-4">
+              <button
+                type="button"
+                className="flex font-bold items-center justify-center rounded bg-green-edit px-4 py-2 text-white-bg"
+              >
+                {/* <IoColorWandSharp className="mr-2" /> */}
+                Edit Organization
+              </button>
+            </div>
+            <div className="flex h-full px-2 py-4">
+              <button
+                type="button"
+                className="flex font-bold items-center justify-center rounded bg-red-delete px-4 py-2 text-white-bg"
+              >
+                {/* <IoTrashBinSharp className="mr-2" /> */}
+                Delete Organization
+              </button>
+            </div>
           </div>
-          <div className="flex h-full px-2 py-4">
-            <button
-              type="button"
-              className="flex font-bold items-center justify-center rounded bg-red-delete px-4 py-2 text-white-bg"
-            >
-              {/* <IoTrashBinSharp className="mr-2" /> */}
-              Delete Organization
-            </button>
-          </div>
-        </div>
+        )}
       </div>
     </div>
   );

@@ -84,7 +84,7 @@ export default function LoginPage() {
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Enter your password here"
           />
-          <Button onClick={handleSubmit} className="w-full" disabled={isLoading}>Login</Button>
+          <Button onClick={handleSubmit} className="w-full text-white" disabled={isLoading}>Login</Button>
           <Link
             href="/auth/register"
             className="text-sm"

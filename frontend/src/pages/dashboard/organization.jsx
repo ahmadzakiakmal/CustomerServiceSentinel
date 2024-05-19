@@ -1,6 +1,7 @@
 import Dropdown from "@/components/Dropdown";
 import Layout from "@/components/Layout";
 import { useState } from "react";
+import Modal from "@/components/modal/Modal";
 
 export default function LoginPage({}) {
   const tableData = [
@@ -73,6 +74,18 @@ export default function LoginPage({}) {
   ];
 
   const [filteredData, setFilteredData] = useState(tableData);
+  const [showModal, setShowModal] = useState(false);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const formData = new FormData();
+    try {
+      e.preventDefault();
+      onClose();
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <Layout>
@@ -85,6 +98,22 @@ export default function LoginPage({}) {
                 <div className="flex">
                   <Dropdown />
                 </div>
+              </form>
+              <form className="mt-4 mx-3">
+                <label for="password">Edit Organization Name:</label>
+
+                <input
+                  type="text"
+                  className="border-b-2 mx-2"
+                  placeholder="Organization's Name"
+                  required
+                />
+
+                <button 
+                type="submit"
+                className="text-green-edit">
+                  Save
+                </button>
               </form>
             </div>
             <table className="mt-16 table w-3/4 text-center">
@@ -109,21 +138,28 @@ export default function LoginPage({}) {
                       <div className="flex justify-center items-center h-full">
                         <button
                           type="button"
-                          className="flex items-center justify-center rounded bg-green-edit px-4 py-2 text-white-bg"
+                          className="flex items-center justify-center rounded bg-green-edit px-4 py-2 text-white font-medium"
+                          onClick={() => setShowModal(true)}
                         >
                           {/* <IoColorWandSharp className="mr-2" /> */}
-                        Edit
+                          Edit
                         </button>
+                        {showModal && (
+                          <Modal
+                            show={showModal}
+                            onClose={() => setShowModal(false)}
+                          />
+                        )}
                       </div>
                     </td>
                     <td className="py-2 pl-3 text-center">
                       <div className="flex justify-center items-center h-full">
                         <button
                           type="button"
-                          className="flex items-center justify-center rounded bg-red-delete px-4 py-2 text-white-bg"
+                          className="flex items-center justify-center rounded bg-red-delete px-4 py-2 text-white font-medium"
                         >
                           {/* <IoTrashBinSharp className="mr-2" /> */}
-                        Delete
+                          Delete
                         </button>
                       </div>
                     </td>
@@ -131,26 +167,6 @@ export default function LoginPage({}) {
                 ))}
               </tbody>
             </table>
-          </div>
-          <div className="flex mt-4">
-            <div className="flex h-full px-2 py-4">
-              <button
-                type="button"
-                className="flex font-bold items-center justify-center rounded bg-green-edit px-4 py-2 text-white-bg"
-              >
-                {/* <IoColorWandSharp className="mr-2" /> */}
-              Edit Organization
-              </button>
-            </div>
-            <div className="flex h-full px-2 py-4">
-              <button
-                type="button"
-                className="flex font-bold items-center justify-center rounded bg-red-delete px-4 py-2 text-white-bg"
-              >
-                {/* <IoTrashBinSharp className="mr-2" /> */}
-              Delete Organization
-              </button>
-            </div>
           </div>
         </div>
       </main>
