@@ -316,7 +316,7 @@ export default function TestingDashboard() {
                   />
                   <div
                     id="image-info"
-                    className="hidden opacity-0 transition-opacity bg-white outline outline-1 outline-dark-brown absolute w-max px-2 py-1 rounded-md top-[calc(100%+8px)] left-0"
+                    className="hidden opacity-0 transition-opacity bg-white outline outline-1 outline-dark-brown absolute w-max px-2 py-1 rounded-md top-[calc(100%+8px)] left-[-50px] z-[1]"
                   >
                     Use <strong>1:1 aspect ratio</strong> images
                     <br />
