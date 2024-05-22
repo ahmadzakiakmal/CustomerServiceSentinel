@@ -156,6 +156,7 @@ export default function TestingDashboard() {
           role: "assistant",
           content: err?.response?.data?.message ?? "Can't connect to server",
           isError: true,
+          image: botImage
         };
         setMessages((prev) => [...prev, errorMessage]);
       })
