@@ -16,7 +16,7 @@ export default function ChatBubble({ isSender, content, time, isError, image }) 
     );
   return (
     <div className="w-full flex gap-4 items-start py-[7px]">
-      <div className="size-[44px] flex-shrink-0 bg-gradient-to-br from-dark-brown to-light-yellow rounded-full">
+      <div className="size-[44px] flex-shrink-0 bg-gradient-to-br from-dark-brown to-light-yellow rounded-full relative">
         {
           image && <Image alt="Bot Image" src={image} width={44} height={44} className="h-[44px] absolute select-none" />
         }
