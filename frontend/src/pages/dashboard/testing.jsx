@@ -60,12 +60,13 @@ export default function TestingDashboard() {
   }, []);
 
   useEffect(() => {
-    if (!activeOrganization) return;
     setIsLoading(true);
+    if(!activeOrganization) return;
     setMessages([]);
     setInputImage({});
     setInputImageLink("");
     setTempFiles([]);
+
     axios
       .get(process.env.NEXT_PUBLIC_API_URL + "/assistant-data/" + activeOrganization, {
         withCredentials: true,
@@ -91,9 +92,11 @@ export default function TestingDashboard() {
         }
       })
       .catch((err) => {
-        toast.error(cutMessage(err?.response?.data?.message) ?? "Can't connect to server", {
-          className: "custom",
-        });
+        if(activeOrganization) {
+          toast.error(cutMessage(err?.response?.data?.message) ?? "Can't connect to server", {
+            className: "custom",
+          });
+        }
       })
       .finally(() => {
         setIsLoading(false);
@@ -282,7 +285,7 @@ export default function TestingDashboard() {
         <main className="text-dark-brown flex flex-col md:flex-row min-h-screen overflow-y-hidden">
           <section className="min-w-[340px] border-r border-[#CACACA] p-10 flex-shrink-0 relative max-h-screen overflow-y-auto md:outline-none border-b">
             {isLoading && (
-              <div className="w-full h-full bg-dark-brown/60 backdrop-blur-[8px] absolute left-0 top-0 z-[2] flex justify-center items-center">
+              <div className="w-full  h-full bg-dark-brown/60 backdrop-blur-[8px] absolute left-0 top-0 z-[10] flex justify-center items-center">
                 <h1 className="text-[25px] font-semibold animate-pulse text-white">Loading...</h1>
               </div>
             )}
@@ -518,7 +521,7 @@ export default function TestingDashboard() {
             </Button>
           </section>
 
-          <section className="w-full flex flex-col min-h-screen max-h-screen relative">
+          <section className="w-full flex flex-col min-h-screen max-h-screen relative z-[1]">
             <div className="flex w-full justify-between items-center p-10">
               <h1 className="text-[24px] font-medium">Chat</h1>
               <button
