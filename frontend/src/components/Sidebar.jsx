@@ -27,16 +27,16 @@ const Sidebar = () => {
             active={router.pathname === "/dashboard"}
           /> */}
           <SidebarLink
-            text="Chat"
-            link="/dashboard/chat"
-            icon={<IoChatboxEllipses />}
-            active={router.pathname === "/dashboard/chat"}
-          />
-          <SidebarLink
             text="Testing"
             link="/dashboard/testing"
             icon={<MdNoteAlt />}
             active={router.pathname === "/dashboard/testing"}
+          />
+          <SidebarLink
+            text="Chat"
+            link="/dashboard/chat"
+            icon={<IoChatboxEllipses />}
+            active={router.pathname === "/dashboard/chat"}
           />
           <SidebarLink
             text="Organization"
