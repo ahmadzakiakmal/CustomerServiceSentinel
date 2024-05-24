@@ -82,7 +82,7 @@ def hello_world():
         Backend
       </p>
       <p style='margin: 0; font-size: 20px'>
-        Version 0.0.1
+        Version 1.0
       </p>
     </div>
   </body>
