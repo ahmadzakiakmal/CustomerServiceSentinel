@@ -4,6 +4,9 @@ import Logo from "@/../public/assets/css_logo.svg";
 import Link from "next/link";
 import Button from "@/components/Button";
 import { useRouter } from "next/router";
+import { toast } from "react-toastify";
+import axios from "axios";
+import cutMessage from "@/utilities/cutMessage";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -15,7 +18,40 @@ export default function LoginPage() {
   const handleSubmit = (event) => {
     event.preventDefault();
     // TODO: Handle register logic here
-    alert(email + "\n" + password);
+    if (!username) return toast.error("Username can't be empty", { className: "custom" });
+    if (!email) return toast.error("Email can't be empty", { className: "custom" });
+    if (!email) return toast.error("Email can't be empty", { className: "custom" });
+    if (email.length < 1 || !email.includes("@") || !email.includes("."))
+      return toast.error("Invalid email", { className: "custom" });
+    if (password !== confirmPassword)
+      return toast.error("Password and its confirmation is not the same", { className: "custom" });
+
+    const toastify = toast.loading("Loading", { className: "custom" });
+    axios
+      .post(process.env.NEXT_PUBLIC_API_URL + "/user/register", {
+        user_name: username,
+        email,
+        password,
+      })
+      .then(() => {
+        router.push("/auth/login");
+        toast.update(toastify, {
+          render: "Register success, you can now log in",
+          type: "success",
+          isLoading: false,
+          autoClose: 5000,
+          className: "custom",
+        });
+      })
+      .catch((err) => {
+        toast.update(toastify, {
+          render: cutMessage(err?.response?.data?.message) ?? "Can't connect to the server",
+          type: "error",
+          isLoading: false,
+          autoClose: 5000,
+          className: "custom",
+        });
+      });
   };
 
   return (
@@ -71,9 +107,15 @@ export default function LoginPage() {
             name="password"
             state={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
-            placeholder="Enter your password here"
+            placeholder="Confirm your password"
           />
-          <Button onClick={() => alert("Not implemented")} className="w-full text-white" disabled={true}>Register</Button>
+          <Button
+            className="w-full text-white"
+            disabled={!username || !email || !password || !confirmPassword}
+            type="submit"
+          >
+            Register
+          </Button>
           <Link
             href="/auth/login"
             className="text-sm"

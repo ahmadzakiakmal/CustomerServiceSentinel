@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify, make_response, g
-from werkzeug.exceptions import BadRequest, Unauthorized, NotFound, Conflict
+from werkzeug.exceptions import BadRequest, Unauthorized, NotFound, Conflict, UnsupportedMediaType
 from models import User
 from middlewares.authentications import authenticateUser
 import bcrypt
@@ -11,7 +11,11 @@ user_bp = Blueprint("user_blueprint", __name__)
 
 @user_bp.route("/register", methods=["POST"])
 def create_user(): 
-  data = request.get_json()
+  data = None
+  try: 
+    data = request.get_json()
+  except:
+    raise UnsupportedMediaType("Body is not in JSON format")
   salt = bcrypt.gensalt()
 
   if not data.get("email") or not data.get("user_name") or not data.get("password"):
@@ -35,7 +39,11 @@ def create_user():
 
 @user_bp.route("/login", methods=["POST"])
 def login():
-  data = request.get_json()
+  data = None
+  try: 
+    data = request.get_json()
+  except:
+    raise UnsupportedMediaType("Body is not in JSON format")
   if not data.get("email") or not data.get("password"):
     raise BadRequest("Missing required parameters")
   

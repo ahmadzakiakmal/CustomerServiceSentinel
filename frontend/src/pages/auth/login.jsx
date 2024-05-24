@@ -31,8 +31,8 @@ export default function LoginPage() {
           withCredentials: true,
         }
       )
-      .then((res) => {
-        router.replace("/dashboard");
+      .then(() => {
+        router.replace("/dashboard/testing");
         toast.update(toastify, {
           render: "Login success",
           type: "success",
@@ -96,6 +96,7 @@ export default function LoginPage() {
             onClick={handleSubmit}
             className="w-full text-white"
             disabled={isLoading}
+            type="submit"
           >
             Login
           </Button>
