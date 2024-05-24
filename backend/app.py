@@ -20,7 +20,11 @@ if not os.environ.get("OPENAI_API_KEY") or not os.environ.get("MONGODB_URI") or 
   raise ValueError("Required environment variables are not found.")  
 
 app = Flask(__name__)
-CORS(app, supports_credentials=True, origins="*")
+origins = ["http://localhost:3000"]
+if os.get_env("FLASK_ENV") != "development":
+  origins = ["http://4.246.226.161:3000"]
+
+CORS(app, supports_credentials=True, origins=origins)
 app.config["MAX_CONTENT_LENGTH"] = 2 * 1024 * 1024
 app.config["MONGODB_SETTINGS"] = {
   "db": os.environ.get("MONGODB_DB"),
