@@ -34,7 +34,7 @@ jobs:
           ls
 
           # Build the new Docker image
-          docker build -t flask=app .
+          docker build -t flask-app .
 
           # Stop the running container
           docker ps -q --filter "ancestor=flask-app" | xargs -r docker stop
