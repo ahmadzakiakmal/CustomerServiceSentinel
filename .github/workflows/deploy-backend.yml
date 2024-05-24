@@ -41,8 +41,6 @@ jobs:
           spawn ssh-add ~/.ssh/id_ed25519_github
           expect "Enter passphrase for ~/.ssh/id_ed25519_github:"
           send "$GH_SSH_PASSPHRASE\r"
-          expect eof
-          DONE
           git config --global core.sshCommand "ssh -i ~/.ssh/id_ed25519_github -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no"
           cd ~/repositories/CustomerServiceSentinel/backend
           git pull origin main
