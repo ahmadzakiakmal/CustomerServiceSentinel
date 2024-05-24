@@ -3,12 +3,14 @@ import Image from "next/image";
 import Logo from "@/../public/assets/css_logo.svg";
 import Link from "next/link";
 import Button from "@/components/Button";
+import { useRouter } from "next/router";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [username, setUsername] = useState("");
+  const router = useRouter();
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -18,13 +20,20 @@ export default function LoginPage() {
 
   return (
     <div className="relative bg-white-bg min-h-screen flex flex-col justify-center items-center">
-      <nav className="flex items-center absolute top-0 w-full justify-between px-8 pt-4 hover:underline">
-        <Link href="/">Back</Link>
-        <Image
-          src={Logo}
-          alt="Logo"
-          className="w-[40px]"
-        />
+      <nav className="flex items-center absolute top-0 w-full justify-between px-8 pt-4">
+        <button
+          className="hover:underline"
+          onClick={() => router.back()}
+        >
+          Back
+        </button>
+        <Link href="/">
+          <Image
+            src={Logo}
+            alt="Logo"
+            className="w-[40px]"
+          />
+        </Link>
       </nav>
 
       <div className="flex w-[90%] sm:max-w-[384px] lg:max-w-[500px] justify-center items-center">

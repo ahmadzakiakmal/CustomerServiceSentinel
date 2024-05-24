@@ -16,7 +16,8 @@ export default function LoginPage() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    if (email.length < 1 || !email.includes("@") || !email.includes(".")) return toast.error("Invalid email");
+    if (email.length < 1 || !email.includes("@") || !email.includes("."))
+      return toast.error("Invalid email", { className: "custom" });
     const toastify = toast.loading("Loading", { className: "custom" });
     setIsLoading(true);
     axios
@@ -54,13 +55,20 @@ export default function LoginPage() {
 
   return (
     <div className="relative bg-white-bg min-h-screen flex flex-col justify-center items-center">
-      <nav className="flex items-center absolute top-0 w-full justify-between px-8 pt-4 hover:underline">
-        <Link href="/">Back</Link>
-        <Image
-          src={Logo}
-          alt="Logo"
-          className="w-[40px]"
-        />
+      <nav className="flex items-center absolute top-0 w-full justify-between px-8 pt-4">
+        <button
+          className="hover:underline"
+          onClick={() => router.back()}
+        >
+          Back
+        </button>
+        <Link href="/">
+          <Image
+            src={Logo}
+            alt="Logo"
+            className="w-[40px]"
+          />
+        </Link>
       </nav>
 
       <div className="flex w-[90%] sm:max-w-[384px] lg:max-w-[500px] justify-center items-center">
@@ -84,7 +92,13 @@ export default function LoginPage() {
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Enter your password here"
           />
-          <Button onClick={handleSubmit} className="w-full text-white" disabled={isLoading}>Login</Button>
+          <Button
+            onClick={handleSubmit}
+            className="w-full text-white"
+            disabled={isLoading}
+          >
+            Login
+          </Button>
           <Link
             href="/auth/register"
             className="text-sm"
