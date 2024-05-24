@@ -16,12 +16,14 @@ jobs:
       run: sudo apt-get update && sudo apt-get install -y sshpass openssh-client
 
     - name: Set up SSH agent for GitHub
+      env:
+        GH_SSH_PASSPHRASE: ${{ secrets.GH_SSH_PASSPHRASE }}
       run: |
         mkdir -p ~/.ssh
         echo "${{ secrets.GH_SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519_github
         chmod 600 ~/.ssh/id_ed25519_github
         eval $(ssh-agent -s)
-        ssh-add ~/.ssh/id_ed25519_github
+        echo "$GH_SSH_PASSPHRASE" | sshpass ssh-add ~/.ssh/id_ed25519_github
 
     - name: Add GitHub to known_hosts
       run: ssh-keyscan github.com >> ~/.ssh/known_hosts
@@ -41,12 +43,14 @@ jobs:
       run: sudo apt-get update && sudo apt-get install -y sshpass openssh-client
 
     - name: Set up SSH agent for VM
+      env:
+        VM_SSH_PASSPHRASE: ${{ secrets.VM_SSH_PASSPHRASE }}
       run: |
         mkdir -p ~/.ssh
         echo "${{ secrets.VM_SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519_vm
         chmod 600 ~/.ssh/id_ed25519_vm
         eval $(ssh-agent -s)
-        ssh-add ~/.ssh/id_ed25519_vm
+        echo "$VM_SSH_PASSPHRASE" | sshpass ssh-add ~/.ssh/id_ed25519_vm
 
     - name: Add VM to known_hosts
       run: ssh-keyscan ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
