@@ -5,7 +5,7 @@ on:
     branches: ["main"]
 
 jobs:
-  pull-code:
+  pull-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -13,25 +13,46 @@ jobs:
       uses: actions/checkout@v3
 
     - name: Install dependencies
-      run: sudo apt-get update && sudo apt-get install -y openssh-client expect
+      run: sudo apt-get update && sudo apt-get install -y sshpass openssh-client
 
-    - name: Set up SSH agent and add key
+    - name: Set up SSH agent and add VM key
       env:
-        GH_SSH_PASSPHRASE: ${{ secrets.GH_SSH_PASSPHRASE }}
+        VM_SSH_PASSPHRASE: ${{ secrets.VM_SSH_PASSPHRASE }}
       run: |
         mkdir -p ~/.ssh
-        echo "${{ secrets.GH_SSH_PRIVATE_KEY }}" | tr -d '\r' > ~/.ssh/id_ed25519
-        chmod 600 ~/.ssh/id_ed25519
+        echo "${{ secrets.VM_SSH_PRIVATE_KEY }}" | tr -d '\r' > ~/.ssh/id_ed25519_vm
+        chmod 600 ~/.ssh/id_ed25519_vm
         eval $(ssh-agent -s)
         expect <<- DONE
-        spawn ssh-add ~/.ssh/id_ed25519
-        expect "Enter passphrase for ~/.ssh/id_ed25519:"
-        send "$GH_SSH_PASSPHRASE\r"
+        spawn ssh-add ~/.ssh/id_ed25519_vm
+        expect "Enter passphrase for ~/.ssh/id_ed25519_vm:"
+        send "$VM_SSH_PASSPHRASE\r"
         expect eof
         DONE
 
-    - name: Add GitHub to known_hosts
-      run: ssh-keyscan github.com >> ~/.ssh/known_hosts
+    - name: Add VM to known_hosts
+      run: ssh-keyscan ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
 
-    - name: Pull latest code from GitHub
-      run: git pull origin main
+    - name: SSH into VM and pull latest code
+      env:
+        VM_SSH_PASSPHRASE: ${{ secrets.VM_SSH_PASSPHRASE }}
+        SSH_HOST: ${{ secrets.SSH_HOST }}
+        SSH_USER: ${{ secrets.SSH_USER }}
+        GH_SSH_PASSPHRASE: ${{ secrets.GH_SSH_PASSPHRASE }}
+        GH_SSH_PRIVATE_KEY: ${{ secrets.GH_SSH_PRIVATE_KEY }}
+      run: |
+        sshpass -p $VM_SSH_PASSPHRASE ssh -o StrictHostKeyChecking=no -A $SSH_USER@$SSH_HOST << 'EOF'
+          mkdir -p ~/.ssh
+          echo "$GH_SSH_PRIVATE_KEY" | tr -d '\r' > ~/.ssh/id_ed25519_github
+          chmod 600 ~/.ssh/id_ed25519_github
+          eval $(ssh-agent -s)
+          expect <<- DONE
+          spawn ssh-add ~/.ssh/id_ed25519_github
+          expect "Enter passphrase for ~/.ssh/id_ed25519_github:"
+          send "$GH_SSH_PASSPHRASE\r"
+          expect eof
+          DONE
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
+          cd ~/repositories/CustomerServiceSentinel/backend
+          GIT_SSH_COMMAND="ssh -i ~/.ssh/id_ed25519_github -o StrictHostKeyChecking=no" git pull origin main
+        EOF
