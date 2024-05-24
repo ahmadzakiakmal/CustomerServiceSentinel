@@ -32,7 +32,7 @@ jobs:
         SSH_PASSPHRASE: ${{ secrets.SSH_PASSPHRASE }}
       run: |
         sshpass -p $SSH_PASSPHRASE ssh -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST << 'EOF'
-          cd /repositories/CustomerServiceSentinel/backend
+          cd ~/repositories/CustomerServiceSentinel/backend
 
           # Build the new Docker image
           docker build -t $DOCKER_IMAGE .
