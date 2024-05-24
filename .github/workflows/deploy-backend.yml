@@ -13,7 +13,7 @@ jobs:
       uses: actions/checkout@v3
 
     - name: Install dependencies
-      run: sudo apt-get update && sudo apt-get install -y sshpass openssh-client
+      run: sudo apt-get update && sudo apt-get install -y openssh-client expect
 
     - name: Set up SSH agent and add VM key
       env:
@@ -23,6 +23,7 @@ jobs:
         echo "${{ secrets.VM_SSH_PRIVATE_KEY }}" | tr -d '\r' > ~/.ssh/id_ed25519_vm
         chmod 600 ~/.ssh/id_ed25519_vm
         eval $(ssh-agent -s)
+        which expect
         expect <<- DONE
         spawn ssh-add ~/.ssh/id_ed25519_vm
         expect "Enter passphrase for ~/.ssh/id_ed25519_vm:"
@@ -46,6 +47,7 @@ jobs:
           echo "$GH_SSH_PRIVATE_KEY" | tr -d '\r' > ~/.ssh/id_ed25519_github
           chmod 600 ~/.ssh/id_ed25519_github
           eval $(ssh-agent -s)
+          which expect
           expect <<- DONE
           spawn ssh-add ~/.ssh/id_ed25519_github
           expect "Enter passphrase for ~/.ssh/id_ed25519_github:"
