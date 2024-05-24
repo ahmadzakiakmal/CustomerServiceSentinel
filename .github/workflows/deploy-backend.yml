@@ -40,7 +40,7 @@ jobs:
           docker build -t flask-app .
 
           # Stop and remove the existing container if it is running
-          docker ps -q --filter "name=flask-app" | grep -q . && docker stop flask-app && docker rm flask-app
+          docker ps -a -q --filter "name=flask-app" | grep -q . && docker stop flask-app && docker rm -f flask-app
 
           # Check if any process is using port 5000 and stop it
           fuser -k 5000/tcp
