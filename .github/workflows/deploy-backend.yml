@@ -32,5 +32,16 @@ jobs:
       run: |
         sshpass -p ${{ secrets.VM_SSH_PASSPHRASE }} ssh -o StrictHostKeyChecking=no -A $SSH_USER@$SSH_HOST << 'EOF'
           cd ~/repositories/CustomerServiceSentinel/backend
+
+          # Pull newest changes
           git pull origin main
-        EOF
+
+          # Build the Docker image
+          docker build -t flask-app .
+
+          # Stop and remove the existing container if it is running
+          docker ps -q --filter "name=flask-app" | grep -q . && docker stop flask-app && docker rm flask-app
+
+          # Run the new container
+          docker run -d --name flask-app -p 5000:5000 --env-file .env flask-app
+          EOF
