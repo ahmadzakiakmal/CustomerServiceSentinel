@@ -12,8 +12,8 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
-    - name: Install sshpass and OpenSSH client
-      run: sudo apt-get update && sudo apt-get install -y sshpass openssh-client
+    - name: Install dependencies
+      run: sudo apt-get update && sudo apt-get install -y sshpass openssh-client expect
 
     - name: Set up SSH agent for GitHub
       env:
@@ -23,7 +23,12 @@ jobs:
         echo "${{ secrets.GH_SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519_github
         chmod 600 ~/.ssh/id_ed25519_github
         eval $(ssh-agent -s)
-        echo "$GH_SSH_PASSPHRASE" | sshpass ssh-add ~/.ssh/id_ed25519_github
+        expect <<- DONE
+        spawn ssh-add ~/.ssh/id_ed25519_github
+        expect "Enter passphrase for ~/.ssh/id_ed25519_github:"
+        send "$GH_SSH_PASSPHRASE\r"
+        expect eof
+        DONE
 
     - name: Add GitHub to known_hosts
       run: ssh-keyscan github.com >> ~/.ssh/known_hosts
@@ -32,15 +37,15 @@ jobs:
       env:
         GH_SSH_PASSPHRASE: ${{ secrets.GH_SSH_PASSPHRASE }}
       run: |
-        GIT_SSH_COMMAND="sshpass -p $GH_SSH_PASSPHRASE ssh -i ~/.ssh/id_ed25519_github -o StrictHostKeyChecking=no" git pull origin main
+        GIT_SSH_COMMAND="ssh -i ~/.ssh/id_ed25519_github -o StrictHostKeyChecking=no" git pull origin main
 
   setup-ssh-vm:
     runs-on: ubuntu-latest
     needs: setup-ssh-github
 
     steps:
-    - name: Install sshpass and OpenSSH client
-      run: sudo apt-get update && sudo apt-get install -y sshpass openssh-client
+    - name: Install dependencies
+      run: sudo apt-get update && sudo apt-get install -y sshpass openssh-client expect
 
     - name: Set up SSH agent for VM
       env:
@@ -50,7 +55,12 @@ jobs:
         echo "${{ secrets.VM_SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519_vm
         chmod 600 ~/.ssh/id_ed25519_vm
         eval $(ssh-agent -s)
-        echo "$VM_SSH_PASSPHRASE" | sshpass ssh-add ~/.ssh/id_ed25519_vm
+        expect <<- DONE
+        spawn ssh-add ~/.ssh/id_ed25519_vm
+        expect "Enter passphrase for ~/.ssh/id_ed25519_vm:"
+        send "$VM_SSH_PASSPHRASE\r"
+        expect eof
+        DONE
 
     - name: Add VM to known_hosts
       run: ssh-keyscan ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
@@ -63,5 +73,5 @@ jobs:
       run: |
         sshpass -p $VM_SSH_PASSPHRASE ssh -o StrictHostKeyChecking=no -A $SSH_USER@$SSH_HOST << 'EOF'
           cd ~/repositories/CustomerServiceSentinel/backend
-          GIT_SSH_COMMAND="sshpass -p $VM_SSH_PASSPHRASE ssh -i ~/.ssh/id_ed25519_vm -o StrictHostKeyChecking=no" git pull origin main
+          GIT_SSH_COMMAND="ssh -i ~/.ssh/id_ed25519_vm -o StrictHostKeyChecking=no" git pull origin main
         EOF
