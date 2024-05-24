@@ -36,12 +36,6 @@ jobs:
           # Pull newest changes
           git pull origin main
 
-          # Stop and remove the existing container if it is running
-          docker stop $(docker ps -a -q) 
-
-          # Check if any process is using port 5000 and stop it
-          fuser -k 5000/tcp
-
           # Run the new container
-          docker run -d --name flask-app -p 5000:5000 --env-file .env flask-app
+          docker run -d --name flask-app --rm -p 5000:5000 --env-file .env flask-app
         EOF
