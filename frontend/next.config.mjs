@@ -10,7 +10,7 @@ const nextConfig = {
       },
       {
         protocol: "http",
-        hostname: "http://4.246.226.161"
+        hostname: "4.246.226.161"
       }
     ]
   }
