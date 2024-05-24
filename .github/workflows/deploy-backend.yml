@@ -5,7 +5,7 @@ on:
     branches: ["main"]
 
 jobs:
-  pull-code:
+  setup-ssh-github:
     runs-on: ubuntu-latest
 
     steps:
@@ -15,29 +15,49 @@ jobs:
     - name: Install sshpass and OpenSSH client
       run: sudo apt-get update && sudo apt-get install -y sshpass openssh-client
 
-    - name: Set up SSH agent and add key
+    - name: Set up SSH agent for GitHub
       run: |
         mkdir -p ~/.ssh
-        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
-        chmod 600 ~/.ssh/id_ed25519
+        echo "${{ secrets.GH_SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519_github
+        chmod 600 ~/.ssh/id_ed25519_github
         eval $(ssh-agent -s)
-        echo ${{ secrets.SSH_PASSPHRASE }} | ssh-add ~/.ssh/id_ed25519
+        ssh-add ~/.ssh/id_ed25519_github
 
     - name: Add GitHub to known_hosts
       run: ssh-keyscan github.com >> ~/.ssh/known_hosts
 
+    - name: Pull latest code from GitHub
+      env:
+        GH_SSH_PASSPHRASE: ${{ secrets.GH_SSH_PASSPHRASE }}
+      run: |
+        GIT_SSH_COMMAND="sshpass -p $GH_SSH_PASSPHRASE ssh -i ~/.ssh/id_ed25519_github -o StrictHostKeyChecking=no" git pull origin main
+
+  setup-ssh-vm:
+    runs-on: ubuntu-latest
+    needs: setup-ssh-github
+
+    steps:
+    - name: Install sshpass and OpenSSH client
+      run: sudo apt-get update && sudo apt-get install -y sshpass openssh-client
+
+    - name: Set up SSH agent for VM
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.VM_SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519_vm
+        chmod 600 ~/.ssh/id_ed25519_vm
+        eval $(ssh-agent -s)
+        ssh-add ~/.ssh/id_ed25519_vm
+
+    - name: Add VM to known_hosts
+      run: ssh-keyscan ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+
     - name: SSH into VM and pull latest code
       env:
+        VM_SSH_PASSPHRASE: ${{ secrets.VM_SSH_PASSPHRASE }}
         SSH_HOST: ${{ secrets.SSH_HOST }}
         SSH_USER: ${{ secrets.SSH_USER }}
-        SSH_PASSPHRASE: ${{ secrets.SSH_PASSPHRASE }}
       run: |
-        sshpass -p $SSH_PASSPHRASE ssh -o StrictHostKeyChecking=no -A $SSH_USER@$SSH_HOST << 'EOF'
-          mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
-          chmod 600 ~/.ssh/id_ed25519
-          eval $(ssh-agent -s)
-          sshpass -p "$SSH_PASSPHRASE" ssh-add ~/.ssh/id_ed25519
+        sshpass -p $VM_SSH_PASSPHRASE ssh -o StrictHostKeyChecking=no -A $SSH_USER@$SSH_HOST << 'EOF'
           cd ~/repositories/CustomerServiceSentinel/backend
-          GIT_SSH_COMMAND="sshpass -p $SSH_PASSPHRASE ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no" git pull origin main
+          GIT_SSH_COMMAND="sshpass -p $VM_SSH_PASSPHRASE ssh -i ~/.ssh/id_ed25519_vm -o StrictHostKeyChecking=no" git pull origin main
         EOF
