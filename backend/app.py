@@ -22,7 +22,7 @@ if not os.environ.get("OPENAI_API_KEY") or not os.environ.get("MONGODB_URI") or 
 app = Flask(__name__)
 origins = ["http://localhost:3000"]
 if os.environ.get("FLASK_ENV") != "development":
-  origins = ["http://4.246.226.161:3000"]
+  origins = ["http://4.246.226.161"]
 
 CORS(app, supports_credentials=True, origins=origins)
 app.config["MAX_CONTENT_LENGTH"] = 2 * 1024 * 1024
