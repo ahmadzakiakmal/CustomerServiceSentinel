@@ -1,4 +1,4 @@
-name: Deploy Backend
+name: Re-Deploy on VM
 
 on:
   push:
@@ -31,11 +31,12 @@ jobs:
         GH_SSH_PRIVATE_KEY: ${{ secrets.GH_SSH_PRIVATE_KEY }}
       run: |
         sshpass -p ${{ secrets.VM_SSH_PASSPHRASE }} ssh -o StrictHostKeyChecking=no -A $SSH_USER@$SSH_HOST << 'EOF'
-          cd ~/repositories/CustomerServiceSentinel/backend
+          cd ~/repositories/CustomerServiceSentinel
 
           # Pull newest changes
           git pull origin main
 
-          # Run the new container
-          # docker run -d --name flask-app --rm -p 5000:5000 --env-file .env flask-app
+          # Stop the compose, then run again after rebuilding
+          docker-compose -f ./docker-compose.yml down
+          docker-compose -f ./docker-compose.yml up -d --build
         EOF
