@@ -13,6 +13,10 @@ RUN pip install --no-cache-dir virtualenv
 # Copy the current directory contents into the container at /backend
 COPY . /backend
 
+ENV OPENAI_API_KEY="fill only in vm"
+ENV MONGODB_URI="fill only in vm"
+ENV JWT_SECRET="fill only in vm"
+
 # Create a virtual environment
 RUN virtualenv venv
 
