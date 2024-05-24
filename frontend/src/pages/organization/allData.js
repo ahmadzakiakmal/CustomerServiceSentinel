@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export default function LoginPage({}) {
+export default function LoginPage({ }) {
   const categories = [
     "Organization A",
     "Organization B",
@@ -182,17 +182,17 @@ export default function LoginPage({}) {
                   </button>
                 </div>
                 {displayOrganizationButtons && (
-          <div className="flex">
-            <div className="ml-4">
-              <button
-                type="button"
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-              >
-                Add Staff
-              </button>
-            </div>
-          </div>
-        )}
+                  <div className="flex">
+                    <div className="ml-4">
+                      <button
+                        type="button"
+                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                      >
+                        Add Staff
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
             </form>
           </div>
