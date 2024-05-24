@@ -15,25 +15,35 @@ jobs:
     - name: Install dependencies
       run: sudo apt-get update && sudo apt-get install -y sshpass openssh-client
 
-    - name: Set up SSH for GitHub
-      run: |
-        mkdir -p ~/.ssh
-        echo "${{ secrets.GH_SSH_PRIVATE_KEY }}" | tr -d '\r' > ~/.ssh/id_ed25519
-        chmod 600 ~/.ssh/id_ed25519
-        ssh-keyscan github.com >> ~/.ssh/known_hosts
-        git config --global core.sshCommand "ssh -i ~/.ssh/id_ed25519 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no"
-
-    - name: SSH into VM and pull latest code
+    - name: Set up SSH for VM
       env:
-        SSH_HOST: ${{ secrets.SSH_HOST }}
-        SSH_USER: ${{ secrets.SSH_USER }}
         SSH_KEY: ${{ secrets.VM_SSH_PRIVATE_KEY }}
       run: |
         mkdir -p ~/.ssh
         echo "$SSH_KEY" | tr -d '\r' > ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa
-        ssh-keyscan $SSH_HOST >> ~/.ssh/known_hosts
-        ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST << 'EOF'
+        ssh-keyscan ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+
+    - name: SSH into VM and pull latest code
+      env:
+        SSH_HOST: ${{ secrets.SSH_HOST }}
+        SSH_USER: ${{ secrets.SSH_USER }}
+        GH_SSH_PRIVATE_KEY: ${{ secrets.GH_SSH_PRIVATE_KEY }}
+        GH_SSH_PASSPHRASE: ${{ secrets.GH_SSH_PASSPHRASE }}
+      run: |
+        sshpass -p ${{ secrets.VM_SSH_PASSPHRASE }} ssh -o StrictHostKeyChecking=no -A $SSH_USER@$SSH_HOST << 'EOF'
+          mkdir -p ~/.ssh
+          echo "$GH_SSH_PRIVATE_KEY" | tr -d '\r' > ~/.ssh/id_ed25519_github
+          chmod 600 ~/.ssh/id_ed25519_github
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
+          eval $(ssh-agent -s)
+          expect <<- DONE
+          spawn ssh-add ~/.ssh/id_ed25519_github
+          expect "Enter passphrase for ~/.ssh/id_ed25519_github:"
+          send "$GH_SSH_PASSPHRASE\r"
+          expect eof
+          DONE
+          git config --global core.sshCommand "ssh -i ~/.ssh/id_ed25519_github -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no"
           cd ~/repositories/CustomerServiceSentinel/backend
           git pull origin main
         EOF
