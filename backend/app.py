@@ -21,7 +21,7 @@ if not os.environ.get("OPENAI_API_KEY") or not os.environ.get("MONGODB_URI") or 
 
 app = Flask(__name__)
 origins = ["http://localhost:3000"]
-if os.get_env("FLASK_ENV") != "development":
+if os.environ.get("FLASK_ENV") != "development":
   origins = ["http://4.246.226.161:3000"]
 
 CORS(app, supports_credentials=True, origins=origins)
