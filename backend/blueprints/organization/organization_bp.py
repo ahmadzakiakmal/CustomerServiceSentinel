@@ -18,7 +18,7 @@ def create_organization():
   if not data.get("organizationName"):
     raise BadRequest("Missing required parameters")
   org = Organization(
-    organization_name = data["organizationName"],
+    organization_name = data['organizationName'],
     owner=payload.get("email")
   )
   org.save()
@@ -28,7 +28,7 @@ def create_organization():
     "message": "Organization created successfully",
     "data": {
       "id": org.id,
-      "name": data["organizationName"],
+      "name": data['organizationName'],
       "owner": payload.get("email")
     }
   }), 201
@@ -49,19 +49,19 @@ def add_member(id):
   if payload.get("email") != org.owner:
     raise Unauthorized("Only organization owner can add members")
   
-  check_duplicate = Membership.objects(organization=id, user=data["email"])
+  check_duplicate = Membership.objects(organization=id, user=data['email'])
 
   if check_duplicate:
     raise Conflict("This membership relation already exist")
   
   membership = Membership(
-    user = data["email"],
+    user = data['email'],
     organization = str(id)
   )
   membership.save()
 
   return jsonify({
-    "message": f"Successfully added {data["email"]} to {org.organization_name}"
+    "message": f"Successfully added {data['email']} to {org.organization_name}"
   }), 200
   
 @organization_bp.route("/member/<id>", methods=["DELETE"], endpoint="Remove Member")
@@ -81,7 +81,7 @@ def remove_member(id):
     raise Unauthorized("Only organization owner can remove members")
   
   membership = Membership.objects(
-    user = data["email"],
+    user = data['email'],
     organization = str(id)
   ).first()
 
@@ -92,7 +92,7 @@ def remove_member(id):
   membership.save()
 
   return jsonify({
-    "message": f"Successfully deleted {data["email"]} from {org.organization_name}"
+    "message": f"Successfully deleted {data['email']} from {org.organization_name}"
   }), 200
 
 @organization_bp.route("/", methods=["GET"], endpoint="Get Organizations")

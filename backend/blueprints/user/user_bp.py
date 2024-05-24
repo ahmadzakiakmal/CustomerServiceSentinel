@@ -17,14 +17,14 @@ def create_user():
   if not data.get("email") or not data.get("user_name") or not data.get("password"):
     raise BadRequest("Missing required parameters")
   
-  check_duplicate = User.objects(email = data["email"])
+  check_duplicate = User.objects(email = data['email'])
   if check_duplicate == []:
     raise Conflict("Email already registered")
 
   user = User(
-    email = data["email"],
-    user_name = data["user_name"],
-    password = bcrypt.hashpw(data["password"].encode("utf-8"), salt),
+    email = data['email'],
+    user_name = data['user_name'],
+    password = bcrypt.hashpw(data['password'].encode("utf-8"), salt),
     salt = salt
   )
   user.save()
@@ -39,7 +39,7 @@ def login():
   if not data.get("email") or not data.get("password"):
     raise BadRequest("Missing required parameters")
   
-  user = User.objects(email=data["email"]).first()
+  user = User.objects(email=data['email']).first()
   if not user:
     raise NotFound("User does not exist")
   jw_token = jwt.encode({
@@ -47,7 +47,7 @@ def login():
     "email" : user.email,
     "exp" : datetime.datetime.now(datetime.UTC) + datetime.timedelta(hours=6)
   }, os.environ.get("JWT_SECRET"), algorithm="HS256")
-  if not bcrypt.checkpw(data["password"].encode("utf-8"), user.password.encode("utf-8")):
+  if not bcrypt.checkpw(data['password'].encode("utf-8"), user.password.encode("utf-8")):
     raise Unauthorized("Invalid credentials")
   response = make_response(jsonify({
     "message" : "login success",
