@@ -12,8 +12,8 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
-    - name: Install sshpass
-      run: sudo apt-get update && sudo apt-get install -y sshpass
+    - name: Install sshpass and OpenSSH client
+      run: sudo apt-get update && sudo apt-get install -y sshpass openssh-client
 
     - name: Set up SSH
       uses: webfactory/ssh-agent@v0.5.3
@@ -23,11 +23,16 @@ jobs:
     - name: Add GitHub to known_hosts
       run: ssh-keyscan github.com >> ~/.ssh/known_hosts
 
-    - name: Add SSH Key
-      run: echo "${{ secrets.SSH_PRIVATE_KEY }}" | ssh-add -
+    - name: Add SSH Key to Agent
+      run: |
+        echo "${{ secrets.SSH_PRIVATE_KEY }}" > key.pem
+        chmod 600 key.pem
+        ssh-add key.pem
 
     - name: Deploy to VM
       env:
+        DOCKER_IMAGE: flask-app
+        DOCKER_CONTAINER_NAME: flask-app
         SSH_HOST: ${{ secrets.SSH_HOST }}
         SSH_USER: ${{ secrets.SSH_USER }}
         SSH_PASSPHRASE: ${{ secrets.SSH_PASSPHRASE }}
@@ -35,7 +40,7 @@ jobs:
         sshpass -p $SSH_PASSPHRASE ssh -o StrictHostKeyChecking=no -A $SSH_USER@$SSH_HOST << 'EOF'
           cd ~/repositories/CustomerServiceSentinel/backend
 
-          # Pull newest commits
+          # Ensure repository is up-to-date
           git pull origin main
 
           # Build the new Docker image
