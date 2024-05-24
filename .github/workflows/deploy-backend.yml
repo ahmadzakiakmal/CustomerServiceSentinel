@@ -36,6 +36,9 @@ jobs:
           # Pull newest changes
           git pull origin main
 
+          # Stop and remove the existing container if it is running
+          docker stop flask-app && docker rm -f flask-app
+
           # Check if any process is using port 5000 and stop it
           fuser -k 5000/tcp
 
