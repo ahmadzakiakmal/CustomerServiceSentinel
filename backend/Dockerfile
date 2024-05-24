@@ -19,12 +19,8 @@ RUN virtualenv venv
 # Activate the virtual environment and install any needed packages specified in requirements.txt
 RUN . venv/bin/activate && pip install --no-cache-dir -r requirements.txt
 
-# Set environment variables
-ENV FLASK_APP=app.py
-ENV FLASK_RUN_HOST=0.0.0.0
-
 # Make port 5000 available to the world outside this container
 EXPOSE 5000
 
-# Set the default command to activate the virtual environment and run the app using flask run
-CMD ["sh", "-c", ". venv/bin/activate && flask run"]
+# Set the default command to activate the virtual environment and run the app using Gunicorn
+CMD ["sh", "-c", ". venv/bin/activate && gunicorn -w 4 -b 0.0.0.0:5000 app:app"]
