@@ -31,7 +31,8 @@ jobs:
         sshpass -p $SSH_PASSPHRASE ssh -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST << 'EOF'
           cd ~/repositories/CustomerServiceSentinel/backend
 
-          ls
+          # Pull newest commit from github
+          git clone git@github.com:ahmadzakiakmal/CustomerServiceSentinel.git
 
           # Build the new Docker image
           docker build -t flask-app .
