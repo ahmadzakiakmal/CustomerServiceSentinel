@@ -4,8 +4,11 @@ FROM python:3.10-slim
 # Set the working directory to /backend
 WORKDIR /backend
 
-# Install Git
+# Install system dependencies
 RUN apt-get update && apt-get install -y git
+
+# Install virtualenv
+RUN pip install --no-cache-dir virtualenv
 
 # Copy the current directory contents into the container at /backend
 COPY . /backend
@@ -19,5 +22,5 @@ RUN . venv/bin/activate && pip install --no-cache-dir -r requirements.txt
 # Make port 5000 available to the world outside this container
 EXPOSE 5000
 
-# Run app.py when the container launches
-CMD ["python", "app.py"]
+# Set the default command to activate the virtual environment and run the app
+CMD ["sh", "-c", ". venv/bin/activate && python app.py"]
