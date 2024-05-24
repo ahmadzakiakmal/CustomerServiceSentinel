@@ -21,7 +21,7 @@ jobs:
         echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
         chmod 600 ~/.ssh/id_ed25519
         eval $(ssh-agent -s)
-        ssh-add ~/.ssh/id_ed25519
+        echo ${{ secrets.SSH_PASSPHRASE }} | ssh-add ~/.ssh/id_ed25519
 
     - name: Add GitHub to known_hosts
       run: ssh-keyscan github.com >> ~/.ssh/known_hosts
@@ -32,7 +32,12 @@ jobs:
         SSH_USER: ${{ secrets.SSH_USER }}
         SSH_PASSPHRASE: ${{ secrets.SSH_PASSPHRASE }}
       run: |
-        sshpass -p $SSH_PASSPHRASE ssh -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST << 'EOF'
+        sshpass -p $SSH_PASSPHRASE ssh -o StrictHostKeyChecking=no -A $SSH_USER@$SSH_HOST << 'EOF'
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          eval $(ssh-agent -s)
+          sshpass -p "$SSH_PASSPHRASE" ssh-add ~/.ssh/id_ed25519
           cd ~/repositories/CustomerServiceSentinel/backend
-          GIT_SSH_COMMAND="ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no" git pull origin main $SSH_PASSPHRASE
+          GIT_SSH_COMMAND="sshpass -p $SSH_PASSPHRASE ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no" git pull origin main
         EOF
