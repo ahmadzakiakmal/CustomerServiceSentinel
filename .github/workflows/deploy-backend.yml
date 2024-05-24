@@ -20,12 +20,12 @@ jobs:
         GH_SSH_PASSPHRASE: ${{ secrets.GH_SSH_PASSPHRASE }}
       run: |
         mkdir -p ~/.ssh
-        echo "${{ secrets.GH_SSH_PRIVATE_KEY }}" | tr -d '\r' > ~/.ssh/id_ed25519_github
-        chmod 600 ~/.ssh/id_ed25519_github
+        echo "${{ secrets.GH_SSH_PRIVATE_KEY }}" | tr -d '\r' > ~/.ssh/id_ed25519
+        chmod 600 ~/.ssh/id_ed25519
         eval $(ssh-agent -s)
         expect <<- DONE
-        spawn ssh-add ~/.ssh/id_ed25519_github
-        expect "Enter passphrase for ~/.ssh/id_ed25519_github:"
+        spawn ssh-add ~/.ssh/id_ed25519
+        expect "Enter passphrase for ~/.ssh/id_ed25519:"
         send "$GH_SSH_PASSPHRASE\r"
         expect eof
         DONE
