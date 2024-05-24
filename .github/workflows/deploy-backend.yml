@@ -12,7 +12,7 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
-    - name: Install dependencies
+    - name: Install sshpass
       run: sudo apt-get update && sudo apt-get install -y sshpass openssh-client
 
     - name: Set up SSH
@@ -36,12 +36,13 @@ jobs:
         SSH_PASSPHRASE: ${{ secrets.SSH_PASSPHRASE }}
       run: |
         sshpass -p $SSH_PASSPHRASE ssh -o StrictHostKeyChecking=no -A $SSH_USER@$SSH_HOST << 'EOF'
-          eval $(ssh-agent -s)
-          ssh-add ~/.ssh/id_rsa
+          # Ensure sshpass is installed on the VM
+          sudo apt-get update && sudo apt-get install -y sshpass
+
           cd ~/repositories/CustomerServiceSentinel/backend
 
-          # Ensure repository is up-to-date
-          GIT_SSH_COMMAND="sshpass -p $SSH_PASSPHRASE ssh -o StrictHostKeyChecking=no" git pull origin main
+          # Ensure repository is up-to-date using the correct SSH key
+          GIT_SSH_COMMAND="sshpass -p $SSH_PASSPHRASE ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no" git pull origin main
 
           # Build the new Docker image
           docker build -t flask-app .
