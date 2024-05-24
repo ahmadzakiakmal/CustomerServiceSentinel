@@ -34,5 +34,5 @@ jobs:
       run: |
         sshpass -p $SSH_PASSPHRASE ssh -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST << 'EOF'
           cd ~/repositories/CustomerServiceSentinel/backend
-          GIT_SSH_COMMAND="ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no" git pull origin main
+          GIT_SSH_COMMAND="ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no" git pull origin main $SSH_PASSPHRASE
         EOF
