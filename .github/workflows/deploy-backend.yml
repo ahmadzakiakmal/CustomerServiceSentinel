@@ -4,7 +4,7 @@ on:
   push:
     branches: ["main"]
     paths:
-      - 'my-nodejs-application-directory/**'
+      - 'backend/**'
       - '.github/workflows/**'
 
 jobs:
