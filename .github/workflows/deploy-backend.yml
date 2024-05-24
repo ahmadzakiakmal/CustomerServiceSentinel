@@ -31,6 +31,8 @@ jobs:
         sshpass -p $SSH_PASSPHRASE ssh -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST << 'EOF'
           cd ~/repositories/CustomerServiceSentinel/backend
 
+          ls
+
           # Build the new Docker image
           docker build -t $DOCKER_IMAGE .
 
