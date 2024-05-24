@@ -53,7 +53,7 @@ def login():
     "message" : "login success",
     "data" : {"username" : user.user_name}
     }))
-  response.set_cookie("Authentication", jw_token, max_age=6*3600)
+  response.set_cookie("Authentication", jw_token, max_age=6*3600, samesite=None)
   return response, 200
   
 @user_bp.route("/logout", methods=["POST"])
