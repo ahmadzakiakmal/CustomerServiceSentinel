@@ -135,3 +135,15 @@ def get_org_members(id):
     "owner" : organization.owner,
     "members" : members
   })
+
+@organization_bp.route("/data/<id>", methods=["GET"], endpoint="Get Organization Data")
+def get_org_data(id):
+  organization = Organization.objects(id=id).first()
+  if(not organization):
+    raise DoesNotExist("Organization does not exist")
+  assistant_data = AssistantData.objects(organization=id).first()
+  if(not assistant_data):
+    raise DoesNotExist("Can't find data for the organization")
+
+  return jsonify({"organization_name": organization.organization_name, "bot_name": assistant_data.name, "files": assistant_data.files}), 200
+
