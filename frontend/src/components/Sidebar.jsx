@@ -33,8 +33,8 @@ const Sidebar = () => {
             active={router.pathname === "/dashboard/testing"}
           />
           <SidebarLink
-            text="Chat"
-            link="/dashboard/chat"
+            text="Appearance"
+            link="/dashboard/appearance"
             icon={<IoChatboxEllipses />}
             active={router.pathname === "/dashboard/chat"}
           />
