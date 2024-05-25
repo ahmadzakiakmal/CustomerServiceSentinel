@@ -336,7 +336,7 @@ export default function Dashboard() {
               <button
                 title="Click to copy"
                 className="font-medium text-yellow bg-dark-brown/95 hover:bg-dark-brown px-2 py-1 rounded-md underline flex gap-2 items-center"
-                onClick={() => copyToClipboard(`http://${window.location.host}/chat/${activeOrganization}`)}
+                onClick={() => copyToClipboard(`http://${host}/chat/${activeOrganization}`)}
               >
                 https://{host}/chat/{activeOrganization} <MdContentCopy />
               </button>
