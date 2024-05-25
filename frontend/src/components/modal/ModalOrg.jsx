@@ -2,7 +2,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 
-export default function Modal({ show, onClose, item }) {
+export default function ModalOrg({ show, onClose, item }) {
   if (show === false) null;
 
   const handleSubmit = async (e) => {
@@ -24,7 +24,7 @@ export default function Modal({ show, onClose, item }) {
 
   return (
     <div
-      className={`modal ${show ? "block" : "hidden"} fixed inset-0 z-50 overflow-auto bg-opacity-50`}
+      className={`modal ${show ? "block" : "hidden"} fixed inset-0 z-50 overflow-auto bg-gray-800 bg-opacity-50`}
     >
       <div
         className="modal-content mx-auto my-10 p-8 rounded-lg z-50"
@@ -43,7 +43,7 @@ export default function Modal({ show, onClose, item }) {
             </div>
             <form onSubmit={handleSubmit} className="flex flex-col space-y-4">
               <div className="text-md pb-6 pt-4 font-bold text-left text-black md:text-xl lg:text-3xl">
-                Update Staff
+                Add Organization
               </div>
 
               <div className="flex flex-col">
@@ -53,18 +53,7 @@ export default function Modal({ show, onClose, item }) {
                 <input
                   type="text"
                   className="h-[22px] w-full rounded-md bg-gray-200 p-3 text-xs text-left text-black md:h-[44px] md:text-sm lg:h-[66px] lg:text-base"
-                  placeholder="Staff's Name"
-                />
-              </div>
-
-              <div className="flex flex-col">
-                <label className="md:text-md text-sm font-bold lg:text-lg text-left">
-                  Position
-                </label>
-                <input
-                  type="text"
-                  className="h-[22px] w-full rounded-md bg-gray-200 p-3 text-xs text-left text-black md:h-[44px] md:text-sm lg:h-[66px] lg:text-base"
-                  placeholder="Staff's Position"
+                  placeholder="Organization's Name"
                 />
               </div>
 
