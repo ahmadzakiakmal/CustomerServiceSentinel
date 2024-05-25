@@ -24,6 +24,7 @@ export default function ChatPage({ orgId, messages = [], colors }) {
               color: colors?.userTxt ?? "auto" 
             }}
             errorStyle={{
+              backgroundColor: colors?.bot ?? "auto",
               color: colors?.error ?? "auto"
             }}
           />
