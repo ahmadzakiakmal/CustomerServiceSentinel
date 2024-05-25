@@ -24,7 +24,7 @@ export default function Modal({ show, onClose, item }) {
 
   return (
     <div className="fixed left-0 top-0 flex h-full w-full items-center justify-center bg-black/10 bg-center">
-      <div className="z-10 h-fit max-h-[80vh] w-3/4 overflow-y-auto rounded-lg bg-white p-4">
+      <div className="z-10 h-fit max-h-[80vh] w-3/4 overflow-y-auto rounded-lg bg-white p-4 md:mx-72">
         <div className="flex justify-end text-base">
           <button type="button" onClick={handleClose} className="text-black">
             X
@@ -34,7 +34,7 @@ export default function Modal({ show, onClose, item }) {
           <div className="text-md pb-6 pt-4 font-bold text-left text-black md:text-xl lg:text-3xl">
             Update Staff
           </div>
-          
+
           <div className="flex flex-col">
             <label className="md:text-md text-sm font-bold lg:text-lg text-left">
               Name
@@ -68,5 +68,5 @@ export default function Modal({ show, onClose, item }) {
         </form>
       </div>
     </div>
-  )
+  );
 }
