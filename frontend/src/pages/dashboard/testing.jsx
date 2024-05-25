@@ -63,6 +63,7 @@ export default function TestingDashboard() {
           className: "custom",
         });
       });
+    //eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
