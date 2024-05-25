@@ -151,49 +151,10 @@ export default function Dashboard() {
         <main className="text-dark-brown p-10">
           <h1 className="text-[24px] font-medium mb-[50px]">Appearance</h1>
           <Dropdown />
-          <div>
-            <section className="mt-4">
+          <div className="flex flex-col lg:flex-row lg:gap-[100px] mt-4">
+            <div>
               <label className="flex items-center gap-4 w-fit">
-                <span className="w-[200px]">Bot Bubble Color</span>
-                <input
-                  type="color"
-                  value={botBubbleColor}
-                  onChange={(e) => {
-                    setBotBubbleColor(e.target.value);
-                  }}
-                />
-                {botBubbleColor}
-              </label>
-            </section>
-            <section>
-              <label className="flex items-center gap-4 w-fit">
-                <span className="w-[200px]">Bot Text Color</span>
-                <input
-                  type="color"
-                  value={botTextColor}
-                  onChange={(e) => {
-                    setBotTextColor(e.target.value);
-                  }}
-                />
-                {botTextColor}
-              </label>
-            </section>
-            <section>
-              <label className="flex items-center gap-4 w-fit">
-                <span className="w-[200px]">Error Text Color</span>
-                <input
-                  type="color"
-                  value={errorColor}
-                  onChange={(e) => {
-                    setErrorColor(e.target.value);
-                  }}
-                />
-                {errorColor}
-              </label>
-            </section>
-            <section>
-              <label className="flex items-center gap-4 w-fit">
-                <span className="w-[200px]">User Bubble Color</span>
+                <span className="w-[140px] font-medium">User Bubble Color</span>
                 <input
                   type="color"
                   value={userBubbleColor}
@@ -203,10 +164,8 @@ export default function Dashboard() {
                 />
                 {userBubbleColor}
               </label>
-            </section>
-            <section>
               <label className="flex items-center gap-4 w-fit">
-                <span className="w-[200px]">User Text Color</span>
+                <span className="w-[140px] font-medium">User Text Color</span>
                 <input
                   type="color"
                   value={userTextColor}
@@ -216,10 +175,8 @@ export default function Dashboard() {
                 />
                 {userTextColor}
               </label>
-            </section>
-            <section>
               <label className="flex items-center gap-4 w-fit">
-                <span className="w-[200px]">Background Color</span>
+                <span className="w-[140px] font-medium">Background Color</span>
                 <input
                   type="color"
                   value={backgroundColor}
@@ -229,8 +186,56 @@ export default function Dashboard() {
                 />
                 {backgroundColor}
               </label>
-            </section>
+            </div>
+            <div>
+              <label className="flex items-center gap-4 w-fit">
+                <span className="w-[140px] font-medium">Bot Bubble Color</span>
+                <input
+                  type="color"
+                  value={botBubbleColor}
+                  onChange={(e) => {
+                    setBotBubbleColor(e.target.value);
+                  }}
+                />
+                {botBubbleColor}
+              </label>
+              <label className="flex items-center gap-4 w-fit">
+                <span className="w-[140px] font-medium">Bot Text Color</span>
+                <input
+                  type="color"
+                  value={botTextColor}
+                  onChange={(e) => {
+                    setBotTextColor(e.target.value);
+                  }}
+                />
+                {botTextColor}
+              </label>
+              <label className="flex items-center gap-4 w-fit">
+                <span className="w-[140px] font-medium">Error Text Color</span>
+                <input
+                  type="color"
+                  value={errorColor}
+                  onChange={(e) => {
+                    setErrorColor(e.target.value);
+                  }}
+                />
+                {errorColor}
+              </label>
+            </div>
           </div>
+          <Button
+            className="!text-[14px] !py-1 !mt-2"
+            onClick={() => {
+              setUserBubbleColor("#FFF3D9");
+              setUserTextColor("#000000");
+              setBackgroundColor("#FFFFFF");
+              setBotBubbleColor("#EBEBEB");
+              setBotTextColor("#000000");
+              setErrorColor("#B12525");
+            }}
+          >
+            Reset
+          </Button>
           <div className="flex flex-row justify-between sm:items-center mb-2 mt-5">
             <h1 className="text-xl font-medium">Preview</h1>
             <Button
@@ -239,7 +244,7 @@ export default function Dashboard() {
                 setConvoIndex(convoIndex == 4 ? 0 : convoIndex + 1);
               }}
             >
-            Change Preview
+              Change Preview
             </Button>
           </div>
           <ChatPage
@@ -259,7 +264,7 @@ export default function Dashboard() {
               user: userBubbleColor,
               userTxt: userTextColor,
               background: backgroundColor,
-              error: errorColor
+              error: errorColor,
             }}
           />
         </main>
