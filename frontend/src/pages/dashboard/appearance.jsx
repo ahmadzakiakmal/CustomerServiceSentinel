@@ -2,7 +2,10 @@ import Button from "@/components/Button";
 import ChatPage from "@/components/ChatPage";
 import Dropdown from "@/components/Dropdown";
 import Layout from "@/components/Layout";
-import { useState } from "react";
+import cutMessage from "@/utilities/cutMessage";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 export default function Dashboard() {
   const conversations = [
@@ -138,6 +141,12 @@ export default function Dashboard() {
     ],
   ];
 
+  const [activeOrganization, setActiveOrganization] = useState("");
+  const [organizatons, setOrganizations] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [botImage, setBotImage] = useState("");
+
+  
   const [convoIndex, setConvoIndex] = useState(0);
   const [botBubbleColor, setBotBubbleColor] = useState("#EBEBEB");
   const [botTextColor, setBotTextColor] = useState("#000000");
@@ -145,12 +154,77 @@ export default function Dashboard() {
   const [userTextColor, setUserTextColor] = useState("#000000");
   const [backgroundColor, setBackgroundColor] = useState("#FFFFFF");
   const [errorColor, setErrorColor] = useState("#B12525");
+
+  useEffect(() => {
+    axios
+      .get(process.env.NEXT_PUBLIC_API_URL + "/organization", {
+        withCredentials: true,
+      })
+      .then((res) => {
+        const mapOwnedOrgs = res.data.owned.map((org) => {
+          return {
+            value: org._id.$oid,
+            label: org.organization_name,
+          };
+        });
+        const mapMemberOrgs = res.data.member.map((org) => {
+          return {
+            value: org._id.$oid,
+            label: org.organization_name,
+          };
+        });
+        if([...mapOwnedOrgs, ...mapMemberOrgs].length === 0) {
+          router.push("/organization/create"); // navigate to create org
+          return toast.info("You don't have an organization yet, please create one", {className: "custom"});
+        }
+        setOrganizations([...mapOwnedOrgs, ...mapMemberOrgs]);
+      })
+      .catch((err) => {
+        console.log(err);
+        toast.error(cutMessage(err?.response?.data?.message) ?? "Can't connect to server", {
+          className: "custom",
+        });
+      });
+    //eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    setIsLoading(true);
+    if(!activeOrganization) return;
+
+    axios
+      .get(process.env.NEXT_PUBLIC_API_URL + "/assistant-data/" + activeOrganization, {
+        withCredentials: true,
+      })
+      .then((res) => {
+        setBotImage(
+          res.data.image ? process.env.NEXT_PUBLIC_API_URL + "/assistant-data/image/" + activeOrganization : ""
+        );
+      })
+      .catch((err) => {
+        console.log(err);
+        if(activeOrganization) {
+          toast.error(cutMessage(err?.response?.data?.message) ?? "Can't connect to server", {
+            className: "custom",
+          });
+        }
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }, [activeOrganization]);
+
   return (
     <main>
       <Layout>
         <main className="text-dark-brown p-10">
           <h1 className="text-[24px] font-medium mb-[50px]">Appearance</h1>
-          <Dropdown />
+          <Dropdown
+            className="z-[1]"
+            state={activeOrganization}
+            setState={setActiveOrganization}
+            options={organizatons}
+          />
           <div className="flex flex-col lg:flex-row lg:gap-[100px] mt-4">
             <div>
               <label className="flex items-center gap-4 w-fit">
@@ -248,6 +322,7 @@ export default function Dashboard() {
             </Button>
           </div>
           <ChatPage
+            botImage={botImage}
             messages={[
               ...conversations[convoIndex],
               {

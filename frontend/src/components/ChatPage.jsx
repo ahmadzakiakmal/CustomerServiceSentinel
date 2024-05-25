@@ -1,6 +1,6 @@
 import ChatBubble from "./ChatBubble";
 
-export default function ChatPage({ orgId, messages = [], colors }) {
+export default function ChatPage({ orgId, messages = [], colors, botImage }) {
   return (
     <main
       className="p-10 outline-1 outline-dashed rounded-md"
@@ -10,7 +10,7 @@ export default function ChatPage({ orgId, messages = [], colors }) {
         return (
           <ChatBubble
             content={message.content ?? ""}
-            image=""
+            image={botImage}
             isError={message.isError}
             isSender={index % 2 == 0}
             time={new Date()}
