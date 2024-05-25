@@ -8,13 +8,12 @@ import os
 
 organization_bp = Blueprint("organization_blueprint", __name__)
 
-@organization_bp.route("/", methods=["POST"])
+@organization_bp.route("/create", methods=["POST"])
 @authenticateUser
 def create_organization():
   data = request.get_json()
   
   payload = g.payload
-
   if not data.get("organizationName"):
     raise BadRequest("Missing required parameters")
   org = Organization(

@@ -13,6 +13,7 @@ import { FaArrowRotateLeft } from "react-icons/fa6";
 import { BsInfoCircleFill } from "react-icons/bs";
 import Button from "@/components/Button";
 import Image from "next/image";
+import { useRouter } from "next/router";
 
 export default function TestingDashboard() {
   const [activeOrganization, setActiveOrganization] = useState("");
@@ -31,6 +32,7 @@ export default function TestingDashboard() {
   const [isDataChanged, setIsDataChanged] = useState(false);
   const [inputImage, setInputImage] = useState({});
   const [inputImageLink, setInputImageLink] = useState("");
+  const router = useRouter();
 
   useEffect(() => {
     axios
@@ -50,6 +52,10 @@ export default function TestingDashboard() {
             label: org.organization_name,
           };
         });
+        if([...mapOwnedOrgs, ...mapMemberOrgs].length === 0) {
+          router.push("/organization/create"); // navigate to create org
+          return toast.info("You don't have an organization yet, please create one", {className: "custom"});
+        }
         setOrganizations([...mapOwnedOrgs, ...mapMemberOrgs]);
       })
       .catch((err) => {
@@ -72,7 +78,6 @@ export default function TestingDashboard() {
         withCredentials: true,
       })
       .then((res) => {
-        // console.log(res);
         setFiles(res.data.files);
         setName(res.data.name);
         setInitialName(res.data.name);

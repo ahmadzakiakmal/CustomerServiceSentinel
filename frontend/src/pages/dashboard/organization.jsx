@@ -109,9 +109,10 @@ export default function LoginPage({}) {
                   required
                 />
 
-                <button 
-                type="submit"
-                className="text-green-edit">
+                <button
+                  type="submit"
+                  className="text-green-edit"
+                >
                   Save
                 </button>
               </form>
@@ -129,7 +130,10 @@ export default function LoginPage({}) {
               </thead>
               <tbody className="w-full border">
                 {filteredData.map((data, index) => (
-                  <tr key={index} className="font-bold text-black">
+                  <tr
+                    key={index}
+                    className="font-bold text-black"
+                  >
                     <td className="py-4 pl-3 text-center">{index + 1}</td>
                     <td className="py-2 pl-3 text-left">{data.name}</td>
                     <td className="py-2 pl-3 text-left">{data.position}</td>
@@ -173,3 +177,4 @@ export default function LoginPage({}) {
     </Layout>
   );
 }
+
