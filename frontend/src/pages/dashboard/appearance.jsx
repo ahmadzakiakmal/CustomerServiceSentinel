@@ -146,6 +146,7 @@ export default function Dashboard() {
   const [organizatons, setOrganizations] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [botImage, setBotImage] = useState("");
+  const [host, setHost] = useState("");
 
   const [convoIndex, setConvoIndex] = useState(0);
   const [botBubbleColor, setBotBubbleColor] = useState("#EBEBEB");
@@ -213,6 +214,10 @@ export default function Dashboard() {
         setIsLoading(false);
       });
   }, [activeOrganization]);
+
+  useEffect(() => {
+    setHost(window.location.host);
+  }, []);
 
   const copyToClipboard = async (text) => {
     try {
@@ -333,7 +338,7 @@ export default function Dashboard() {
                 className="font-medium text-yellow bg-dark-brown/95 hover:bg-dark-brown px-2 py-1 rounded-md underline flex gap-2 items-center"
                 onClick={() => copyToClipboard(`http://${window.location.host}/chat/${activeOrganization}`)}
               >
-                https://{window.location.host}/chat/{activeOrganization} <MdContentCopy />
+                https://{host}/chat/{activeOrganization} <MdContentCopy />
               </button>
             </p>
             <Button
