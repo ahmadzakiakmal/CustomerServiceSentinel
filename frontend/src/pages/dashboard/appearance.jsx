@@ -4,6 +4,7 @@ import Dropdown from "@/components/Dropdown";
 import Layout from "@/components/Layout";
 import cutMessage from "@/utilities/cutMessage";
 import axios from "axios";
+import { MdContentCopy } from "react-icons/md";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
@@ -146,7 +147,6 @@ export default function Dashboard() {
   const [isLoading, setIsLoading] = useState(false);
   const [botImage, setBotImage] = useState("");
 
-  
   const [convoIndex, setConvoIndex] = useState(0);
   const [botBubbleColor, setBotBubbleColor] = useState("#EBEBEB");
   const [botTextColor, setBotTextColor] = useState("#000000");
@@ -173,9 +173,9 @@ export default function Dashboard() {
             label: org.organization_name,
           };
         });
-        if([...mapOwnedOrgs, ...mapMemberOrgs].length === 0) {
+        if ([...mapOwnedOrgs, ...mapMemberOrgs].length === 0) {
           router.push("/organization/create"); // navigate to create org
-          return toast.info("You don't have an organization yet, please create one", {className: "custom"});
+          return toast.info("You don't have an organization yet, please create one", { className: "custom" });
         }
         setOrganizations([...mapOwnedOrgs, ...mapMemberOrgs]);
       })
@@ -190,7 +190,7 @@ export default function Dashboard() {
 
   useEffect(() => {
     setIsLoading(true);
-    if(!activeOrganization) return;
+    if (!activeOrganization) return;
 
     axios
       .get(process.env.NEXT_PUBLIC_API_URL + "/assistant-data/" + activeOrganization, {
@@ -203,7 +203,7 @@ export default function Dashboard() {
       })
       .catch((err) => {
         console.log(err);
-        if(activeOrganization) {
+        if (activeOrganization) {
           toast.error(cutMessage(err?.response?.data?.message) ?? "Can't connect to server", {
             className: "custom",
           });
@@ -214,8 +214,22 @@ export default function Dashboard() {
       });
   }, [activeOrganization]);
 
+  const copyToClipboard = async (text) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      toast.info("Link copied", { className: "custom" });
+    } catch (err) {
+      toast.error("Failed to copy link", { className: "custom" });
+    }
+  };
+
   return (
     <main>
+      {isLoading && (
+        <div className="w-full  h-full bg-dark-brown/60 backdrop-blur-[8px] fixed left-0 top-0 z-[10] flex justify-center items-center z-[20]">
+          <h1 className="text-[25px] font-semibold animate-pulse text-white">Loading...</h1>
+        </div>
+      )}
       <Layout>
         <main className="text-dark-brown p-10">
           <h1 className="text-[24px] font-medium mb-[50px]">Appearance</h1>
@@ -310,8 +324,18 @@ export default function Dashboard() {
           >
             Reset
           </Button>
-          <div className="flex flex-row justify-between sm:items-center mb-2 mt-5">
-            <h1 className="text-xl font-medium">Preview</h1>
+          <h1 className="text-xl font-medium mt-8">Preview</h1>
+          <div className="flex flex-row justify-between sm:items-center mb-2 mt-2">
+            <p>
+              Your chatbot is publicly accessible here: <br />{" "}
+              <button
+                title="Click to copy"
+                className="font-medium text-yellow bg-dark-brown/95 hover:bg-dark-brown px-2 py-1 rounded-md underline flex gap-2 items-center"
+                onClick={() => copyToClipboard(`http://${window.location.host}/chat/${activeOrganization}`)}
+              >
+                https://{window.location.host}/chat/{activeOrganization} <MdContentCopy />
+              </button>
+            </p>
             <Button
               className="!text-[14px] !py-1 !mt-0"
               onClick={() => {
