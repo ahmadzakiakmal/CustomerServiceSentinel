@@ -109,9 +109,9 @@ export default function LoginPage({}) {
             >
               Create Organization
             </button>
-            <ModalOrg show={showOrgModal} onClose={() => setShowOrgModal(false)} />
           </div>
         </form>
+        <ModalOrg show={showOrgModal} onClose={() => setShowOrgModal(false)} />
         <div className="mt-8">
           Owner: <span className="font-medium">{owner}</span>
         </div>
@@ -120,10 +120,11 @@ export default function LoginPage({}) {
           <div className="flex gap-4">
             <input
               type="text"
-              className="border-b-2 py-1 px-2 focus:outline-none"
+              className="border-b-2 py-1 px-2 focus:outline-none disabled:opacity-60"
               placeholder="Organization's Name"
               required
               value={orgName}
+              disabled={!verifyOwner()}
               onChange={(e) => setOrgName(e.target.value)}
             />
             {verifyOwner() && (
