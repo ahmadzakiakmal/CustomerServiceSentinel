@@ -54,8 +54,8 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="relative bg-white-bg min-h-screen flex flex-col justify-center items-center">
-      <nav className="flex items-center absolute top-0 w-full justify-between px-8 pt-4">
+    <div className="relative bg-white-bg min-h-screen flex flex-col justify-center items-center p-4">
+      <nav className="flex items-center absolute top-0 w-full justify-between px-4 pt-4 md:px-8">
         <button
           className="hover:underline"
           onClick={() => router.back()}
@@ -66,17 +66,17 @@ export default function LoginPage() {
           <Image
             src={Logo}
             alt="Logo"
-            className="w-[40px]"
+            className="w-10 sm:w-12"
           />
         </Link>
       </nav>
 
-      <div className="flex w-[90%] sm:max-w-[384px] lg:max-w-[500px] justify-center items-center">
+      <div className="flex w-full max-w-xs sm:max-w-md lg:max-w-lg justify-center items-center">
         <form
-          className="p-6 w-full shadow-lg bg-white-bg rounded-md flex flex-col gap-5"
+          className="p-4 w-full shadow-lg bg-white rounded-md flex flex-col gap-4 sm:p-6 sm:gap-5"
           onSubmit={(e) => handleSubmit(e)}
         >
-          <h1 className="text-center font-bold text-lg md:text-xl lg:text-2xl">Login Here!</h1>
+          <h1 className="text-center font-bold text-lg sm:text-xl lg:text-2xl">Login Here!</h1>
           <FormInput
             label="Email"
             name="email"
@@ -116,13 +116,13 @@ function FormInput({ state, onChange, label, type = "text", name, placeholder = 
   return (
     <label
       htmlFor={name}
-      className="font-bold lg:text-lg text-left text-dark-brown"
+      className="font-bold text-sm sm:text-base lg:text-lg text-left text-dark-brown"
     >
       {label}
       <input
         name={name}
         type={type}
-        className="w-full rounded-md bg-light-gray px-3 py-2 lg:py-2.5 font-medium text-black"
+        className="w-full rounded-md bg-light-gray px-2 py-2 sm:px-3 sm:py-2.5 font-medium text-black"
         placeholder={placeholder}
         value={state}
         onChange={onChange}
@@ -130,4 +130,3 @@ function FormInput({ state, onChange, label, type = "text", name, placeholder = 
     </label>
   );
 }
-

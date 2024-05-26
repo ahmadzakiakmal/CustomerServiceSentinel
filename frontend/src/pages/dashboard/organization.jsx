@@ -2,6 +2,7 @@ import Dropdown from "@/components/Dropdown";
 import Layout from "@/components/Layout";
 import { useState } from "react";
 import Modal from "@/components/modal/Modal";
+import ModalOrg from "@/components/modal/ModalOrg";
 
 export default function LoginPage({}) {
   const tableData = [
@@ -75,6 +76,7 @@ export default function LoginPage({}) {
 
   const [filteredData, setFilteredData] = useState(tableData);
   const [showModal, setShowModal] = useState(false);
+  const [showOrgModal, setShowOrgModal] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -95,8 +97,27 @@ export default function LoginPage({}) {
           <div className="mt-8">
             <div>
               <form className="max-w-lg">
-                <div className="flex">
+                <div className="flex flex-row items-center gap-4">
+                  <div>
                   <Dropdown />
+                  </div>
+                  <div class="">
+                      
+                      <button
+                          type="button"
+                          className="flex items-center justify-center rounded bg-blue-500 hover:bg-blue-700 px-4 py-2 text-white font-medium"
+                          onClick={() => setShowOrgModal(true)}
+                        >
+                          {/* <IoColorWandSharp className="mr-2" /> */}
+                          Add Organization
+                        </button>
+                        {showOrgModal && (
+                          <ModalOrg
+                            show={showOrgModal}
+                            onClose={() => setShowOrgModal(false)}
+                          />
+                        )}
+                      </div>
                 </div>
               </form>
               <form className="mt-4 mx-3">
