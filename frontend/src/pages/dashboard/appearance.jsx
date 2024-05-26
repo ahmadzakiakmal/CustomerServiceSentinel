@@ -7,6 +7,7 @@ import axios from "axios";
 import { MdContentCopy } from "react-icons/md";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import { useRouter } from "next/router";
 
 export default function Dashboard() {
   const conversations = [
@@ -141,6 +142,7 @@ export default function Dashboard() {
       { isSender: true, content: "Thanks for your help!", time: "2:04 PM", isError: false, image: null },
     ],
   ];
+  const router = useRouter();
 
   const [activeOrganization, setActiveOrganization] = useState("");
   const [organizatons, setOrganizations] = useState([]);
@@ -182,6 +184,9 @@ export default function Dashboard() {
       })
       .catch((err) => {
         console.log(err);
+        if(err?.response?.status == 401) {
+          router.replace("/auth/login");
+        }
         toast.error(cutMessage(err?.response?.data?.message) ?? "Can't connect to server", {
           className: "custom",
         });

@@ -62,6 +62,10 @@ export default function TestingDashboard() {
         toast.error(cutMessage(err?.response?.data?.message) ?? "Can't connect to server", {
           className: "custom",
         });
+        if(err?.response?.status == 401) {
+          router.replace("/auth/login");
+        }
+        toast;
       });
     //eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
