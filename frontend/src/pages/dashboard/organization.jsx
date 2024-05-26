@@ -18,6 +18,7 @@ export default function LoginPage({}) {
   const [showOrgModal, setShowOrgModal] = useState(false);
   const [refetch, setRefetch] = useState(false);
   const [email, setEmail] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const router = useRouter();
 
@@ -59,7 +60,10 @@ export default function LoginPage({}) {
   }, [refetch]);
 
   useEffect(() => {
-    if (activeOrganization === "") return;
+    setIsLoading(true);
+    setTimeout(() => {}, 100);
+    console.log(activeOrganization);
+    if (!activeOrganization) return;
     axios
       .get(process.env.NEXT_PUBLIC_API_URL + "/organization/member/" + activeOrganization, { withCredentials: true })
       .then((res) => {
@@ -75,6 +79,9 @@ export default function LoginPage({}) {
       })
       .catch((err) => {
         toast.error(err?.response?.data?.message ?? "Error occured", { className: "custom" });
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
   }, [activeOrganization, refetch]);
 
@@ -85,6 +92,11 @@ export default function LoginPage({}) {
 
   return (
     <Layout>
+      {isLoading && (
+        <div className="w-full  h-full bg-dark-brown/60 backdrop-blur-[8px] fixed left-0 top-0 flex justify-center items-center z-[20]">
+          <h1 className="text-[25px] font-semibold animate-pulse text-white">Loading...</h1>
+        </div>
+      )}
       <main className="min-h-screen relative bg-white-bg p-10 w-[100vw] overflow-hidden pb-[120px]">
         <h1 className="text-[24px] font-medium mb-[50px]">Organization</h1>
         <form className="w-fit">
@@ -159,7 +171,7 @@ export default function LoginPage({}) {
                     <button
                       type="button"
                       className="flex items-center justify-center rounded bg-red-delete px-4 py-2 text-white font-medium opacity-60"
-                      onClick={() => toast.error("Owner cannot be removed from organization", {className: "custom"})}
+                      onClick={() => toast.error("Owner cannot be removed from organization", { className: "custom" })}
                     >
                       <IoTrashBinSharp />
                     </button>
@@ -181,13 +193,14 @@ export default function LoginPage({}) {
                       className="flex mx-auto items-center justify-center rounded bg-red-delete px-4 py-2 text-white font-medium disabled:opacity-60 disabled:!cursor-not-allowed"
                       disabled={!verifyOwner()}
                       onClick={() => {
-                        if(!verifyOwner()) return toast.error("Only organization owner can remove members", {className: "custom"});
+                        if (!verifyOwner())
+                          return toast.error("Only organization owner can remove members", { className: "custom" });
                         const loadingToast = toast.loading("Saving...", { className: "custom" });
                         axios
                           .delete(
                             process.env.NEXT_PUBLIC_API_URL + "/organization/member/" + activeOrganization + "/" + data,
                             {
-                              withCredentials: true
+                              withCredentials: true,
                             }
                           )
                           .then((res) => {
@@ -224,7 +237,7 @@ export default function LoginPage({}) {
             <form
               onSubmit={(e) => {
                 e.preventDefault();
-                if(email == "") return toast.error("Email can't be empty", {className: "custom"});
+                if (email == "") return toast.error("Email can't be empty", { className: "custom" });
                 const loadingToast = toast.loading("Saving...", { className: "custom" });
                 axios
                   .post(
