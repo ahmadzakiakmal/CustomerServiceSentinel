@@ -108,9 +108,11 @@ def get_orgs():
   for membership in memberships:
     if membership.organization.id not in owned_orgs_ids:
       print(membership.organization.id in owned_orgs_ids)
-      filtered_membership.append({
-        Organization.objects(id=membership.organization.id).first().organization_name
-    })
+      filtered_membership.append(
+          Organization.objects(id=membership.organization.id).first()
+    )
+      
+  print(filtered_membership)
 
   return jsonify({
     "owned": owned_orgs,
@@ -120,6 +122,7 @@ def get_orgs():
 @organization_bp.route("/member/<id>", methods=["GET"], endpoint="Get Members")
 @authenticateUser
 def get_org_members(id):
+  payload = g.payload
   memberships = Membership.objects(organization=id)
   organization = Organization.objects(id=id).first()
   members = []
@@ -133,7 +136,8 @@ def get_org_members(id):
   return jsonify({
     "organization" : organization.organization_name,
     "owner" : organization.owner,
-    "members" : members
+    "members" : members,
+    "user": payload.get("email")
   })
 
 @organization_bp.route("/data/<id>", methods=["GET"], endpoint="Get Organization Data")

@@ -367,7 +367,7 @@ export default function TestingDashboard() {
                           className: "custom",
                         });
                       }
-                      const blob = URL.createObjectURL(e.target.files[0]);
+                      const blob = URL.ObjectURL(e.target.files[0]);
                       setInputImage(e.target.files[0]);
                       setInputImageLink(blob);
                     }}

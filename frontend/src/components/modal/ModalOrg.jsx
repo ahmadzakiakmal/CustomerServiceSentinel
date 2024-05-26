@@ -1,9 +1,9 @@
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { createPortal } from "react-dom";
+import { useState } from "react";
+import { IoClose } from "react-icons/io5";
 
 export default function ModalOrg({ show, onClose, item }) {
-  if (show === false) null;
+  const [name, setName] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -24,26 +24,26 @@ export default function ModalOrg({ show, onClose, item }) {
 
   return (
     <div
-      className={`modal ${show ? "block" : "hidden"} fixed inset-0 z-50 overflow-auto bg-gray-800 bg-opacity-50`}
+      className={`modal ${show ? "block" : "hidden"} fixed inset-0 z-50 overflow-auto bg-dark-brown/60 backdrop-blur-[8px] bg-opacity-50`}
     >
       <div
         className="modal-content mx-auto my-10 p-8 rounded-lg z-50"
         style={{ maxWidth: "calc(100% - 250px)" }}
       >
         <div className="fixed left-0 top-0 flex h-full w-full items-center justify-center bg-black/10 bg-center">
-          <div className="z-10 h-fit max-h-[80vh] w-3/4 overflow-y-auto rounded-lg bg-white p-4">
+          <div className="z-10 h-fit max-w-[600px] w-3/4 overflow-y-auto rounded-lg bg-white p-4">
             <div className="flex justify-end text-base">
               <button
                 type="button"
                 onClick={handleClose}
                 className="text-black"
               >
-                X
+                <IoClose className="text-[20px]" />
               </button>
             </div>
             <form onSubmit={handleSubmit} className="flex flex-col space-y-4">
-              <div className="text-md pb-6 pt-4 font-bold text-left text-black md:text-xl lg:text-3xl">
-                Add Organization
+              <div className="pb-6 pt-4 font-bold text-left text-black md:text-2xl lg:text-3xl">
+                Create Organization
               </div>
 
               <div className="flex flex-col">
@@ -52,7 +52,7 @@ export default function ModalOrg({ show, onClose, item }) {
                 </label>
                 <input
                   type="text"
-                  className="h-[22px] w-full rounded-md bg-gray-200 p-3 text-xs text-left text-black md:h-[44px] md:text-sm lg:h-[66px] lg:text-base"
+                  className="h-[22px] w-full rounded-md bg-gray-200 p-3 text-left text-black text-xl py-5"
                   placeholder="Organization's Name"
                 />
               </div>
