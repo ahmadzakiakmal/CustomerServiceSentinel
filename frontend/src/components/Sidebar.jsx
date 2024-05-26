@@ -15,7 +15,7 @@ const Sidebar = () => {
 
   useEffect(() => {
     setUsername(localStorage.getItem("Username"));
-  });
+  }, []);
 
   return (
     <aside className="bg-dark-brown w-full md:w-fit md:min-h-screen flex flex-row md:flex-col items-center justify-start py-6 md:py-10 text-white fixed md:relative bottom-0 md:bottom-auto z-[10] shadow-[0_0px_5px_#FFDD93]">
