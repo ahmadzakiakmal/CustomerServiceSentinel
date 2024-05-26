@@ -249,7 +249,7 @@ export default function Dashboard() {
   return (
     <main>
       {isLoading && (
-        <div className="w-full  h-full bg-dark-brown/60 backdrop-blur-[8px] fixed left-0 top-0 z-[10] flex justify-center items-center z-[20]">
+        <div className="w-full  h-full bg-dark-brown/60 backdrop-blur-[8px] fixed left-0 top-0 flex justify-center items-center z-[20]">
           <h1 className="text-[25px] font-semibold animate-pulse text-white">Loading...</h1>
         </div>
       )}

@@ -6,6 +6,7 @@ import { ImSpinner8 } from "react-icons/im";
 import { IoSendSharp } from "react-icons/io5";
 import ChatBubble from "@/components/ChatBubble";
 import Image from "next/image";
+import Logo from "./.././../../public/assets/css_logo_wtext.svg";
 
 export default function ChatPage() {
   const router = useRouter();
@@ -110,6 +111,7 @@ export default function ChatPage() {
 
   useEffect(() => {
     console.log(window.location.host);
+    setIsLoading(true);
     setHost(window.location.host);
     if (!orgId || organization.name !== "") return;
     axios
@@ -124,7 +126,7 @@ export default function ChatPage() {
           setBotBubbleColor("#EBEBEB");
           setBotTextColor("#000000");
           setErrorColor("#B12525");
-          return;
+          return setIsLoading(false);
         }
         setUserBubbleColor(res.data.colors.user_bubble_color);
         setUserTextColor(res.data.colors.user_text_color);
@@ -133,6 +135,7 @@ export default function ChatPage() {
         setBotTextColor(res.data.colors.bot_text_color);
         setErrorColor(res.data.colors.error_text_color);
         setBotImage(process.env.NEXT_PUBLIC_API_URL + "/assistant-data/image/" + orgId);
+        return setIsLoading(false);
       })
       .catch((err) => {
         console.log(err);
@@ -150,6 +153,12 @@ export default function ChatPage() {
         </title>
       </Head>
       <main className="flex justify-center items-center">
+        {isLoading && (
+          <div className="fixed top-0 left-0 w-full h-full bg-dark-brown/80 backdrop-blur-[8px] z-[20] flex flex-col justify-center items-center">
+            <Image src={Logo} alt="CSS Logo" className="animate-pulse" />
+            {/* <h1 className="text-[25px] font-semibold text-white">Connecting...</h1> */}
+          </div>
+        )}
         <main className="w-full //max-w-[800px] h-screen relative">
           <nav className="bg-dark-brown text-white py-6 px-10 absolute top-0 w-full z-[1]">
             <p>
