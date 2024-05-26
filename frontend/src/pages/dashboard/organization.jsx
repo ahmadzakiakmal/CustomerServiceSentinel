@@ -73,7 +73,7 @@ export default function LoginPage({}) {
       .catch((err) => {
         toast.error(err?.response?.data?.message ?? "Error occured", { className: "custom" });
       });
-  }, [activeOrganization]);
+  }, [activeOrganization, refetch]);
 
   const verifyOwner = () => {
     if (user !== owner) return false;
@@ -155,8 +155,8 @@ export default function LoginPage({}) {
                   <div className="flex justify-center items-center h-full">
                     <button
                       type="button"
-                      className="flex items-center justify-center rounded bg-red-delete px-4 py-2 text-white font-medium disabled:opacity-60"
-                      disabled={!verifyOwner()}
+                      className="flex items-center justify-center rounded bg-red-delete px-4 py-2 text-white font-medium opacity-60"
+                      onClick={() => toast.error("Owner cannot be removed from organization", {className: "custom"})}
                     >
                       <IoTrashBinSharp />
                     </button>
@@ -177,6 +177,44 @@ export default function LoginPage({}) {
                       type="button"
                       className="flex mx-auto items-center justify-center rounded bg-red-delete px-4 py-2 text-white font-medium disabled:opacity-60 disabled:!cursor-not-allowed"
                       disabled={!verifyOwner()}
+                      onClick={() => {
+                        if(!verifyOwner()) return toast.error("Only organization owner can remove members", {className: "custom"});
+                        const loadingToast = toast.loading("Saving...", { className: "custom" });
+                        axios
+                          .delete(
+                            process.env.NEXT_PUBLIC_API_URL + "/organization/member/" + activeOrganization + "/" + data,
+                            // {
+                            //   email,
+                            // },
+                            {
+                              withCredentials: true
+                            },
+                            {
+                              email
+                            }
+                          )
+                          .then((res) => {
+                            toast.update(loadingToast, {
+                              render: res.data.message,
+                              autoClose: 5000,
+                              className: "custom",
+                              type: "success",
+                              isLoading: false,
+                            });
+                            setRefetch(!refetch);
+                            setEmail("");
+                          })
+                          .catch((err) => {
+                            console.log(err);
+                            toast.update(loadingToast, {
+                              render: err?.response?.data?.message ?? "Can't connect to server",
+                              type: "error",
+                              isLoading: false,
+                              autoClose: 5000,
+                              className: "custom",
+                            });
+                          });
+                      }}
                     >
                       <IoTrashBinSharp />
                     </button>
@@ -207,8 +245,8 @@ export default function LoginPage({}) {
                       type: "success",
                       isLoading: false,
                     });
-                    setRefetch(!refetch);
                     setEmail("");
+                    setRefetch(!refetch);
                   })
                   .catch((err) => {
                     console.log(err);

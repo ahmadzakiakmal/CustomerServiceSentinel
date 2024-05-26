@@ -63,13 +63,12 @@ def add_member(id):
     "message": f"Successfully added {data['email']} to {org.organization_name}"
   }), 200
   
-@organization_bp.route("/member/<id>", methods=["DELETE"], endpoint="Remove Member")
+@organization_bp.route("/member/<id>/<email>", methods=["DELETE"], endpoint="Remove Member")
 @authenticateUser
-def remove_member(id):
-  data = request.get_json()
+def remove_member(id, email):
   payload = g.payload
 
-  if not data.get("email"):
+  if not email:
     raise BadRequest("Missing required parameter, email")
   
   org = Organization.objects(id=id).first()
@@ -80,7 +79,7 @@ def remove_member(id):
     raise Unauthorized("Only organization owner can remove members")
   
   membership = Membership.objects(
-    user = data['email'],
+    user = email,
     organization = str(id)
   ).first()
 
@@ -91,7 +90,7 @@ def remove_member(id):
   membership.save()
 
   return jsonify({
-    "message": f"Successfully deleted {data['email']} from {org.organization_name}"
+    "message": f"Successfully deleted {email} from {org.organization_name}"
   }), 200
 
 @organization_bp.route("/", methods=["GET"], endpoint="Get Organizations")
