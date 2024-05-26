@@ -191,6 +191,8 @@ export default function Dashboard() {
 
   useEffect(() => {
     setIsLoading(true);
+    setTimeout(() => {}, 100);
+    console.log(activeOrganization);
     if (!activeOrganization) return;
 
     axios
@@ -198,6 +200,22 @@ export default function Dashboard() {
         withCredentials: true,
       })
       .then((res) => {
+        console.log(res.data);
+        if (!res.data.user_bubble_color) {
+          setUserBubbleColor("#FFF3D9");
+          setUserTextColor("#000000");
+          setBackgroundColor("#FFFFFF");
+          setBotBubbleColor("#EBEBEB");
+          setBotTextColor("#000000");
+          setErrorColor("#B12525");
+          return;
+        }
+        setUserBubbleColor(res.data.user_bubble_color);
+        setUserTextColor(res.data.user_text_color);
+        setBackgroundColor(res.data.background_color);
+        setBotBubbleColor(res.data.bot_bubble_color);
+        setBotTextColor(res.data.bot_text_color);
+        setErrorColor(res.data.error_text_color);
         setBotImage(
           res.data.image ? process.env.NEXT_PUBLIC_API_URL + "/assistant-data/image/" + activeOrganization : ""
         );
@@ -316,19 +334,61 @@ export default function Dashboard() {
               </label>
             </div>
           </div>
-          <Button
-            className="!text-[14px] !py-1 !mt-2"
-            onClick={() => {
-              setUserBubbleColor("#FFF3D9");
-              setUserTextColor("#000000");
-              setBackgroundColor("#FFFFFF");
-              setBotBubbleColor("#EBEBEB");
-              setBotTextColor("#000000");
-              setErrorColor("#B12525");
-            }}
-          >
-            Reset
-          </Button>
+          <div className="flex gap-4 mt-1">
+            <Button
+              className="!text-[14px] !py-1 !bg-green-edit/90 hover:!bg-green-edit"
+              onClick={() => {
+                const loadingToast = toast.loading("Saving...", { className: "custom" });
+                axios
+                  .patch(
+                    process.env.NEXT_PUBLIC_API_URL + "/assistant-data/colors/" + activeOrganization,
+                    {
+                      user_bubble_color: userBubbleColor,
+                      user_text_color: userTextColor,
+                      background_color: backgroundColor,
+                      bot_bubble_color: botBubbleColor,
+                      bot_text_color: botTextColor,
+                      error_text_color: errorColor,
+                    },
+                    { withCredentials: true }
+                  )
+                  .then((res) => {
+                    console.log(res);
+                    toast.update(loadingToast, {
+                      render: "Success",
+                      type: "success",
+                      isLoading: false,
+                      autoClose: 5000,
+                      className: "custom",
+                    });
+                  })
+                  .catch((err) => {
+                    toast.update(loadingToast, {
+                      render: err?.response?.data?.message ?? "Can't connect to server",
+                      type: "error",
+                      isLoading: false,
+                      autoClose: 5000,
+                      className: "custom",
+                    });
+                  });
+              }}
+            >
+              Save
+            </Button>
+            <Button
+              className="!text-[14px] !py-1"
+              onClick={() => {
+                setUserBubbleColor("#FFF3D9");
+                setUserTextColor("#000000");
+                setBackgroundColor("#FFFFFF");
+                setBotBubbleColor("#EBEBEB");
+                setBotTextColor("#000000");
+                setErrorColor("#B12525");
+              }}
+            >
+              Reset
+            </Button>
+          </div>
           <h1 className="text-xl font-medium mt-8">Preview</h1>
           <div className="flex flex-row justify-between sm:items-center mb-2 mt-2">
             <p>

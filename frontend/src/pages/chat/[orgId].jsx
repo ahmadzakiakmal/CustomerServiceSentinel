@@ -21,12 +21,19 @@ export default function ChatPage() {
   const inputRef = useRef(null);
   const [host, setHost] = useState("");
 
+  const [botBubbleColor, setBotBubbleColor] = useState("#EBEBEB");
+  const [botTextColor, setBotTextColor] = useState("#000000");
+  const [userBubbleColor, setUserBubbleColor] = useState("#FFF3D9");
+  const [userTextColor, setUserTextColor] = useState("#000000");
+  const [backgroundColor, setBackgroundColor] = useState("#FFFFFF");
+  const [errorColor, setErrorColor] = useState("#B12525");
+
   const scrollToBottom = () => {
     console.log(scrollableContainerRef.current);
     if (scrollableContainerRef.current) {
       scrollableContainerRef.current.scrollTo({
         top: scrollableContainerRef.current.scrollHeight,
-        behavior: "smooth"
+        behavior: "smooth",
       });
     }
   };
@@ -110,6 +117,21 @@ export default function ChatPage() {
       .then((res) => {
         console.log(res.data);
         setOrganization({ name: res.data.organization_name, botName: res.data.bot_name, files: res.data.files });
+        if (!res?.data?.colors?.user_bubble_color) {
+          setUserBubbleColor("#FFF3D9");
+          setUserTextColor("#000000");
+          setBackgroundColor("#FFFFFF");
+          setBotBubbleColor("#EBEBEB");
+          setBotTextColor("#000000");
+          setErrorColor("#B12525");
+          return;
+        }
+        setUserBubbleColor(res.data.colors.user_bubble_color);
+        setUserTextColor(res.data.colors.user_text_color);
+        setBackgroundColor(res.data.colors.background_color);
+        setBotBubbleColor(res.data.colors.bot_bubble_color);
+        setBotTextColor(res.data.colors.bot_text_color);
+        setErrorColor(res.data.colors.error_text_color);
         setBotImage(process.env.NEXT_PUBLIC_API_URL + "/assistant-data/image/" + orgId);
       })
       .catch((err) => {
@@ -139,8 +161,9 @@ export default function ChatPage() {
             <div
               ref={scrollableContainerRef}
               className="max-h-full overflow-y-auto pt-10 relative h-full pb-[30px]"
+              style={{ backgroundColor: backgroundColor }}
             >
-              <div className="px-10 bg-white mb-[80px] pt-12">
+              <div className="px-10 mb-[80px] pt-12">
                 {messages.map((message, index) => {
                   return (
                     <ChatBubble
@@ -150,6 +173,18 @@ export default function ChatPage() {
                       time={message.time}
                       isError={message.isError}
                       image={message.image}
+                      botStyle={{
+                        backgroundColor: botBubbleColor ?? "auto",
+                        color: botTextColor ?? "auto",
+                      }}
+                      senderStyle={{
+                        backgroundColor: userBubbleColor ?? "auto",
+                        color: userTextColor ?? "auto",
+                      }}
+                      errorStyle={{
+                        backgroundColor: botBubbleColor ?? "auto",
+                        color: errorColor ?? "auto",
+                      }}
                     />
                   );
                 })}
@@ -166,10 +201,22 @@ export default function ChatPage() {
                         />
                       )}
                     </div>
-                    <div className="bg-[#EBEBEB] py-[10px] px-4 rounded-[8px] flex gap-3 min-h-[44px] items-center">
-                      <div className="size-[6px] bg-dark-brown rounded-full animate-chat-loading" />
-                      <div className="size-[6px] bg-dark-brown rounded-full animate-chat-loading delay-1" />
-                      <div className="size-[6px] bg-dark-brown rounded-full animate-chat-loading delay-2" />
+                    <div
+                      className="bg-[#EBEBEB] py-[10px] px-4 rounded-[8px] flex gap-3 min-h-[44px] items-center"
+                      style={{ backgroundColor: botBubbleColor }}
+                    >
+                      <div
+                        className="size-[6px] bg-dark-brown rounded-full animate-chat-loading"
+                        style={{ backgroundColor: botTextColor }}
+                      />
+                      <div
+                        className="size-[6px] bg-dark-brown rounded-full animate-chat-loading delay-1"
+                        style={{ backgroundColor: botTextColor }}
+                      />
+                      <div
+                        className="size-[6px] bg-dark-brown rounded-full animate-chat-loading delay-2"
+                        style={{ backgroundColor: botTextColor }}
+                      />
                     </div>
                   </div>
                 )}

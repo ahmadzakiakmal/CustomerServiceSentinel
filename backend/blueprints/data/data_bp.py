@@ -3,6 +3,7 @@ from models import Organization, AssistantData
 from werkzeug.exceptions import NotFound, BadRequest, Conflict, Unauthorized, RequestEntityTooLarge
 from werkzeug.utils import secure_filename
 from mongoengine.errors import DoesNotExist
+from middlewares.authentications import authenticateUser
 import os
 
 assistant_data_bp = Blueprint("data_blueprint", __name__)
@@ -103,3 +104,28 @@ def serve_image(org_id):
   response = Response(assistant_data.image.read())
   response.headers['Content-Type'] = assistant_data.image.content_type
   return response
+
+@assistant_data_bp.route("/colors/<org_id>", methods=["PATCH"])
+@authenticateUser
+def update_colors(org_id):
+    assistant_data = AssistantData.objects(organization=org_id).first()
+    if not assistant_data:
+        raise DoesNotExist("Organization not found")
+
+    data = request.get_json()
+    if 'user_bubble_color' in data:
+        assistant_data.user_bubble_color = data['user_bubble_color']
+    if 'user_text_color' in data:
+        assistant_data.user_text_color = data['user_text_color']
+    if 'background_color' in data:
+        assistant_data.background_color = data['background_color']
+    if 'bot_bubble_color' in data:
+        assistant_data.bot_bubble_color = data['bot_bubble_color']
+    if 'bot_text_color' in data:
+        assistant_data.bot_text_color = data['bot_text_color']
+    if 'error_text_color' in data:
+        assistant_data.error_text_color = data['error_text_color']
+
+    assistant_data.save()
+
+    return jsonify({"message": "Colors updated successfully", "data": assistant_data.to_json()}), 200

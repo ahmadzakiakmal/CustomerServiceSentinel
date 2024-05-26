@@ -144,6 +144,15 @@ def get_org_data(id):
   assistant_data = AssistantData.objects(organization=id).first()
   if(not assistant_data):
     raise DoesNotExist("Can't find data for the organization")
+  
+  color_data = {
+      "user_bubble_color": assistant_data.user_bubble_color,
+      "user_text_color": assistant_data.user_text_color,
+      "background_color": assistant_data.background_color,
+      "bot_bubble_color": assistant_data.bot_bubble_color,
+      "bot_text_color": assistant_data.bot_text_color,
+      "error_text_color": assistant_data.error_text_color
+  }
 
-  return jsonify({"organization_name": organization.organization_name, "bot_name": assistant_data.name, "files": assistant_data.files}), 200
+  return jsonify({"organization_name": organization.organization_name, "bot_name": assistant_data.name, "files": assistant_data.files, "colors": color_data}), 200
 
