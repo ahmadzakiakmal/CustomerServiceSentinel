@@ -126,7 +126,42 @@ export default function LoginPage({}) {
         <div className="mt-8">
           Owner: <span className="font-medium">{owner}</span>
         </div>
-        <form className="mt-4 sm:mt-4 flex flex-col sm:flex-row w-fit gap-2 sm:gap-4 sm:items-center">
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            if(orgName === "") return toast.error("Organization name cannot be empty", {className: "custom"});
+            const loadingToast = toast.loading("Saving...", { className: "custom" });
+            axios
+              .patch(
+                process.env.NEXT_PUBLIC_API_URL + "/organization/edit/" + activeOrganization,
+                {
+                  name: orgName,
+                },
+                { withCredentials: true }
+              )
+              .then((res) => {
+                toast.update(loadingToast, {
+                  render: res.data.message,
+                  autoClose: 5000,
+                  className: "custom",
+                  type: "success",
+                  isLoading: false,
+                });
+                setRefetch(!refetch);
+              })
+              .catch((err) => {
+                console.log(err);
+                toast.update(loadingToast, {
+                  render: err?.response?.data?.message ?? "Can't connect to server",
+                  type: "error",
+                  isLoading: false,
+                  autoClose: 5000,
+                  className: "custom",
+                });
+              });
+          }}
+          className="mt-4 sm:mt-4 flex flex-col sm:flex-row w-fit gap-2 sm:gap-4 sm:items-center"
+        >
           <label>Edit Organization Name:</label>
           <div className="flex gap-4">
             <input

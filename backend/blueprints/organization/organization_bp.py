@@ -163,3 +163,26 @@ def get_org_data(id):
 
   return jsonify({"organization_name": organization.organization_name, "bot_name": assistant_data.name, "files": assistant_data.files, "colors": color_data}), 200
 
+@organization_bp.route("/edit/<id>", methods=["PATCH"], endpoint="Edit Organization Name")
+@authenticateUser
+def edit_org_name(id):
+  payload = g.payload
+  data = request.get_json()
+  new_name = data.get("name")
+
+  if not new_name:
+    raise BadRequest("Missing required parameter, email")
+  
+  org = Organization.objects(id=id).first()
+  if not org:
+    raise NotFound("Organization Not Found")
+  
+  if payload.get("email") != org.owner:
+    raise Unauthorized("Only organization owner can edit organization")
+  
+  org.organization_name = new_name
+  org.save()
+
+  return jsonify({
+    "message": f"Successfully edited organization"
+  }), 200
