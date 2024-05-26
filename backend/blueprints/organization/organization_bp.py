@@ -52,6 +52,10 @@ def add_member(id):
 
   if check_duplicate:
     raise Conflict("This membership relation already exist")
+
+  user = User.objects(email=data["email"]).first()
+  if not user:
+    raise DoesNotExist("User with this email does not exist")
   
   membership = Membership(
     user = data['email'],
