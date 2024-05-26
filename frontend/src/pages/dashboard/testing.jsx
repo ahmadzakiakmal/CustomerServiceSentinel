@@ -371,13 +371,13 @@ export default function TestingDashboard() {
                 </div>
               ) : (
                 <div className="flex gap-2 items-end">
-                  <Image
+                  {inputImageLink !== "" && <Image
                     src={inputImageLink}
                     alt="Bot Photo"
                     width={80}
                     height={80}
-                    className={"h-[80px] select-none " + (inputImageLink === "" ? "hidden" : "")}
-                  />
+                    className="h-[80px] select-none "
+                  />}
                   <label
                     htmlFor="photo-input"
                     className={
@@ -560,7 +560,7 @@ export default function TestingDashboard() {
                 {isBotTyping && (
                   <div className="w-full flex gap-4 items-start py-[7px]">
                     <div className="size-[44px] flex-shrink-0 bg-gradient-to-br from-dark-brown to-light-yellow rounded-full">
-                      {botImage && (
+                      {botImage!=="" && (
                         <Image
                           alt="Bot Image"
                           src={botImage}
