@@ -146,6 +146,7 @@ export default function Dashboard() {
   const [organizatons, setOrganizations] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [botImage, setBotImage] = useState("");
+  const [host, setHost] = useState("");
 
   const [convoIndex, setConvoIndex] = useState(0);
   const [botBubbleColor, setBotBubbleColor] = useState("#EBEBEB");
@@ -190,6 +191,8 @@ export default function Dashboard() {
 
   useEffect(() => {
     setIsLoading(true);
+    setTimeout(() => {}, 100);
+    console.log(activeOrganization);
     if (!activeOrganization) return;
 
     axios
@@ -197,6 +200,22 @@ export default function Dashboard() {
         withCredentials: true,
       })
       .then((res) => {
+        console.log(res.data);
+        if (!res.data.user_bubble_color) {
+          setUserBubbleColor("#FFF3D9");
+          setUserTextColor("#000000");
+          setBackgroundColor("#FFFFFF");
+          setBotBubbleColor("#EBEBEB");
+          setBotTextColor("#000000");
+          setErrorColor("#B12525");
+          return;
+        }
+        setUserBubbleColor(res.data.user_bubble_color);
+        setUserTextColor(res.data.user_text_color);
+        setBackgroundColor(res.data.background_color);
+        setBotBubbleColor(res.data.bot_bubble_color);
+        setBotTextColor(res.data.bot_text_color);
+        setErrorColor(res.data.error_text_color);
         setBotImage(
           res.data.image ? process.env.NEXT_PUBLIC_API_URL + "/assistant-data/image/" + activeOrganization : ""
         );
@@ -214,6 +233,10 @@ export default function Dashboard() {
       });
   }, [activeOrganization]);
 
+  useEffect(() => {
+    setHost(window.location.host);
+  }, []);
+
   const copyToClipboard = async (text) => {
     try {
       await navigator.clipboard.writeText(text);
@@ -226,7 +249,7 @@ export default function Dashboard() {
   return (
     <main>
       {isLoading && (
-        <div className="w-full  h-full bg-dark-brown/60 backdrop-blur-[8px] fixed left-0 top-0 z-[10] flex justify-center items-center z-[20]">
+        <div className="w-full  h-full bg-dark-brown/60 backdrop-blur-[8px] fixed left-0 top-0 flex justify-center items-center z-[20]">
           <h1 className="text-[25px] font-semibold animate-pulse text-white">Loading...</h1>
         </div>
       )}
@@ -311,19 +334,61 @@ export default function Dashboard() {
               </label>
             </div>
           </div>
-          <Button
-            className="!text-[14px] !py-1 !mt-2"
-            onClick={() => {
-              setUserBubbleColor("#FFF3D9");
-              setUserTextColor("#000000");
-              setBackgroundColor("#FFFFFF");
-              setBotBubbleColor("#EBEBEB");
-              setBotTextColor("#000000");
-              setErrorColor("#B12525");
-            }}
-          >
-            Reset
-          </Button>
+          <div className="flex gap-4 mt-1">
+            <Button
+              className="!text-[14px] !py-1 !bg-green-edit/90 hover:!bg-green-edit"
+              onClick={() => {
+                const loadingToast = toast.loading("Saving...", { className: "custom" });
+                axios
+                  .patch(
+                    process.env.NEXT_PUBLIC_API_URL + "/assistant-data/colors/" + activeOrganization,
+                    {
+                      user_bubble_color: userBubbleColor,
+                      user_text_color: userTextColor,
+                      background_color: backgroundColor,
+                      bot_bubble_color: botBubbleColor,
+                      bot_text_color: botTextColor,
+                      error_text_color: errorColor,
+                    },
+                    { withCredentials: true }
+                  )
+                  .then((res) => {
+                    console.log(res);
+                    toast.update(loadingToast, {
+                      render: "Success",
+                      type: "success",
+                      isLoading: false,
+                      autoClose: 5000,
+                      className: "custom",
+                    });
+                  })
+                  .catch((err) => {
+                    toast.update(loadingToast, {
+                      render: err?.response?.data?.message ?? "Can't connect to server",
+                      type: "error",
+                      isLoading: false,
+                      autoClose: 5000,
+                      className: "custom",
+                    });
+                  });
+              }}
+            >
+              Save
+            </Button>
+            <Button
+              className="!text-[14px] !py-1"
+              onClick={() => {
+                setUserBubbleColor("#FFF3D9");
+                setUserTextColor("#000000");
+                setBackgroundColor("#FFFFFF");
+                setBotBubbleColor("#EBEBEB");
+                setBotTextColor("#000000");
+                setErrorColor("#B12525");
+              }}
+            >
+              Reset
+            </Button>
+          </div>
           <h1 className="text-xl font-medium mt-8">Preview</h1>
           <div className="flex flex-row justify-between sm:items-center mb-2 mt-2">
             <p>
@@ -331,9 +396,9 @@ export default function Dashboard() {
               <button
                 title="Click to copy"
                 className="font-medium text-yellow bg-dark-brown/95 hover:bg-dark-brown px-2 py-1 rounded-md underline flex gap-2 items-center"
-                onClick={() => copyToClipboard(`http://${window.location.host}/chat/${activeOrganization}`)}
+                onClick={() => copyToClipboard(`http://${host}/chat/${activeOrganization}`)}
               >
-                https://{window.location.host}/chat/{activeOrganization} <MdContentCopy />
+                https://{host}/chat/{activeOrganization} <MdContentCopy />
               </button>
             </p>
             <Button

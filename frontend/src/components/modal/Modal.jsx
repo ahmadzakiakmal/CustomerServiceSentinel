@@ -45,7 +45,6 @@ export default function Modal({ show, onClose, item }) {
               <div className="text-md pb-6 pt-4 font-bold text-left text-black md:text-xl lg:text-3xl">
                 Update Staff
               </div>
-
               <div className="flex flex-col">
                 <label className="md:text-md text-sm font-bold lg:text-lg text-left">
                   Name

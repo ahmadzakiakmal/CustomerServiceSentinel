@@ -6,6 +6,7 @@ import { BiSolidDashboard } from "react-icons/bi";
 import { IoChatboxEllipses } from "react-icons/io5";
 import { MdNoteAlt } from "react-icons/md";
 import { GrOrganization } from "react-icons/gr";
+import { CgProfile } from "react-icons/cg";
 
 const Sidebar = () => {
   const router = useRouter();
@@ -16,8 +17,6 @@ const Sidebar = () => {
         <div className="profile-section text-white flex flex-col justify-center items-center mb-[75px]">
           <div className="profile-picture bg-white size-[60px] rounded-full mb-5" />
           <h2 className="text-[18px] hidden md:block font-semibold">Username</h2>
-        </div>
-
         <div className="links-section flex flex-col gap-10 px-[30px] lg:px-[50px]">
           <SidebarLink
             text="Testing"
