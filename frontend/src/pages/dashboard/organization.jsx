@@ -189,6 +189,7 @@ export default function LoginPage({}) {
             <form
               onSubmit={(e) => {
                 e.preventDefault();
+                if(email == "") return toast.error("Email can't be empty", {className: "custom"});
                 const loadingToast = toast.loading("Saving...", { className: "custom" });
                 axios
                   .post(
@@ -207,6 +208,7 @@ export default function LoginPage({}) {
                       isLoading: false,
                     });
                     setRefetch(!refetch);
+                    setEmail("");
                   })
                   .catch((err) => {
                     console.log(err);
