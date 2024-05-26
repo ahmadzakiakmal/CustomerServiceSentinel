@@ -31,7 +31,8 @@ export default function LoginPage() {
           withCredentials: true,
         }
       )
-      .then(() => {
+      .then((res) => {
+        localStorage.setItem("Username", res.data.data.username);
         router.replace("/dashboard/testing");
         toast.update(toastify, {
           render: "Login success",
@@ -42,6 +43,7 @@ export default function LoginPage() {
         });
       })
       .catch((err) => {
+        console.log(err);
         toast.update(toastify, {
           render: cutMessage(err?.response?.data?.message) ?? "Can't connect to the server",
           type: "error",

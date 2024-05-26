@@ -3,7 +3,7 @@ import Dropdown from "@/components/Dropdown";
 import Layout from "@/components/Layout";
 import cutMessage from "@/utilities/cutMessage";
 import axios from "axios";
-import { act, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { IoSendSharp } from "react-icons/io5";
 import { ImSpinner8 } from "react-icons/im";
@@ -288,7 +288,7 @@ export default function TestingDashboard() {
   return (
     <main>
       <Layout>
-        <main className="text-dark-brown flex flex-col md:flex-row min-h-screen overflow-y-hidden">
+        <main className="text-dark-brown flex flex-col lg:flex-row min-h-screen overflow-y-hidden">
           {isLoading && (
             <div className="w-full  h-full bg-dark-brown/60 backdrop-blur-[8px] absolute left-0 top-0 z-[10] flex justify-center items-center">
               <h1 className="text-[25px] font-semibold animate-pulse text-white">Loading...</h1>

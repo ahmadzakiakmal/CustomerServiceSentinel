@@ -3,11 +3,9 @@ import Sidebar from "./Sidebar";
 
 function Layout({ children }) {
   return (
-    <div className="main-layout">
+    <div className="min-h-screen h-full flex flex-row justify-start items-stretch text-dark-brown">
       <Sidebar />
-      <main className="ml-64 p-4 flex-grow h-screen overflow-y-auto">
-  {children}
-</main>
+      <main className="bg-white flex-1 text-dark-brown">{children}</main>
     </div>
   );
 }

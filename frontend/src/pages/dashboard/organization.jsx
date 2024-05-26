@@ -99,29 +99,28 @@ export default function LoginPage({}) {
               <form className="max-w-lg">
                 <div className="flex flex-row items-center gap-4">
                   <div>
-                  <Dropdown />
+                    <Dropdown />
                   </div>
-                  <div class="">
-                      
-                      <button
-                          type="button"
-                          className="flex items-center justify-center rounded bg-blue-500 hover:bg-blue-700 px-4 py-2 text-white font-medium"
-                          onClick={() => setShowOrgModal(true)}
-                        >
-                          {/* <IoColorWandSharp className="mr-2" /> */}
-                          Add Organization
-                        </button>
-                        {showOrgModal && (
-                          <ModalOrg
-                            show={showOrgModal}
-                            onClose={() => setShowOrgModal(false)}
-                          />
-                        )}
-                      </div>
+                  <div>
+                    <button
+                      type="button"
+                      className="flex items-center justify-center rounded bg-blue-500 hover:bg-blue-700 px-4 py-2 text-white font-medium"
+                      onClick={() => setShowOrgModal(true)}
+                    >
+                      {/* <IoColorWandSharp className="mr-2" /> */}
+                      Add Organization
+                    </button>
+                    {showOrgModal && (
+                      <ModalOrg
+                        show={showOrgModal}
+                        onClose={() => setShowOrgModal(false)}
+                      />
+                    )}
+                  </div>
                 </div>
               </form>
               <form className="mt-4 mx-3">
-                <label for="password">Edit Organization Name:</label>
+                <label htmlFor="password">Edit Organization Name:</label>
 
                 <input
                   type="text"
@@ -198,4 +197,3 @@ export default function LoginPage({}) {
     </Layout>
   );
 }
-

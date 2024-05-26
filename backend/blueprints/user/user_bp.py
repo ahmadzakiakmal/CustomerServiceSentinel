@@ -66,10 +66,13 @@ def login():
   
 @user_bp.route("/logout", methods=["POST"])
 def logout():
-  response = make_response(jsonify({"message": "logout success."}))
-  a_day_ago = datetime.datetime.utcnow() - datetime.timedelta(days=1)
-  response.set_cookie("Authentication", "", max_age=0, expires=a_day_ago,)
-  return response
+  try:
+    response = make_response(jsonify({"message": "logout success."}))
+    a_day_ago = datetime.datetime.now(datetime.UTC) - datetime.timedelta(days=1)
+    response.set_cookie("Authentication", "deleted", max_age=0, expires=a_day_ago, path="/", samesite=None)
+    return response, 200
+  except Exception as e:
+    raise Exception(e)
 
 @user_bp.route("/", methods=["GET"])
 @authenticateUser
