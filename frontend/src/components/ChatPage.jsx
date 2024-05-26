@@ -1,7 +1,7 @@
 import Image from "next/image";
 import ChatBubble from "./ChatBubble";
 
-export default function ChatPage({ orgId, messages = [], colors, botImage }) {
+export default function ChatPage({ messages = [], colors, botImage }) {
   return (
     <main
       className="p-[2.5%] md:p-5 lg:p-10 outline-1 outline-dashed rounded-md"

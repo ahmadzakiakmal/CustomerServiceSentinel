@@ -26,7 +26,7 @@ const Sidebar = () => {
               <CgProfile className="text-[25px] md:text-[60px] rounded-full mb-0 md:mb-5" />
             </button>
             <div
-              className={"md:hidden px-4 py-3 bg-dark-brown transition-[grid-template-rows,padding,outline] overflow-y-hidden outline outline-1 outline-yellow shadow-[0_0_5px_#39311D] rounded-[5px] absolute bottom-[calc(100%+8px)] left-[50%] translate-x-[-50%] max-w-[140px] grid place-items-center " + 
+              className={"md:hidden px-4 py-3 bg-dark-brown transition-[grid-template-rows,padding,outline] overflow-y-hidden outline outline-1 outline-yellow shadow-[0_0_5px_#39311D] rounded-[5px] absolute bottom-[calc(100%+8px)] left-0 max-w-[140px] grid place-items-center " + 
             (open ? "grid-rows-[1fr]" : "grid-rows-[0fr] !py-0 !outline-none")}
             >
               <div className="overflow-hidden w-max">
