@@ -395,25 +395,19 @@ export default function Dashboard() {
             </Button>
           </div>
           <h1 className="text-xl font-medium mt-8">Preview</h1>
-          <div className="flex flex-row justify-between sm:items-center mb-2 mt-2">
+          <div className="flex flex-col lg:flex-row justify-between lg:items-center gap-2 mb-2 mt-2">
             <p>
-              Your chatbot is publicly accessible here: <br />{" "}
+              Your chatbot is publicly accessible <span className="hidden sm:inline">here:</span> <br className="hidden sm:block" />{" "}
+              <a href={`http://${host}/chat/${activeOrganization}`} target="_blank" rel="norel noreferrer" className="underline mt-3 font-medium text-wrap hidden sm:block">{`https://${host}/chat/${activeOrganization}`}</a>
+              <a href={`http://${host}/chat/${activeOrganization}`} target="_blank" rel="norel noreferrer" className="inline sm:hidden font-medium underline" >here.</a>
               <button
                 title="Click to copy"
-                className="font-medium text-yellow bg-dark-brown/95 hover:bg-dark-brown px-2 py-1 rounded-md underline flex gap-2 items-center"
+                className="font-medium text-yellow bg-dark-brown/95 hover:bg-dark-brown px-2 py-1 rounded-md mt-2 flex gap-2 items-center"
                 onClick={() => copyToClipboard(`http://${host}/chat/${activeOrganization}`)}
               >
-                https://{host}/chat/{activeOrganization} <MdContentCopy />
+                Copy Link <MdContentCopy />
               </button>
             </p>
-            <Button
-              className="!text-[14px] !py-1 !mt-0"
-              onClick={() => {
-                setConvoIndex(convoIndex == 4 ? 0 : convoIndex + 1);
-              }}
-            >
-              Change Preview
-            </Button>
           </div>
           <ChatPage
             botImage={botImage}
@@ -436,6 +430,14 @@ export default function Dashboard() {
               error: errorColor,
             }}
           />
+          <Button
+            className="!text-[14px] !py-1 !mt-2"
+            onClick={() => {
+              setConvoIndex(convoIndex == 4 ? 0 : convoIndex + 1);
+            }}
+          >
+              Change Preview
+          </Button>
         </main>
       </Layout>
     </main>
