@@ -6,6 +6,7 @@ import { IoTrashBinSharp } from "react-icons/io5";
 import axios from "axios";
 import { toast } from "react-toastify";
 import Button from "@/components/Button";
+import { useRouter } from "next/router";
 
 export default function LoginPage({}) {
   const [activeOrganization, setActiveOrganization] = useState("");
@@ -17,6 +18,8 @@ export default function LoginPage({}) {
   const [showOrgModal, setShowOrgModal] = useState(false);
   const [refetch, setRefetch] = useState(false);
   const [email, setEmail] = useState("");
+
+  const router = useRouter();
 
   useEffect(() => {
     axios
@@ -183,14 +186,8 @@ export default function LoginPage({}) {
                         axios
                           .delete(
                             process.env.NEXT_PUBLIC_API_URL + "/organization/member/" + activeOrganization + "/" + data,
-                            // {
-                            //   email,
-                            // },
                             {
                               withCredentials: true
-                            },
-                            {
-                              email
                             }
                           )
                           .then((res) => {
