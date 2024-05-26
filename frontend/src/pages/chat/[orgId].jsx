@@ -84,9 +84,6 @@ export default function ChatPage() {
         setMessages((prev) => [...prev, reply]);
       })
       .catch((err) => {
-        toast.error(err?.response?.data?.message ?? "Can't connect to server", {
-          className: "custom",
-        });
         const errorMessage = {
           role: "assistant",
           content: err?.response?.data?.message ?? "Can't connect to server",
