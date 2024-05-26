@@ -1,13 +1,11 @@
 import Dropdown from "@/components/Dropdown";
 import Layout from "@/components/Layout";
 import { useEffect, useState } from "react";
-import Modal from "@/components/modal/Modal";
 import ModalOrg from "@/components/modal/ModalOrg";
-import { IoColorWandSharp, IoTrashBinSharp } from "react-icons/io5";
-import { MdEdit } from "react-icons/md";
+import { IoTrashBinSharp } from "react-icons/io5";
 import axios from "axios";
 import { toast } from "react-toastify";
-import cutMessage from "@/utilities/cutMessage";
+import Button from "@/components/Button";
 
 export default function LoginPage({}) {
   const [activeOrganization, setActiveOrganization] = useState("");
@@ -16,19 +14,9 @@ export default function LoginPage({}) {
   const [owner, setOwner] = useState("");
   const [user, setUser] = useState("");
   const [filteredData, setFilteredData] = useState([]);
-  const [showModal, setShowModal] = useState(false);
   const [showOrgModal, setShowOrgModal] = useState(false);
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const formData = new FormData();
-    try {
-      e.preventDefault();
-      onClose();
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  const [refetch, setRefetch] = useState(false);
+  const [email, setEmail] = useState("");
 
   useEffect(() => {
     axios
@@ -65,7 +53,7 @@ export default function LoginPage({}) {
         }
       });
     //eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [refetch]);
 
   useEffect(() => {
     if (activeOrganization === "") return;
@@ -76,9 +64,11 @@ export default function LoginPage({}) {
         setOrgName(res.data.organization);
         setOwner(res.data.owner);
         setUser(res.data.user);
-        setFilteredData(res.data.members.map((member) => {
-          return(member.email);
-        }));
+        setFilteredData(
+          res.data.members.map((member) => {
+            return member.email;
+          })
+        );
       })
       .catch((err) => {
         toast.error(err?.response?.data?.message ?? "Error occured", { className: "custom" });
@@ -111,7 +101,13 @@ export default function LoginPage({}) {
             </button>
           </div>
         </form>
-        <ModalOrg show={showOrgModal} onClose={() => setShowOrgModal(false)} />
+        <ModalOrg
+          show={showOrgModal}
+          onClose={() => {
+            setShowOrgModal(false);
+            setRefetch(!refetch);
+          }}
+        />
         <div className="mt-8">
           Owner: <span className="font-medium">{owner}</span>
         </div>
@@ -150,9 +146,7 @@ export default function LoginPage({}) {
               </tr>
             </thead>
             <tbody className="w-full border">
-              <tr
-                className="font-medium text-black"
-              >
+              <tr className="font-medium text-black">
                 <td className="py-4 text-center">1</td>
                 <td className="py-2 text-left w-max pr-5">{owner}</td>
                 <td className="py-2 text-left">Owner</td>
@@ -191,6 +185,59 @@ export default function LoginPage({}) {
               ))}
             </tbody>
           </table>
+          {verifyOwner() && (
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                const loadingToast = toast.loading("Saving...", { className: "custom" });
+                axios
+                  .post(
+                    process.env.NEXT_PUBLIC_API_URL + "/organization/member/" + activeOrganization,
+                    {
+                      email,
+                    },
+                    { withCredentials: true }
+                  )
+                  .then(() => {
+                    toast.update(loadingToast, {
+                      render: `${email} added to ${orgName}`,
+                      autoClose: 5000,
+                      className: "custom",
+                      type: "success",
+                      isLoading: false,
+                    });
+                    setRefetch(!refetch);
+                  })
+                  .catch((err) => {
+                    console.log(err);
+                    toast.update(loadingToast, {
+                      render: err?.response?.data?.message ?? "Can't connect to server",
+                      type: "error",
+                      isLoading: false,
+                      autoClose: 5000,
+                      className: "custom",
+                    });
+                  });
+              }}
+              className="mt-8 max-w-[300px]"
+            >
+              <label className="flex flex-col gap-2">
+                <input
+                  type="text"
+                  className="border-b-2 py-1 px-2 focus:outline-none disabled:opacity-60 w-full"
+                  placeholder="Email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </label>
+              <Button
+                type="submit"
+                className="bg-green-edit w-full !py-1"
+              >
+                Add Member
+              </Button>
+            </form>
+          )}
         </div>
       </main>
     </Layout>
