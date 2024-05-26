@@ -113,7 +113,7 @@ export default function ChatPage() {
     console.log(window.location.host);
     setIsLoading(true);
     setHost(window.location.host);
-    if (!orgId || organization.name !== "") return;
+    if (!orgId || organization.name !== "") return setIsLoading(false);
     axios
       .get(process.env.NEXT_PUBLIC_API_URL + "/organization/data/" + orgId)
       .then((res) => {
@@ -159,8 +159,8 @@ export default function ChatPage() {
             {/* <h1 className="text-[25px] font-semibold text-white">Connecting...</h1> */}
           </div>
         )}
-        <main className="w-full //max-w-[800px] h-screen relative">
-          <nav className="bg-dark-brown text-white py-6 px-10 absolute top-0 w-full z-[1]">
+        <main className="w-full h-screen relative">
+          <nav className="bg-dark-brown text-white py-4 lg:py-6 px-8 lg:px-10 absolute top-0 w-full z-[1]">
             <p>
               <span className="font-medium text-xl">{organization?.botName}</span>
               &nbsp; ({organization.name})
@@ -231,7 +231,7 @@ export default function ChatPage() {
                 )}
               </div>
               <form
-                className="pt-4 pb-1 px-5 md:px-10 fixed bottom-0 w-full bg-white border-t gap-2 //max-w-[800px]"
+                className="pt-4 pb-1 px-5 md:px-10 fixed bottom-0 w-full bg-white border-t gap-2"
                 onSubmit={(e) => {
                   sendMessage(e);
                 }}
