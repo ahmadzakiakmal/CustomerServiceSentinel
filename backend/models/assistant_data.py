@@ -9,11 +9,11 @@ class AssistantData(Document):
   files = ListField(StringField(default=[]))
   name = StringField(required=True, default="Customer Service Sentinel")
   image = FileField()
-  user_bubble_color = StringField(required=True, default="#ffc2c2")
+  user_bubble_color = StringField(required=True, default="#FFF3D9")
   user_text_color = StringField(required=True, default="#000000")
-  background_color = StringField(required=True, default="#ffffff")
-  bot_bubble_color = StringField(required=True, default="#df4343")
-  bot_text_color = StringField(required=True, default="#ffffff")
-  error_text_color = StringField(required=True, default="#ffee33")
+  background_color = StringField(required=True, default="#FFFFFF")
+  bot_bubble_color = StringField(required=True, default="#EBEBEB")
+  bot_text_color = StringField(required=True, default="#000000")
+  error_text_color = StringField(required=True, default="#B12525")
   
   meta = {"collection" : "AssistantDatas"}

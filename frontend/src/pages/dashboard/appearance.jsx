@@ -197,7 +197,6 @@ export default function Dashboard() {
   useEffect(() => {
     setIsLoading(true);
     setTimeout(() => {}, 100);
-    console.log(activeOrganization);
     if (!activeOrganization) return;
 
     axios
@@ -205,7 +204,7 @@ export default function Dashboard() {
         withCredentials: true,
       })
       .then((res) => {
-        console.log(res.data);
+        console.log(res.data.user_bubble_color);
         if (!res.data.user_bubble_color) {
           setUserBubbleColor("#FFF3D9");
           setUserTextColor("#000000");
