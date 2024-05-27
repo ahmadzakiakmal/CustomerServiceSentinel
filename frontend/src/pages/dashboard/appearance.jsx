@@ -397,7 +397,7 @@ export default function Dashboard() {
           <div className="flex flex-col lg:flex-row justify-between lg:items-center gap-2 mb-2 mt-2">
             <p>
               Your chatbot is publicly accessible <span className="hidden sm:inline">here:</span> <br className="hidden sm:block" />{" "}
-              <a href={`http://${host}/chat/${activeOrganization}`} target="_blank" rel="norel noreferrer" className="underline mt-3 font-medium text-wrap hidden sm:block">{`https://${host}/chat/${activeOrganization}`}</a>
+              <a href={`http://${host}/chat/${activeOrganization}`} target="_blank" rel="norel noreferrer" className="underline mt-3 font-medium text-wrap hidden sm:block">{`http://${host}/chat/${activeOrganization}`}</a>
               <a href={`http://${host}/chat/${activeOrganization}`} target="_blank" rel="norel noreferrer" className="inline sm:hidden font-medium underline" >here.</a>
               <button
                 title="Click to copy"
