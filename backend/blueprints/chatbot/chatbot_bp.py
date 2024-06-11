@@ -1,17 +1,16 @@
-from langchain_openai import OpenAIEmbeddings
+
 from flask import Blueprint, request, jsonify
-from middlewares.authentications import authenticateUser
 from werkzeug.exceptions import BadRequest, UnsupportedMediaType
 from mongoengine.errors import DoesNotExist
 from openai import OpenAI
 from models import AssistantData, Organization
 from langchain_community.document_loaders import DirectoryLoader
 from langchain.indexes import VectorstoreIndexCreator
-from langchain_openai import ChatOpenAI
+# from langchain_openai import ChatOpenAI
 
 chatbot_bp = Blueprint("chatbot_blueprint", __name__)
 
-# client = OpenAI()
+client = OpenAI()
 
 @chatbot_bp.route("/langchain/<id>", methods=["POST"])
 def chat(id):
@@ -22,8 +21,8 @@ def chat(id):
   if not data.get("messages"):
     raise BadRequest("Messages is empty")
   
-  # dir_loader = DirectoryLoader(f"./file/{id}", glob="*.txt")
-  # index = VectorstoreIndexCreator().from_loaders([dir_loader])
+  dir_loader = DirectoryLoader(f"./file/{id}", glob="*.txt")
+  index = VectorstoreIndexCreator().from_loaders([dir_loader])
 
   assistant_data = AssistantData.objects(organization=id).first()
   messages = []
@@ -50,12 +49,12 @@ def chat(id):
           "content": assistant_data.instruction
         }
       )
-  # messages.append(
-  #   {
-  #   "role": "system",
-  #   "content" : index.query("write the important information from the documents")
-  #   }
-  # )
+  messages.append(
+    {
+    "role": "system",
+    "content" : index.query("write the important information from the documents")
+    }
+  )
   messages.append(
     {
     "role": "system",
@@ -64,17 +63,15 @@ def chat(id):
   )
   for message in data.get("messages"):
     messages.append(message)
-  # completion = client.chat.completions.create(
-  #   model="gpt-3.5-turbo",
-  #   messages=messages,
-  #   max_tokens=500,
-  #   temperature=0.0
-  # )
-  # for message in messages:
-  #   print(message)
+  completion = client.chat.completions.create(
+    model="gpt-3.5-turbo",
+    messages=messages,
+    max_tokens=500,
+    temperature=0.0
+  )
   return jsonify(
     {
-      "completion" : "Chatbot has been disabled to save resources (API Key Credits)",
+      "completion" : completion.choices[0].message.content,
       "assistant_data": assistant_data,
       "messages": messages
     }
@@ -115,17 +112,15 @@ def chat_customized(id):
       )
   for message in data.get("messages"):
     messages.append(message)
-  # completion = client.chat.completions.create(
-  #   model="gpt-3.5-turbo",
-  #   messages=messages,
-  #   max_tokens=500,
-  #   temperature=0.0
-  # )
-  # for message in messages:
-  #   print(message)
+  completion = client.chat.completions.create(
+    model="gpt-3.5-turbo",
+    messages=messages,
+    max_tokens=500,
+    temperature=0.0
+  )
   return jsonify(
     {
-      "completion" : "Chatbot has been disabled to save resources (API Key Credits)",
+      "completion" : completion.choices[0].message.content,
       "assistant_data": assistant_data,
       "messages": messages
     }

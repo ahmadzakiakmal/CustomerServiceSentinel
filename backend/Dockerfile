@@ -26,5 +26,6 @@ RUN . venv/bin/activate && pip install --no-cache-dir -r requirements.txt
 # Make port 5000 available to the world outside this container
 EXPOSE 5000
 
-# Set the default command to activate the virtual environment and run the app using Gunicorn
-CMD ["sh", "-c", ". venv/bin/activate && gunicorn -w 4 -b 0.0.0.0:5000 app:app"]
+# Set the default command to activate the virtual environment and run the app using Flask
+CMD ["sh", "-c", ". venv/bin/activate && flask run --host=0.0.0.0"]
+
